@@ -1,0 +1,178 @@
+Changes in version 0.9
+  - Required changes to be compatible with stochvol 2.0.0
+
+Changes in version 0.8.3
+  - Default for argument "restrict" in fsvsample is now "auto". This does not
+    require the end-user to pre-sort the data but instead imposes zeros
+    in the factor loadings matrix according to a preliminary static
+    factor analysis.
+  - New function findrestrict.
+  - New function orderident.
+  - Changed default burn-in in fsvsample to 1000 (from 100).
+  - Changed default value of runningstorethin in fsvsample to 10 (from 1).
+  - The function logret can now standardize so that each series has (empirical)
+    variance equal to 1.
+  - Requires stochvol version >= 1.3.2.
+  - New function expweightcov.
+  - Changed default values for priorh0fac and priorphifac in fsvsample.
+  - h0 is now stored and returned by default by fsvsample.
+  - Added new argument "startlatent0" for passing starting values for h0
+    in fsvsample.
+  - Changed some default starting values to (somewhat) resemble those often
+    encountered in real data applications. This could decrease burn-in time.
+
+Changes in version 0.8.2
+  - The function predprecision is now called predprecWB.
+  - The first two arguments of predloglik and predloglikWB were interchanced.
+  - Fixed ambiguity of type casting for log10() in sampler.cpp (needed to
+    compile on Solaris).
+  - Turned on progress indicator also for Windows (need %% instead of \045 or
+    \% to escape a percent symbol in Rprintf).
+  - Fixed signident to work also for 1 single MCMC draw.
+  - Minor fixes in CITATION.
+
+Changes in version 0.8.1
+  - First CRAN release version.
+  - It is now possible to have arbitrary loadings restrictions. Thanks to
+    Florian Huber for bringing this up.
+  - interweaving == 4 means: deep with largest element (instead of diagonal).
+    This is also the new default.
+
+Changes in Version 0.8.0
+  - Switched rows/colums for data input.
+  - interweaving == 3 means: shallow with largest element (instead of diagonal).
+  - Introduced (more) print and plot methods.
+  - Wrapper functions polished.
+  - Some error checks added.
+  - Fixed problem with offsetting constant (now used only in no-factor model).
+  - Documentation via roxygen2.
+
+Changes in Version 0.7.14
+  - Fast evaluation of multivariate normal w/ low-rank covariance matrix using
+    Woodbury identity. Implemented in predcovinvdet.fsvdraws and
+    predloglik.fsvdraws.
+
+Changes in Version 0.7.13
+  - Interweaving not only with diagonal element but with largest element.
+  - Changed default prior hyperparameters and starting values for phis.
+  - Added manual GetRNGstate() and PutRNGstate() clauses; using "RNGScope scope"
+    caused segfaults in rare (very) cases.
+
+Changes in Version 0.7.12
+  - Prior for h0 can now be chosen to not depend to phi. Requires now stochvol
+    version 1.3.0 or higher.
+
+Changes in Version 0.7.11
+  - Fixed the corresponding (nasty) bug in deep interweaving of factor loadings.
+
+Changes in Version 0.7.10
+  - Fixed a bug in shallow interweaving of factor loadings. Many thanks to
+    Sylvia Frühwirth-Schnatter for pointing this out.
+
+Changes in Version 0.7.9
+  - Setting runningstore >= 4 now also stores individual volatilities.
+  - Setting runningstore >= 6 now also stores communalities.
+  - Introduced comtimeplot for plotting communalities.
+
+Changes in Version 0.7.8
+  - stochvol part can now be disabled to allow for homoskedastic factors
+    as well as time-invariant idiosyncratic variances.
+  - Fixed minor glitches for no-factor model.
+  - Number of factors in function preorder can now be specified.
+  - New plotting functions corlineplot and covlineplot.
+  - New plotting function corpointplot.
+  - New functions extractcor and extractcov for extracting the implied
+    correlation/covariance matrix from runningstore at a certain point in time.
+
+Changes in Version 0.7.7
+  - Added covmat.fsvdraws and covmat.fsvsim for extracting implied
+    covariance matrices (computationally inefficient, for testing
+    purposes mainly).
+  - Added extra functionality to runningstore (store first four moments
+    of implied covariance and correlation matrix draws).
+
+Changes in Version 0.7.6
+  - Added a "vectorized" version of dmvnorm.
+  - Bug causing Rcpp::index_out_of_bounds fixed (appeared when fitting a
+    0-factor model with NG-prior).
+  - fsvsim can now produce facloads that are "sparse".
+
+Changes in Version 0.7.5
+  - Now able to simulate, estimate, and plot a "0-factor" model (i.e.
+    independent SV only).
+  - Minor internal changes concerning draws stored during sampling.
+
+Changes in Version 0.7.4
+  - Severe speed-ups in predict.fsvdraws (now handled via RcppArmadillo).
+  - fsvsim is (a bit) more flexible.
+  - signident can now handle "maximin" type of identification.
+  - facloadpointplot now marks leading and sign-identifying series.
+  - predict.fsvdraws can handle selective storage.
+  - facloaddensplot can now handle non-restricted draws properly.
+  - facloaddensplot now indicates identifiers.
+  - added a "preorder" function (uses factanal).
+
+Changes in Version 0.7.3
+  - predict.fsvdraws can now predict multiple draws per posterior draw.
+
+Changes in Version 0.7.2
+  - Changes some default values in fsvsample.
+  - Modified some plotting functions.
+  - Implemented paratraceplot plotting function.
+
+Changes in Version 0.7.1
+  - "runningstore" is now more flexible (store only certain variables).
+  - Implemented facloadpointplot plotting function.
+
+Changes in Version 0.7.0
+  - Substantially re-written sampling of factors and loadings because
+    of (very) rare numerical problems with chol() when drawing the
+    factors.
+  - Added some defaults for fsvsim.
+  - Implemented voltimeplot, facloadtraceplot, and facloaddensplot
+    plotting functions.
+  - Implemented signident function (forces diagonal loadings to be pos.).
+
+Changes in Version 0.6.2
+  - Re-written sampling scheme so that column-wise shrinkage is possible.
+  - Introduced a prediction method.
+
+Changes in Version 0.6.1
+  - Included a "runningstore" feature that incorporates tracking of
+    min, max, and first four moment draws of f and h through time even
+    if thintime != 1.
+
+Changes in Version 0.6.0
+  - Now using do_rgig() instead of rgig() to avoid excessive calls of
+    GetRNGstate() and PutRNGstate(), cf. NEWS and /inst/doc/README of
+    GIGrvg.
+  - Now depends on stochvol (>= 0.9) for increased stability.
+  - Moved down "RNGScope scope;" to avoid (very) rare segfaults, cf.
+    https://www.mail-archive.com/rcpp-devel@lists.r-forge.r-project.org/msg07519.html
+
+Changes in Version 0.5
+  - Normal-Gamma prior for factor loadings introduced.
+  - Now links to GIGrvg for efficiently drawing Generalized Inverse
+    Gaussian RVs (needed for the Normal-Gamma prior specification).
+
+Changes in Version 0.4
+  - First full C/C++ implementation, realized through the use of Rcpp
+    and RcppArmadillo.
+  - Added two interweaving strategies ("shallow" and "deep" interweaving)
+    to improve sampling, cf. paper for details. This finally ensures
+    convergences for certain data sets. Results without interweaving
+    do not seem to be (automatically) trustworthy.
+
+Changes in Version 0.3
+  - Now links to stochvol for efficient sampling of univariate SV
+    models.
+
+Changes in Version 0.2
+  - Bugfixes, code optimization.
+
+Changes in Version 0.1
+  - Project initiated.
+  - Fully R-based "proof of concept".
+
+TODO
+  - Vignette

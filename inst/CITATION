@@ -1,0 +1,51 @@
+## citHeader("To cite package factorstochvol in publications use:")
+
+## R >= 2.8.0 passes package metadata to citation().
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("factorstochvol")
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+citEntry(header = "To cite the current version of the package you could use:",
+         entry = "manual",
+         title = "{factorstochvol}: {B}ayesian estimation of (sparse) latent factor stochastic volatility models",
+         author = personList(as.person("Gregor Kastner")),                              
+         year = year,
+         note = note,
+         url = "https://cran.r-project.org/package=factorstochvol",
+         textVersion =
+         paste("Kastner, G.",
+   	       sprintf("(%s).", year),	 
+               "factorstochvol: Bayesian estimation of (sparse) latent factor stochastic volatility models.",
+	       paste(note, ".", sep = ""),
+               "URL: https://cran.r-project.org/package=factorstochvol")
+)
+
+citEntry(header = "To refer to the interweaving (ASIS) methodology used in factorstochvol please cite:",
+         entry = "article",
+         title = "Efficient {B}ayesian inference for multivariate factor stochastic volatility models",
+         author = personList(as.person("Gregor Kastner"),
+                             as.person("Sylvia Fr\\\"{u}hwirth-Schnatter"),
+                             as.person("Hedibert Freitas Lopes")),
+         journal = "ArXiv e-prints",
+         year = "2016",
+         url = "http://arxiv.org/abs/1602.08154",
+         eprinttype  = "arXiv",
+         eprintclass = "stat.CO",
+         eprint      = "1602.08154",
+         textVersion = "Kastner, G., S. Frühwirth-Schnatter, H. F. Lopes (2016). Efficient Bayesian inference for multivariate factor stochastic volatility models. URL: http://arxiv.org/abs/1602.08154."
+)
+
+citEntry(header = "To refer to the shrinkage methodology used in factorstochvol please cite:",
+         entry = "article",
+         title = "Sparse {B}ayesian time-varying covariance estimation in many dimensions",
+         author = personList(as.person("Gregor Kastner")),
+         journal = "ArXiv e-prints",
+         year = "2016",
+         url = "http://arxiv.org/abs/1608.08468",
+         eprinttype  = "arXiv",
+         eprintclass = "stat.ME",
+         eprint      = "1608.08468",
+         textVersion = "Kastner, G. (2016). Sparse Bayesian time-varying covariance estimation in many dimensions. URL: http://arxiv.org/abs/1608.08468."
+)
+
+citFooter("BibTeX entries of the above can be obtained by", sQuote('toBibtex(citation("factorstochvol"))'))
