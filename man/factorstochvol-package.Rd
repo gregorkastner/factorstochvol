@@ -85,28 +85,27 @@ comtimeplot(res, fsvsimobj = sim, show = 'series')
 }
 
 }
-\author{
-Gregor Kastner \email{gregor.kastner@wu.ac.at}
-}
 \references{
-Kastner, G., Frühwirth-Schnatter, S., Lopes, H. F. (2016). Efficient
-Bayesian inference for multivariate factor stochastic volatility models.
-\emph{Report 128, Research Report Series of the Institute of Statistics
-and Mathematics, WU Vienna University of Economics and Business},
-\url{http://epub.wu.ac.at/4875/}
+Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2017).
+Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models.
+\emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
+\url{https://doi.org/10.1080/10618600.2017.1322091}.
 
-Kastner, G. (2016). Sparse Bayesian time-varying covariance estimation
-in many dimensions. \emph{Working Paper}
+Kastner, G. (2018). Sparse Bayesian Time-Varying Covariance Estimation
+in Many Dimensions. \emph{Journal of Econometrics}.
+\url{https://doi.org/10.1016/j.jeconom.2018.11.007}.
 
-Kastner, G. and Frühwirth-Schnatter, S. (2014). Ancillarity-sufficiency
-interweaving strategy (ASIS) for boosting MCMC estimation of stochastic
-volatility models. \emph{Computational Statistics and Data Analysis},
-\url{http://dx.doi.org/10.1016/j.csda.2013.01.002}.
+Kastner, G. and Frühwirth-Schnatter, S. (2014). Ancillarity-Sufficiency
+Interweaving Strategy (ASIS) for Boosting MCMC Estimation of Stochastic
+Volatility Models. \emph{Computational Statistics and Data Analysis},
+\url{https://doi.org/10.1016/j.csda.2013.01.002}.
 }
 \seealso{
 \code{\link[stochvol:stochvol-package]{stochvol}}
 }
+\author{
+Gregor Kastner \email{gregor.kastner@wu.ac.at}
+}
 \keyword{models}
 \keyword{package}
 \keyword{ts}
-

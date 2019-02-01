@@ -39,4 +39,4 @@ Other plotting: \code{\link{comtimeplot}},
   \code{\link{logvartimeplot}},
   \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}}
 }
-
+\concept{plotting}

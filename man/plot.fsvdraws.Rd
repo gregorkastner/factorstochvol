@@ -34,4 +34,4 @@ Other plotting: \code{\link{comtimeplot}},
   \code{\link{logvartimeplot}},
   \code{\link{paratraceplot}}, \code{\link{voltimeplot}}
 }
-
+\concept{plotting}

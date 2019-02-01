@@ -4,8 +4,9 @@
 \alias{fsvsim}
 \title{Simulate data from a factor SV model}
 \usage{
-fsvsim(n = 1000, series = 10, factors = 1, facload = "dense", idipara,
-  facpara, heteroskedastic = rep(TRUE, series + factors), df = Inf)
+fsvsim(n = 1000, series = 10, factors = 1, facload = "dense",
+  idipara, facpara, heteroskedastic = rep(TRUE, series + factors),
+  df = Inf)
 }
 \arguments{
 \item{n}{Length of the series to be generated.}
@@ -61,4 +62,3 @@ The value returned is a list object of class \code{fsvsim} holding
 This object can be passed to many plotting functions to indicate
 the data generating processes when visualizing results.
 }
-

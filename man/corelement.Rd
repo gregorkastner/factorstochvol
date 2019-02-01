@@ -27,4 +27,4 @@ Vector with the requested correlations.
 Other simulation: \code{\link{covelement}},
   \code{\link{covmat.fsvsim}}
 }
-
+\concept{simulation}

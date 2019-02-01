@@ -21,4 +21,4 @@ from the MCMC output, or from the simulated model.
 \seealso{
 covmat.fsvsample covmat.fsvsim
 }
-
+\concept{generics}

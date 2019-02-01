@@ -66,4 +66,4 @@ Other predictors: \code{\link{predcond}},
   \code{\link{predh}}, \code{\link{predloglik}},
   \code{\link{predprecWB}}
 }
-
+\concept{predictors}

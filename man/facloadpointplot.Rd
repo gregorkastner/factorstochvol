@@ -4,8 +4,8 @@
 \alias{facloadpointplot}
 \title{Displays point estimates of the factor loadings posterior.}
 \usage{
-facloadpointplot(x, fsvsimobj = NULL, statistic = "median", cex = 6.5,
-  alpha = 0.2, allpairs = FALSE, col = NULL)
+facloadpointplot(x, fsvsimobj = NULL, statistic = "median",
+  cex = 6.5, alpha = 0.2, allpairs = FALSE, col = NULL)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -48,4 +48,4 @@ Other plotting: \code{\link{comtimeplot}},
   \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
   \code{\link{voltimeplot}}
 }
-
+\concept{plotting}

@@ -28,4 +28,4 @@ Vector with the requested covariances.
 Other simulation: \code{\link{corelement}},
   \code{\link{covmat.fsvsim}}
 }
-
+\concept{simulation}

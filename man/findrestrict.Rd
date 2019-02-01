@@ -46,4 +46,3 @@ restrict is set to 'auto'.
 \seealso{
 ledermann
 }
-

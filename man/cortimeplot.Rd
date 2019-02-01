@@ -50,4 +50,4 @@ Other plotting: \code{\link{comtimeplot}},
   \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
   \code{\link{voltimeplot}}
 }
-
+\concept{plotting}

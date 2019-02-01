@@ -60,4 +60,4 @@ covmat covmat.fsvsim
 Other extractors: \code{\link{runningcormat}},
   \code{\link{runningcovmat}}
 }
-
+\concept{extractors}

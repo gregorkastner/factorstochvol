@@ -57,4 +57,4 @@ for (i in 1:3) {
 Other extractors: \code{\link{covmat.fsvdraws}},
   \code{\link{runningcovmat}}
 }
-
+\concept{extractors}

@@ -21,4 +21,3 @@ factors which can be used for \code{\link[stats]{factanal}}.
 \seealso{
 preorder
 }
-

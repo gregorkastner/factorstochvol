@@ -44,4 +44,3 @@ second highest loading is taken).
 \seealso{
 ledermann
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/generics.R, R/utilities_other.R
 \name{logret}
 \alias{logret}
-\alias{logret.data.frame}
 \alias{logret.matrix}
+\alias{logret.data.frame}
 \title{Computes the log returns of a vector-valued time series}
 \usage{
 logret(dat, demean = FALSE, standardize = FALSE, ...)
@@ -40,7 +40,7 @@ series, with optional de-meaning.
 
 \item \code{data.frame}: (De-meaned) log returns
 }}
+
 \seealso{
 fsvsample logret.matrix logret.data.frame
 }
-

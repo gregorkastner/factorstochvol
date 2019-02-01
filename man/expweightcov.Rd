@@ -21,4 +21,3 @@ A \code{m} times \code{m} covariance matrix estimate.
 A common way to get estimates for time-varying covariance matrices
 is the compute the exponentially weighted empirical covariance matrix.
 }
-

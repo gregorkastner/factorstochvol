@@ -12,7 +12,7 @@
 #'
 #' @importFrom Rcpp evalCpp
 #'
-#  calls update:
+#  calls update_sv:
 #' @importFrom stochvol svsample
 #' 
 #  calls do_rgig:

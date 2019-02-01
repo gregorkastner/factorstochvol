@@ -5,15 +5,16 @@
 \title{Markov Chain Monte Carlo (MCMC) Sampling for the Factor Stochastic
 Volatility Model.}
 \usage{
-fsvsample(y, factors = 1, draws = 1000, burnin = 1000, priormu = c(0,
-  10), priorphiidi = c(10, 3), priorphifac = c(10, 3), priorsigmaidi = 1,
-  priorsigmafac = 1, priorfacload = 1, priorng = c(1, 1),
-  columnwise = FALSE, priorh0idi = "stationary",
+fsvsample(y, factors = 1, draws = 1000, burnin = 1000,
+  priormu = c(0, 10), priorphiidi = c(10, 3), priorphifac = c(10, 3),
+  priorsigmaidi = 1, priorsigmafac = 1, priorfacload = 1,
+  priorng = c(1, 1), columnwise = FALSE, priorh0idi = "stationary",
   priorh0fac = "stationary", thin = 1, keeptime = "last",
   runningstore = 1, runningstorethin = 10, runningstoremoments = 2,
   quiet = FALSE, restrict = "auto", interweaving = 4,
-  signswitch = FALSE, heteroskedastic = TRUE, priorhomoskedastic = NA,
-  expert, startpara, startlatent, startlatent0, startfacload, startfac)
+  signswitch = FALSE, heteroskedastic = TRUE,
+  priorhomoskedastic = NA, expert, startpara, startlatent, startlatent0,
+  startfacload, startfac)
 }
 \arguments{
 \item{y}{Data matrix. Each of \code{m} rows is assumed to contain a single
@@ -57,7 +58,7 @@ hyperprior's hyperhyperparameters \code{c} and \code{d}.}
 
 \item{columnwise}{Set to \code{TRUE} if you want to use column-wise shrinkage
 and to \code{FALSE} for row-wise shrinkage. For details please see the paper
-by Kastner et al. (2016).}
+by Kastner et al. (2017).}
 
 \item{priorh0idi}{Vector of length 1 or \code{m}, containing
 information about the Gaussian prior for the initial idiosyncratic
@@ -151,7 +152,7 @@ are accepted:
  \item{3: }{Shallow interweaving through the largest absolute entries in each column.}
  \item{4: }{Deep interweaving through the largest absolute entries in each column.}
 }
-For details please see Kastner et al. (2016).
+For details please see Kastner et al. (2017).
 A value of 4 is the highly recommended default.}
 
 \item{signswitch}{Set to \code{TRUE} to turn on a random sign switch of
@@ -259,7 +260,7 @@ stochastic volatility models in this package.
 }
 \details{
 For details concerning the factor SV algorithm please see
-Kastner et al. (2016), details about the univariate SV estimation
+Kastner et al. (2017), details about the univariate SV estimation
 can be found in Kastner and Frühwirth-Schnatter (2014).
 }
 \examples{
@@ -286,21 +287,21 @@ par(oldpar)
 
 }
 \references{
-Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2016).
-Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models
-\emph{Research Report Series / Department of Statistics and Mathematics},
-\bold{128}. \url{https://epub.wu.ac.at/4875/}.
+Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2017).
+Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models.
+\emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
+\url{http://dx.doi.org/10.1080/10618600.2017.1322091}.
 
 Kastner, G. (2016).
-Dealing with stochastic volatility in time series using the R package
+Dealing with Stochastic Volatility in Time Series Using the R Package
 stochvol.
 \emph{Journal of Statistical Software}, \bold{69}(5), 1--30,
 \url{http://dx.doi.org/10.18637/jss.v069.i05}.
 
 Kastner, G. and Frühwirth-Schnatter, S. (2014).
-Ancillarity-sufficiency interweaving strategy (ASIS) for boosting MCMC
-estimation of stochastic volatility models.
+Ancillarity-Sufficiency Interweaving Strategy (ASIS) for Boosting MCMC
+Estimation of Stochastic Volatility Models.
 \emph{Computational Statistics & Data Analysis}, \bold{76}, 408--423,
 \url{http://dx.doi.org/10.1016/j.csda.2013.01.002}.
 }
-
+\concept{wrappers}

@@ -47,4 +47,4 @@ Other plotting: \code{\link{corimageplot}},
   \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
   \code{\link{voltimeplot}}
 }
-
+\concept{plotting}

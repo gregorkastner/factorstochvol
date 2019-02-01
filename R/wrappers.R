@@ -48,7 +48,7 @@
 #'
 #' @param columnwise Set to \code{TRUE} if you want to use column-wise shrinkage
 #' and to \code{FALSE} for row-wise shrinkage. For details please see the paper
-#' by Kastner et al. (2016).
+#' by Kastner et al. (2017).
 #'
 #' @param priorh0idi Vector of length 1 or \code{m}, containing
 #' information about the Gaussian prior for the initial idiosyncratic
@@ -120,7 +120,7 @@
 #' the factor loadings
 #' matrix should be restricted to have zeros above the diagonal ("upper"), 
 #' whether all elements should be estimated from the data ("none"), or
- #' whether the function \code{\link{findrestrict}} should be invoked for a
+#' whether the function \code{\link{findrestrict}} should be invoked for a
 #' priori finding suitable zeros. Setting
 #' \code{restrict} to "upper" or "auto" often stabilizes MCMC
 #' estimation and can be important for identifying the factor loadings matrix,
@@ -142,7 +142,7 @@
 #'  \item{3: }{Shallow interweaving through the largest absolute entries in each column.}
 #'  \item{4: }{Deep interweaving through the largest absolute entries in each column.}
 #' }
-#' For details please see Kastner et al. (2016).
+#' For details please see Kastner et al. (2017).
 #' A value of 4 is the highly recommended default.
 #'
 #' @param signswitch Set to \code{TRUE} to turn on a random sign switch of
@@ -224,7 +224,7 @@
 #' latent factors.
 #' 
 #' @details For details concerning the factor SV algorithm please see
-#' Kastner et al. (2016), details about the univariate SV estimation
+#' Kastner et al. (2017), details about the univariate SV estimation
 #' can be found in Kastner and Frühwirth-Schnatter (2014).
 #' 
 #' @return 
@@ -247,20 +247,20 @@
 #' statistics currently stored in the object; the \code{plot} method
 #' \code{\link{plot.fsvdraws}} gives a graphical overview.
 #' 
-#' @references Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2016).
-#' Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models
-#' \emph{Research Report Series / Department of Statistics and Mathematics},
-#' \bold{128}. \url{https://epub.wu.ac.at/4875/}.
+#' @references Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2017).
+#' Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models.
+#' \emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
+#' \url{http://dx.doi.org/10.1080/10618600.2017.1322091}.
 #'
 #' @references Kastner, G. (2016).
-#' Dealing with stochastic volatility in time series using the R package
+#' Dealing with Stochastic Volatility in Time Series Using the R Package
 #' stochvol.
 #' \emph{Journal of Statistical Software}, \bold{69}(5), 1--30,
 #' \url{http://dx.doi.org/10.18637/jss.v069.i05}.
 #'
 #' @references Kastner, G. and Frühwirth-Schnatter, S. (2014).
-#' Ancillarity-sufficiency interweaving strategy (ASIS) for boosting MCMC
-#' estimation of stochastic volatility models.
+#' Ancillarity-Sufficiency Interweaving Strategy (ASIS) for Boosting MCMC
+#' Estimation of Stochastic Volatility Models.
 #' \emph{Computational Statistics & Data Analysis}, \bold{76}, 408--423,
 #' \url{http://dx.doi.org/10.1016/j.csda.2013.01.002}.
 #'
@@ -288,8 +288,6 @@
 #' par(oldpar)
 #' }
 #' 
-#' @useDynLib factorstochvol sampler
-#'
 #' @export
 
 fsvsample <- function(y, factors = 1, draws = 1000, burnin = 1000, 

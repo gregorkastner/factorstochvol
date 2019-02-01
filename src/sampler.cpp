@@ -19,7 +19,6 @@ double do_rgig1(double lambda, double chi, double psi) {
  return as<double>(fun(1, lambda, chi, psi));
 }
 
-
 void test(double * data, int size) {
  for (int i = 0; i < size; i++) {
   data[i] = i;

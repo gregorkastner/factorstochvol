@@ -6,19 +6,14 @@ Title: Bayesian Estimation of (Sparse) Latent Factor Stochastic
 Version: 0.9
 Authors@R: person("Gregor", "Kastner", role = c("aut", "cre"),
                   email = "gregor.kastner@wu.ac.at", comment = c(ORCID = "0000-0002-8237-8271"))
-Maintainer: Gregor Kastner <gregor.kastner@wu.ac.at>
 Description: Markov chain Monte Carlo (MCMC) sampler for fully Bayesian
-             estimation of latent factor stochastic volatility models.
+             estimation of latent factor stochastic volatility models with
+             interweaving <doi:10.1080/10618600.2017.1322091>.
              Sparsity can be achieved through the usage of Normal-Gamma priors
-             on the factor loading matrix.
+             on the factor loading matrix <doi:10.1016/j.jeconom.2018.11.007>.
 License: GPL (>= 2)
 Depends: R (>= 3.0.2)
 Imports: stochvol (>= 2.0.0), GIGrvg (>= 0.4), Rcpp (>= 1.0.0),
         corrplot, methods, grDevices, graphics, stats, utils
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7.500.0.0), stochvol
-RoxygenNote: 5.0.1
-NeedsCompilation: yes
-Packaged: 2019-01-28 10:39:42 UTC; dhosszejni
-Author: Gregor Kastner [aut, cre]
-Repository: CRAN
-Date/Publication: 2016-12-31 17:21:54
+RoxygenNote: 6.1.1

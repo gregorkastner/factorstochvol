@@ -33,4 +33,4 @@ covmat covmat.fsvsample
 Other simulation: \code{\link{corelement}},
   \code{\link{covelement}}
 }
-
+\concept{simulation}
