@@ -11,13 +11,13 @@ fsvsample(y, factors = 1, draws = 1000, burnin = 1000,
   priorng = c(1, 1), columnwise = FALSE, priorh0idi = "stationary",
   priorh0fac = "stationary", thin = 1, keeptime = "last",
   runningstore = 1, runningstorethin = 10, runningstoremoments = 2,
-  quiet = FALSE, restrict = "auto", interweaving = 4,
+  quiet = FALSE, restrict = "none", interweaving = 4,
   signswitch = FALSE, heteroskedastic = TRUE,
   priorhomoskedastic = NA, expert, startpara, startlatent, startlatent0,
   startfacload, startfac)
 }
 \arguments{
-\item{y}{Data matrix. Each of \code{m} rows is assumed to contain a single
+\item{y}{Data matrix. Each of \code{m} columns is assumed to contain a single
 (univariate) series of length \code{n}.}
 
 \item{factors}{Number of latent factors to be estimated.}
@@ -235,14 +235,14 @@ latent factors.}
 }
 \value{
 The value returned is a list object of class \code{fsvdraws} holding
- \itemize{
- \item{f}{Array containing factor draws from the posterior distribution.}
- \item{para}{Array containing parameter draws form the posterior distribution.}
- \item{h}{Array containing idiosyncratic and factor log-variance draws.}
- \item{facload}{Array containing draws from the posterior distribution of the
+ \describe{
+ \item{\code{f}}{Array containing factor draws from the posterior distribution.}
+ \item{\code{para}}{Array containing parameter draws form the posterior distribution.}
+ \item{\code{h}}{Array containing idiosyncratic and factor log-variance draws.}
+ \item{\code{facload}}{Array containing draws from the posterior distribution of the
                 factor loadings matrix.}
- \item{y}{Matrix containing the data supplied.}
- \item{runningstore}{List whose elements contain ergodic moments of certain
+ \item{\code{y}}{Matrix containing the data supplied.}
+ \item{\code{runningstore}}{List whose elements contain ergodic moments of certain
                      variables of interest. See argument
                      \code{runningstore} for details about what
                      is being stored here.}

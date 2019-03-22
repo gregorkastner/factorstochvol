@@ -227,8 +227,7 @@
 #' Kastner et al. (2017), details about the univariate SV estimation
 #' can be found in Kastner and Frühwirth-Schnatter (2014).
 #' 
-#' @return 
-#' The value returned is a list object of class \code{fsvdraws} holding
+#' @return The value returned is a list object of class \code{fsvdraws} holding
 #'  \describe{
 #'  \item{\code{f}}{Array containing factor draws from the posterior distribution.}
 #'  \item{\code{para}}{Array containing parameter draws form the posterior distribution.}
