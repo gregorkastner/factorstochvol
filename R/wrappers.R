@@ -228,17 +228,23 @@
 #' can be found in Kastner and Frühwirth-Schnatter (2014).
 #' 
 #' @return The value returned is a list object of class \code{fsvdraws} holding
-#'  \describe{
-#'  \item{\code{f}}{Array containing factor draws from the posterior distribution.}
-#'  \item{\code{para}}{Array containing parameter draws form the posterior distribution.}
-#'  \item{\code{h}}{Array containing idiosyncratic and factor log-variance draws.}
-#'  \item{\code{facload}}{Array containing draws from the posterior distribution of the
+#'  \itemize{
+#'  \item{\code{f}: }{Array containing factor draws from the posterior distribution.}
+#'  \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
+#'  \item{\code{h0}: }{Array containing idiosyncratic and factor initial log-variance draws.}
+#'  \item{\code{h}: }{Array containing idiosyncratic and factor log-variance draws.}
+#'  \item{\code{facload}: }{Array containing draws from the posterior distribution of the
 #'                 factor loadings matrix.}
-#'  \item{\code{y}}{Matrix containing the data supplied.}
-#'  \item{\code{runningstore}}{List whose elements contain ergodic moments of certain
+#'  \item{\code{y}: }{Matrix containing the data supplied.}
+#'  \item{\code{runningstore}: }{List whose elements contain ergodic moments of certain
 #'                      variables of interest. See argument
 #'                      \code{runningstore} for details about what
 #'                      is being stored here.}
+#'  \item{\code{config}: }{List containing information on configuration parameters.}
+#'  \item{\code{priors}: }{List containing prior hyperparameter values.}
+#'  \item{\code{identifier}: }{Matrix containing the indices of the series used for
+#'    ex-post sign-identification along with the corresponding minimum distances to zero.
+#'    See \code{\link{signident}} for details.}
 #' }
 #' To display the output, use \code{print}, \code{summary} and \code{plot}.
 #' The \code{print} method simply prints the posterior draws (which is very
