@@ -7,7 +7,7 @@
 #' the MCMC draws. It is the main workhorse to conduct inference for factor
 #' stochastic volatility models in this package.
 #' 
-#' @param y Data matrix. Each of \code{m} rows is assumed to contain a single
+#' @param y Data matrix. Each of \code{m} columns is assumed to contain a single
 #' (univariate) series of length \code{n}.
 #'
 #' @param factors Number of latent factors to be estimated.
@@ -229,14 +229,14 @@
 #' 
 #' @return 
 #' The value returned is a list object of class \code{fsvdraws} holding
-#'  \itemize{
-#'  \item{f}{Array containing factor draws from the posterior distribution.}
-#'  \item{para}{Array containing parameter draws form the posterior distribution.}
-#'  \item{h}{Array containing idiosyncratic and factor log-variance draws.}
-#'  \item{facload}{Array containing draws from the posterior distribution of the
+#'  \describe{
+#'  \item{\code{f}}{Array containing factor draws from the posterior distribution.}
+#'  \item{\code{para}}{Array containing parameter draws form the posterior distribution.}
+#'  \item{\code{h}}{Array containing idiosyncratic and factor log-variance draws.}
+#'  \item{\code{facload}}{Array containing draws from the posterior distribution of the
 #'                 factor loadings matrix.}
-#'  \item{y}{Matrix containing the data supplied.}
-#'  \item{runningstore}{List whose elements contain ergodic moments of certain
+#'  \item{\code{y}}{Matrix containing the data supplied.}
+#'  \item{\code{runningstore}}{List whose elements contain ergodic moments of certain
 #'                      variables of interest. See argument
 #'                      \code{runningstore} for details about what
 #'                      is being stored here.}

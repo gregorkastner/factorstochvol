@@ -1,10 +1,13 @@
+- TODO: Allow also for ones in the loadings matrix a priori (not only zeros)
+- TODO: Preparation works for including the leverage effect that became
+        available in stochvol 2.0.0.
+
 Changes in version 0.9.1
-  - TODO: Allow alos for ones in the loadings matrix a priori (not only zeros)
-  - TODO: Preparation works for including the leverage effect that became
-    available in stochvol 2.0.0.
   - Default for argument "restrict" in fsvsample is now "none". This
     alleviates the problem of (potentially) introducing arbitrary zeros which
     are not in line with the data.
+  - Fixed glitches in the documentation. Thanks to Gregor Zens for pointing
+    these out.
 
 Changes in version 0.9
   - Required changes to be compatible with stochvol 2.0.0. Concerns low-level
