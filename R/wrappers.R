@@ -806,7 +806,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
   res$mixind <- NULL
  }
  
- dimnames(res$para) <- list(c("mu", "phi", "sigma"), NULL, NULL)
+ dimnames(res$para) <- list(c("mu", "phi", "sigma", "rho"), NULL, NULL)
  
  if (!quiet) {
   cat("\n\nReorganizing runningstores... ")
