@@ -753,7 +753,7 @@ if (is.character(restrict)) {
  if (restrict == "auto") restr <- findrestrict(y, factors = factors)
 }
 
-if (length(samplefac) != 1 || !is.logical(samplefac)) {
+if (length(samplefac) != 1L || !is.logical(samplefac)) {
   stop("Argument 'samplefac' must be logical and of length one.")
 }
 
@@ -762,7 +762,7 @@ if (!isTRUE(samplefac) && isTRUE(signswitch)) {
   warning("Turning sign switching off because 'samplefac' is set to FALSE.")
 }
 
-if (!isTRUE(samplefac) && interweaving > 1L) {
+if (!isTRUE(samplefac) && interweaving != 0L) {
   interweaving <- 0L
   warning("Turning interweaving off because 'samplefac' is set to FALSE.")
 }
