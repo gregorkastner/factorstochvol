@@ -5,7 +5,7 @@
 using namespace Rcpp;
 
 static const R_CallMethodDef CallEntries[] = {
-    {"sampler", (DL_FUNC) &sampler, 31},
+    {"sampler", (DL_FUNC) &sampler, 32},
     {"predict", (DL_FUNC) &predict, 3},
     {"dmvnorm", (DL_FUNC) &dmvnorm, 4},
     {NULL, NULL, 0}

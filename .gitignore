@@ -1,12 +1,13 @@
-.o
-.so
+# Binary files
+*.o
+*.so
 
 # History files
-.Rhistory
-.Rapp.history
+*.Rhistory
+*.Rapp.history
 
 # Session Data files
-.RData
+*.RData
 
 # Example code in package build process
 *-Ex.R

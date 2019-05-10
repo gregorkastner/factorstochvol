@@ -40,7 +40,8 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   const SEXP signswitch_in, const SEXP runningstore_in,
   const SEXP runningstoreevery_in, const SEXP runningstoremoments_in,
   const SEXP columnwise_in, const SEXP heteroskedastic_in,
-  const SEXP priorhomoskedastic_in, const SEXP priorh0_in) {
+  const SEXP priorhomoskedastic_in, const SEXP priorh0_in,
+  const SEXP samplefac_in) {
 
  // note: SEXP to Rcpp conversion REUSES memory unless "clone"d
  // Rcpp to Armadillo conversion allocates NEW memory unless deact'd
@@ -61,6 +62,8 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  const bool signswitch        = as<bool>(signswitch_in);
  const int runningstore      = as<int>(runningstore_in);
  const bool columnwise        = as<bool>(columnwise_in);
+ 
+ const bool samplefac        = as<bool>(samplefac_in);
 
  NumericVector sv(heteroskedastic_in);
  NumericVector priorhomoskedastic(priorhomoskedastic_in);
@@ -855,6 +858,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   // STEP 3:
   // update the factors (T independent r-variate regressions with m observations)
 
+  if (samplefac) {
   armadraw2 = rnorm(r*T);
   for (int j = 0; j < T; j++) {
    
@@ -903,6 +907,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
      ::Rf_error("Error in run %i: Couldn't sample factors at time %i of %i", i+1, j+1, T);
    }
    }
+  }
   }
   
 

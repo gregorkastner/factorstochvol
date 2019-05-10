@@ -2,6 +2,10 @@
 - TODO: Preparation works for including the leverage effect that became
         available in stochvol 2.0.0.
 
+Changes in version 0.9.2
+  - It's now possible to turn factor sampling off. This might be useful if one
+    wants to include observed factors (instead of latent ones).
+
 Changes in version 0.9.1
   - Default for argument "restrict" in fsvsample is now "none". This
     alleviates the problem of (potentially) introducing arbitrary zeros which

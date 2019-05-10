@@ -222,6 +222,13 @@
 #' @param startfac \emph{optional} numeric matrix of dimension
 #' \code{c(factors, n)}, containing the starting values of the
 #' latent factors.
+#'
+#' @param samplefac If set to FALSE, the factors are not sampled (but 
+#' remain at their starting values forever). This might be useful if one
+#' wants to include observed factors instead of latent ones.
+#'
+#' @param signident If set to FALSE, no ex-post sign-identification is
+#' performed. Defaults to TRUE.
 #' 
 #' @details For details concerning the factor SV algorithm please see
 #' Kastner et al. (2017), details about the univariate SV estimation
@@ -313,7 +320,8 @@ fsvsample <- function(y, factors = 1, draws = 1000, burnin = 1000,
 		      priorhomoskedastic = NA,
 		      expert,
 		      startpara, startlatent, startlatent0,
-		      startfacload, startfac) {
+		      startfacload, startfac, samplefac = TRUE,
+		      signident = TRUE) {
  
  # Some error checking for y
  if (is(y, "fsvsim")) {
@@ -745,6 +753,25 @@ if (is.character(restrict)) {
  if (restrict == "auto") restr <- findrestrict(y, factors = factors)
 }
 
+if (length(samplefac) != 1 || !is.logical(samplefac)) {
+  stop("Argument 'samplefac' must be logical and of length one.")
+}
+
+if (!isTRUE(samplefac) && isTRUE(signswitch)) {
+  signswitch <- FALSE
+  warning("Turning sign switching off because 'samplefac' is set to FALSE.")
+}
+
+if (!isTRUE(samplefac) && interweaving > 1L) {
+  interweaving <- 0L
+  warning("Turning interweaving off because 'samplefac' is set to FALSE.")
+}
+
+if (!isTRUE(samplefac) && isTRUE(signident)) {
+  signident <- FALSE
+  warning("Turning ex-post sign-identification off because 'samplefac' is set to FALSE.")
+}
+
 restrinv <- matrix(as.integer(!restr), nrow = nrow(restr), ncol = ncol(restr))
 
 startval <- list(facload = startfacload,
@@ -764,7 +791,7 @@ res <- .Call("sampler", t(y), draws, burnin, startval,
 	myoffset, truncnormal,
 	restrinv, interweaving, signswitch, runningstore,
 	runningstorethin, runningstoremoments, columnwise,
-	heteroskedastic, priorhomoskedastic, priorh0,
+	heteroskedastic, priorhomoskedastic, priorh0, samplefac,
 	PACKAGE = "factorstochvol")
 
 res$y <- y
@@ -786,7 +813,8 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    startlatent = startlatent,
 		    startlatent0 = startlatent0,
 		    startfacload = startfacload,
-		    startfac = startfac)
+		    startfac = startfac,
+                    samplefac = samplefac)
  res$priors <- list(priormu = priormu,
 		    priorphiidi = priorphiidi,
 		    priorphifac = priorphifac,
@@ -879,12 +907,14 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
  
  class(res) <- "fsvdraws"
 
+ if (signident) {
  if (!quiet) {
   cat("Ex-post sign-identification... ")
   flush.console()
  }
 
  res <- signident(res)
+ }
 
  if (!quiet) {
   cat("Done!\n")
