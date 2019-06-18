@@ -87,7 +87,7 @@ comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
 #' to \code{\link{fsvsample}}.
 #' @param these Index vector containing the time points to plot. Defaults
 #' to \code{seq_len(nrow(x$y))}, i.e., all timepoints.
-#' @param legend Where to position the \code{link{legend}}. 
+#' @param legend Where to position the \code{\link{legend}}. 
 #' If set to NULL, labels will be put directly next to the series.
 #' Defaults to "topright".
 #' @param ... Additional parameters will be passed on to \code{\link{ts.plot}}.
