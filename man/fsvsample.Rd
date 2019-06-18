@@ -14,7 +14,7 @@ fsvsample(y, factors = 1, draws = 1000, burnin = 1000,
   quiet = FALSE, restrict = "none", interweaving = 4,
   signswitch = FALSE, heteroskedastic = TRUE,
   priorhomoskedastic = NA, expert, startpara, startlatent, startlatent0,
-  startfacload, startfac, samplefac = TRUE)
+  startfacload, startfac, samplefac = TRUE, signident = TRUE)
 }
 \arguments{
 \item{y}{Data matrix. Each of \code{m} columns is assumed to contain a single
@@ -236,6 +236,9 @@ latent factors.}
 \item{samplefac}{If set to FALSE, the factors are not sampled (but 
 remain at their starting values forever). This might be useful if one
 wants to include observed factors instead of latent ones.}
+
+\item{signident}{If set to FALSE, no ex-post sign-identification is
+performed. Defaults to TRUE.}
 }
 \value{
 The value returned is a list object of class \code{fsvdraws} holding

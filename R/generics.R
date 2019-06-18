@@ -1,7 +1,11 @@
 #' Generic extraction of covariance matrix
 #' 
 #' Generic function for extracting model-implied covariance matrices, either
-#' from the MCMC output, or from the simulated model.
+#' from the MCMC output, or from the simulated model. Details about the
+#' function's behavior can be found in  \code{\link{covmat.fsvsdraws}}
+#' (the function invoked when applied to MCMC output) or
+#' \code{\link{covmat.fsvsim}} (the function invoked when applied to a
+#' simulated model.
 #'
 #' @param x An object of class \code{fsvdraws} or \code{fsvsim}.
 #' @param ... Arguments to be passed to methods.
@@ -10,7 +14,7 @@
 #'
 #' @family generics
 #'
-#' @seealso covmat.fsvsample covmat.fsvsim
+#' @seealso \code{\link{covmat.fsvsdraws}} \code{\link{covmat.fsvsim}}
 #'
 #' @export
 
