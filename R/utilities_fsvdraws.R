@@ -566,7 +566,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE) {
  r <- nrow(x$f)
  n <- dim(predobj)[3]
  if (!is.numeric(y) || !is.matrix(y) || ncol(y) != m || nrow(y) != length(ahead))
-  stop("Argument 'y' must be a matrix of dimension c(length(ahead), nrow(x$y)).")
+  stop("Argument 'y' must be a matrix of dimension c(length(ahead), ncol(x$y)).")
  ret <- array(NA_real_, dim = c(n, length(ahead)))
  realret <- rep(NA_real_, length(ahead))
  names(realret) <- ahead
@@ -640,7 +640,7 @@ predloglikWB <- function(x, y, ahead = 1, each = 1, alldraws = FALSE) {
  m <- ncol(x$y)
  r <- nrow(x$f)
  if (!is.numeric(y) || !is.matrix(y) || ncol(y) != m || nrow(y) != length(ahead))
-  stop("Argument 'y' must be a matrix of dimension c(length(ahead), nrow(x$y)).")
+  stop("Argument 'y' must be a matrix of dimension c(length(ahead), ncol(x$y)).")
  ret <- array(NA_real_, dim = c(dim(covinvdet$precisionlogdet)[1], length(ahead)))
  realret <- rep(NA_real_, length(ahead))
  names(realret) <- ahead
