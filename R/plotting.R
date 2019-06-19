@@ -67,7 +67,7 @@ comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
    title(paste0("Joint communalities (mean +/- 2sd)"))
    if (!is.null(fsvsimobj)) lines(colMeans(communalities), col = 3)
   } else {
-   title(paste0("Communalities of series ", i, " (", snames[i], ", mean +/- 2sd)"))
+   title(paste0("Communalities of series ", i, " (", snames[i], ", mean +/- 2sd)"), font.main = 1)
    if (!is.null(fsvsimobj)) lines(communalities[i,], col = 3)
   }
  }
@@ -651,9 +651,9 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
   axis(1, labels = dates[ats], at = ats)
 
   if (i <= m) {
-   title(paste0("Idiosyncratic log-variance of series ", i, " (", snames[i], ", mean +/- 2sd)"))
+   title(paste0("Idiosyncratic log-variance of series ", i, " (", snames[i], ", mean +/- 2sd)"), font.main = 1)
   } else {
-   title(paste("Log-variance of factor", i-m, "(mean +/- 2sd)"))
+   title(paste("Log-variance of factor", i-m, "(mean +/- 2sd)"), font.main = 1)
   }
   if (!is.null(fsvsimobj)) {
    if (i <= m) {
