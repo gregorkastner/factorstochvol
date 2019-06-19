@@ -5,6 +5,7 @@
 Changes in version 0.9.2
   - It's now possible to turn factor sampling off. This might be useful if one
     wants to include observed factors (instead of latent ones).
+  - TODO: Change argument structure for loadings priors.
 
 Changes in version 0.9.1
   - Default for argument "restrict" in fsvsample is now "none". This
