@@ -64,10 +64,10 @@ comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
   axis(1, labels = dates[ats], at = ats)
 
   if (i == m+1) {
-   mtext(paste0("Joint communalities (mean +/- 2sd)"), cex = 1.5, line = .3)
+   title(paste0("Joint communalities (mean +/- 2sd)"))
    if (!is.null(fsvsimobj)) lines(colMeans(communalities), col = 3)
   } else {
-   mtext(paste0("Communalities of series ", i, " (", snames[i], ", mean +/- 2sd)"), cex = 0.8)
+   title(paste0("Communalities of series ", i, " (", snames[i], ", mean +/- 2sd)"))
    if (!is.null(fsvsimobj)) lines(communalities[i,], col = 3)
   }
  }
@@ -636,9 +636,9 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
 
  oldpar <- par(mfrow = c(min(maxrows, max(r, 1)), 1), mgp = c(2, .5, 0), mar = c(1.5, 1.5, 1.5, 0.5))
 
- if (show == "both") thesei <- c(m + seq_len(r), 1:m)
+ if (show == "both") thesei <- c(m + seq_len(r), seq_len(m))
  else if (show == "fac") thesei <- m + seq_len(r)
- else if (show == "idi") thesei <- 1:m
+ else if (show == "idi") thesei <- seq_len(m)
 
  for (i in thesei) {
   if (i == 1) par(mfrow = c(min(maxrows, m), 1))
@@ -651,9 +651,9 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
   axis(1, labels = dates[ats], at = ats)
 
   if (i <= m) {
-   mtext(paste0("Idiosyncratic log-variance of series ", i, " (", snames[i], ", mean +/- 2sd)"), cex = 1.4, line = .1)
+   title(paste0("Idiosyncratic log-variance of series ", i, " (", snames[i], ", mean +/- 2sd)"))
   } else {
-   mtext(paste("Log-variance of factor", i-m, "(mean +/- 2sd)"), cex = 1.4, line = .1)
+   title(paste("Log-variance of factor", i-m, "(mean +/- 2sd)"))
   }
   if (!is.null(fsvsimobj)) {
    if (i <= m) {
@@ -1034,9 +1034,9 @@ corplot <- function(x, fsvsimobj = NULL, these = 1:(ncol(x$y)*(ncol(x$y)-1)/2), 
 
   whiches <- as.numeric(unlist(strsplit(dimnames(x$runningstore$cor)[[2]][i], "_")))
 
-  mtext(paste0("Estimated correlation of series ", whiches[2], " (",
+  main(paste0("Estimated correlation of series ", whiches[2], " (",
 	       snames[whiches[2]], ") and series ", whiches[1], " (",
-	       snames[whiches[1]], ") (mean +/- 2sd)"), cex = 0.8)
+	       snames[whiches[1]], ") (mean +/- 2sd)"))
   
   if (!is.null(fsvsimobj)) {
    lines(corelement(fsvsimobj, whiches[1], whiches[2], these = times), col = 3)
