@@ -651,9 +651,9 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
   axis(1, labels = dates[ats], at = ats)
 
   if (i <= m) {
-   mtext(paste0("Idiosyncratic log-variance of series ", i, " (", snames[i], ", mean +/- 2sd)"), cex = 0.8)
+   mtext(paste0("Idiosyncratic log-variance of series ", i, " (", snames[i], ", mean +/- 2sd)"), cex = 1.4, line = .1)
   } else {
-   mtext(paste("Log-variance of factor", i-m, "(mean +/- 2sd)"), cex = 0.8)
+   mtext(paste("Log-variance of factor", i-m, "(mean +/- 2sd)"), cex = 1.4, line = .1)
   }
   if (!is.null(fsvsimobj)) {
    if (i <= m) {
