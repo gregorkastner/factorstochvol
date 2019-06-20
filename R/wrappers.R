@@ -226,7 +226,7 @@
 #' factor loadings.
 #'
 #' @param startfac \emph{optional} numeric matrix of dimension
-#' \code{c(n, factors)}, containing the starting values of the
+#' \code{c(factors, n)}, containing the starting values of the
 #' latent factors.
 #'
 #' @param samplefac If set to FALSE, the factors are not sampled (but 
@@ -313,26 +313,40 @@
 #' 
 #' @export
 
-fsvsample <- function(y, factors = 1, draws = 1000, burnin = 1000, 
-		      priormu = c(0, 10),
-		      priorphiidi = c(10, 3), priorphifac = c(10, 3),
-		      priorsigmaidi = 1, priorsigmafac = 1,
-		      priorfacload = 1,
-                      priorfacloadtype = "normal", 
+fsvsample <- function(y,
+		      factors = 1,
+		      draws = 10000,
+		      thin = 1,
+		      burnin = 10000, 
+		      restrict = "none",
+                      priorfacloadtype = "rowwiseng", 
+		      priorfacload = .1,
 		      priorng = c(1, 1),
+		      priormu = c(0, 10),
+		      priorphiidi = c(10, 3),
+		      priorphifac = c(10, 3),
+		      priorsigmaidi = 1,
+		      priorsigmafac = 1,
 		      priorh0idi = "stationary",
 		      priorh0fac = "stationary",
-		      thin = 1,
-		      keeptime = "last", runningstore = 1,
-		      runningstorethin = 10, runningstoremoments = 2,
-		      quiet = FALSE, restrict = "none", interweaving = 4,
-		      signswitch = FALSE, 
+		      keeptime = "last",
 		      heteroskedastic = TRUE,
 		      priorhomoskedastic = NA,
+		      samplefac = TRUE,
+		      runningstore = 6,
+		      runningstorethin = 10,
+		      runningstoremoments = 2,
+		      signident = TRUE,
+		      signswitch = FALSE, 
+		      interweaving = 4,
+		      quiet = FALSE,
 		      expert,
-		      startpara, startlatent, startlatent0,
-		      startfacload, startfac, samplefac = TRUE,
-		      signident = TRUE) {
+		      startpara,
+		      startlatent,
+		      startlatent0,
+		      startfacload,
+		      startfac
+		      ) {
  
  # Some error checking for y
  if (is(y, "fsvsim")) {
@@ -741,11 +755,11 @@ if (missing(startfacload)) {
 
 # Some input checking for startfac
 if (missing(startfac)) {
- startfac <- matrix(rnorm(factors*n, 0, sd=.1), ncol=factors)
+ startfac <- matrix(rnorm(factors*n, 0, sd=.1), nrow=factors)
 } else {
  if (!is.numeric(startfac) || !is.matrix(startfac) ||
-     ncol(startfac) != factors || (nrow(startfac) != n && factors >= 1))
-  stop("Argument 'startfac' must be a numeric matrix of dimension c(nrow(y), factors).")
+     nrow(startfac) != factors || (ncol(startfac) != n && factors >= 1))
+  stop("Argument 'startfac' must be a numeric matrix of dimension c(factors, nrow(y)).")
 }
 
 if (is.numeric(runningstore) && length(runningstore) == 1 && runningstore >= 0 && runningstore <= 6) {
@@ -821,7 +835,7 @@ if (!isTRUE(samplefac) && isTRUE(signident)) {
 restrinv <- matrix(as.integer(!restr), nrow = nrow(restr), ncol = ncol(restr))
 
 startval <- list(facload = startfacload,
-		 fac = t(startfac),
+		 fac = startfac,
 		 para = startpara,
 		 latent = startlatent,
 		 latent0 = startlatent0,
@@ -859,7 +873,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    startlatent = startlatent,
 		    startlatent0 = startlatent0,
 		    startfacload = startfacload,
-		    startfac = t(startfac),
+		    startfac = startfac,
                     samplefac = samplefac)
  res$priors <- list(priormu = priormu,
 		    priorphiidi = priorphiidi,

@@ -5,16 +5,17 @@
 \title{Markov Chain Monte Carlo (MCMC) Sampling for the Factor Stochastic
 Volatility Model.}
 \usage{
-fsvsample(y, factors = 1, draws = 1000, burnin = 1000,
-  priormu = c(0, 10), priorphiidi = c(10, 3), priorphifac = c(10, 3),
-  priorsigmaidi = 1, priorsigmafac = 1, priorfacload = 1,
-  priorfacloadtype = "normal", priorng = c(1, 1),
-  priorh0idi = "stationary", priorh0fac = "stationary", thin = 1,
-  keeptime = "last", runningstore = 1, runningstorethin = 10,
-  runningstoremoments = 2, quiet = FALSE, restrict = "none",
-  interweaving = 4, signswitch = FALSE, heteroskedastic = TRUE,
-  priorhomoskedastic = NA, expert, startpara, startlatent, startlatent0,
-  startfacload, startfac, samplefac = TRUE, signident = TRUE)
+fsvsample(y, factors = 1, draws = 10000, thin = 1, burnin = 10000,
+  restrict = "none", priorfacloadtype = "rowwiseng",
+  priorfacload = 0.1, priorng = c(1, 1), priormu = c(0, 10),
+  priorphiidi = c(10, 3), priorphifac = c(10, 3), priorsigmaidi = 1,
+  priorsigmafac = 1, priorh0idi = "stationary",
+  priorh0fac = "stationary", keeptime = "last",
+  heteroskedastic = TRUE, priorhomoskedastic = NA, samplefac = TRUE,
+  runningstore = 6, runningstorethin = 10, runningstoremoments = 2,
+  signident = TRUE, signswitch = FALSE, interweaving = 4,
+  quiet = FALSE, expert, startpara, startlatent, startlatent0,
+  startfacload, startfac)
 }
 \arguments{
 \item{y}{Data matrix. Each of \code{m} columns is assumed to contain a single
@@ -24,7 +25,50 @@ fsvsample(y, factors = 1, draws = 1000, burnin = 1000,
 
 \item{draws}{Number of MCMC draws kept after burn-in.}
 
+\item{thin}{Single number greater or equal to 1, coercible to integer.
+Every \code{thin}th MCMC draw is kept and returned. The default value
+is 1, corresponding to no thinning of the draws, i.e. every draw is
+stored.}
+
 \item{burnin}{Number of initial MCMC draws to be discarded.}
+
+\item{restrict}{Either "upper", "none", or "auto", indicating whether
+the factor loadings
+matrix should be restricted to have zeros above the diagonal ("upper"), 
+whether all elements should be estimated from the data ("none"), or
+whether the function \code{\link{findrestrict}} should be invoked for a
+priori finding suitable zeros. Setting
+\code{restrict} to "upper" or "auto" often stabilizes MCMC
+estimation and can be important for identifying the factor loadings matrix,
+however, it generally is a strong prior assumption. Setting
+\code{restrict} to "none" is usually the preferred option if identification
+of the factor loadings matrix is of less concern but covariance estimation
+or prediction is the goal. Alternatively, \code{restrict} can be a
+logical matrix
+of dimension \code{c(m, r)} indicating which elements should be unrestricted
+(where \code{restrict} is \code{FALSE}) or zero (where \code{restrict} is
+\code{TRUE}).}
+
+\item{priorfacloadtype}{Can be \code{"normal"} (the default), \code{"rowwiseng"}, 
+\code{"colwiseng"}.
+\itemize{
+ \item{\code{"normal"}: }{Default normal prior. The value of \code{priorfacload}
+                          is interpreted as the standard deviations of the
+                          Gaussian prior distributions for the factor loadings.}
+ \item{\code{"rowwiseng"}: }{Row-wise Normal-Gamma prior. The value of \code{priorfacload}
+                             is interpreted as the shrinkage parameter \code{a}.}
+ \item{\code{"colwiseng"}: }{Column-wise Normal-Gamma prior. The value of \code{priorfacload}
+                             is interpreted as the shrinkage parameter \code{a}.}
+}
+For details please see Kastner (2019).}
+
+\item{priorfacload}{Either a matrix of dimensions \code{m} times \code{factors}
+with positive elements or a single number (which will be recycled accordingly).
+The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
+and is explained there.}
+
+\item{priorng}{Two-element vector with positive entries indicating the Normal-Gamma
+prior's hyperhyperparameters \code{c} and \code{d}.}
 
 \item{priormu}{Vector of length 2 denoting prior mean and standard deviation
 for unconditional levels of the idiosyncratic log-variance processes.}
@@ -44,27 +88,6 @@ one element, it will be recycled for all idiosyncratic log-variances.}
 \item{priorsigmafac}{Vector of length \code{factors} containing the
 prior volatilities of log-variances. If \code{priorsigmafac} has exactly
 one element, it will be recycled for all factor log-variances.}
-
-\item{priorfacload}{Either a matrix of dimensions \code{m} times \code{factors}
-with positive elements or a single number (which will be recycled accordingly).
-The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
-and is explained there.}
-
-\item{priorfacloadtype}{Can be \code{"normal"} (the default), \code{"rowwiseng"}, 
-\code{"colwiseng"}.
-\itemize{
- \item{\code{"normal"}: }{Default normal prior. The value of \code{priorfacload}
-                          is interpreted as the standard deviations of the
-                          Gaussian prior distributions for the factor loadings.}
- \item{\code{"rowwiseng"}: }{Row-wise Normal-Gamma prior. The value of \code{priorfacload}
-                             is interpreted as the shrinkage parameter \code{a}.}
- \item{\code{"colwiseng"}: }{Column-wise Normal-Gamma prior. The value of \code{priorfacload}
-                             is interpreted as the shrinkage parameter \code{a}.}
-}
-For details please see Kastner (2019).}
-
-\item{priorng}{Two-element vector with positive entries indicating the Normal-Gamma
-prior's hyperhyperparameters \code{c} and \code{d}.}
 
 \item{priorh0idi}{Vector of length 1 or \code{m}, containing
 information about the Gaussian prior for the initial idiosyncratic
@@ -88,11 +111,6 @@ If an element of
 initial log volatility is taken to be from the stationary distribution, i.e.
 h0 is assumed to be Gaussian with mean 0 and variance $sigma^2/(1-phi^2)$.}
 
-\item{thin}{Single number greater or equal to 1, coercible to integer.
-Every \code{thin}th MCMC draw is kept and returned. The default value
-is 1, corresponding to no thinning of the draws, i.e. every draw is
-stored.}
-
 \item{keeptime}{Either a number coercible to a positive integer, or a string
 equal to "all" or "last". If a number different from 1 is provided, only every
 \code{keeptime}th latent log-volatility is being monitored. If, e.g.,
@@ -102,6 +120,25 @@ be kept. If \code{keeptime} is set to "all", this is equivalent to setting it
 to 1. If
 \code{keeptime} is set to "last" (the default), only draws for the very last
 latent log-variances h_n are kept.}
+
+\item{heteroskedastic}{Vector of length 1, 2, or \code{m + factors},
+containing logical values indicating whether time-varying
+(\code{heteroskedastic = TRUE}) or constant (\code{heteroskedastic = FALSE})
+variance should be estimated.
+If \code{heteroskedastic} is of length 2 it will be recycled accordingly,
+whereby the first element is used for all idiosyncratic variances and
+the second element is used for all factor variances.}
+
+\item{priorhomoskedastic}{Only used if at least one element of
+\code{heteroskedastic} is set to \code{FALSE}. In that case,
+\code{priorhomoskedastic} must be must be a matrix with positive entries
+and dimension c(factors + m, 2). Values in column 1 will be interpreted as
+shape and values in column 2 will be interpreted as the rate parameter
+of the corresponding inverse gamma prior distribution.}
+
+\item{samplefac}{If set to FALSE, the factors are not sampled (but 
+remain at their starting values forever). This might be useful if one
+wants to include observed factors instead of latent ones.}
 
 \item{runningstore}{Because most machines these days do not have enough memory
 to store all draws for all points in time, setting \code{runningstore} to an
@@ -128,26 +165,12 @@ at every MCMC iteration.}
 \item{runningstoremoments}{Selects how many running moments (up to 4) should be
 calculated.}
 
-\item{quiet}{Logical value indicating whether the progress bar and other
-informative output during sampling should be omitted. The default
-value is \code{FALSE}, implying verbose output.}
+\item{signident}{If set to FALSE, no ex-post sign-identification is
+performed. Defaults to TRUE.}
 
-\item{restrict}{Either "upper", "none", or "auto", indicating whether
-the factor loadings
-matrix should be restricted to have zeros above the diagonal ("upper"), 
-whether all elements should be estimated from the data ("none"), or
-whether the function \code{\link{findrestrict}} should be invoked for a
-priori finding suitable zeros. Setting
-\code{restrict} to "upper" or "auto" often stabilizes MCMC
-estimation and can be important for identifying the factor loadings matrix,
-however, it generally is a strong prior assumption. Setting
-\code{restrict} to "none" is usually the preferred option if identification
-of the factor loadings matrix is of less concern but covariance estimation
-or prediction is the goal. Alternatively, \code{restrict} can be a
-logical matrix
-of dimension \code{c(m, r)} indicating which elements should be unrestricted
-(where \code{restrict} is \code{FALSE}) or zero (where \code{restrict} is
-\code{TRUE}).}
+\item{signswitch}{Set to \code{TRUE} to turn on a random sign switch of
+factors and loadings. Note that the signs of each factor loadings matrix column
+and the corresponding factor cannot be identified from the likelihood.}
 
 \item{interweaving}{The following values for interweaving the factor loadings
 are accepted:
@@ -161,24 +184,9 @@ are accepted:
 For details please see Kastner et al. (2017).
 A value of 4 is the highly recommended default.}
 
-\item{signswitch}{Set to \code{TRUE} to turn on a random sign switch of
-factors and loadings. Note that the signs of each factor loadings matrix column
-and the corresponding factor cannot be identified from the likelihood.}
-
-\item{heteroskedastic}{Vector of length 1, 2, or \code{m + factors},
-containing logical values indicating whether time-varying
-(\code{heteroskedastic = TRUE}) or constant (\code{heteroskedastic = FALSE})
-variance should be estimated.
-If \code{heteroskedastic} is of length 2 it will be recycled accordingly,
-whereby the first element is used for all idiosyncratic variances and
-the second element is used for all factor variances.}
-
-\item{priorhomoskedastic}{Only used if at least one element of
-\code{heteroskedastic} is set to \code{FALSE}. In that case,
-\code{priorhomoskedastic} must be must be a matrix with positive entries
-and dimension c(factors + m, 2). Values in column 1 will be interpreted as
-shape and values in column 2 will be interpreted as the rate parameter
-of the corresponding inverse gamma prior distribution.}
+\item{quiet}{Logical value indicating whether the progress bar and other
+informative output during sampling should be omitted. The default
+value is \code{FALSE}, implying verbose output.}
 
 \item{expert}{\emph{optional} named list of expert parameters for the
 univariate SV models (will be passed to the \code{stochvol} package). For most
@@ -236,15 +244,8 @@ log-variances.}
 factor loadings.}
 
 \item{startfac}{\emph{optional} numeric matrix of dimension
-\code{c(n, factors)}, containing the starting values of the
+\code{c(factors, n)}, containing the starting values of the
 latent factors.}
-
-\item{samplefac}{If set to FALSE, the factors are not sampled (but 
-remain at their starting values forever). This might be useful if one
-wants to include observed factors instead of latent ones.}
-
-\item{signident}{If set to FALSE, no ex-post sign-identification is
-performed. Defaults to TRUE.}
 }
 \value{
 The value returned is a list object of class \code{fsvdraws} holding
