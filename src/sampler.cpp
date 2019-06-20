@@ -167,12 +167,6 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  const NumericVector cShrink = shrinkagepriors["c"];
  const NumericVector dShrink = shrinkagepriors["d"];
 
- bool ngprior;
- if (r > 0 && !NumericVector::is_na(aShrink(0))) {
-  ngprior = true;
- } else {
-  ngprior = false;
- }
 
  int nlambda;
  if (ngprior) {

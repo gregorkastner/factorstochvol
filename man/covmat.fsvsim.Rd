@@ -28,7 +28,7 @@ Currently crudely implemented as an R loop over all time points,
 may be slow.
 }
 \seealso{
-covmat covmat.fsvsample
+covmat covmat.fsvdraws
 
 Other simulation: \code{\link{corelement}},
   \code{\link{covelement}}

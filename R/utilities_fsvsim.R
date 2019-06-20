@@ -17,7 +17,7 @@
 #'
 #' @family simulation
 #'
-#' @seealso covmat covmat.fsvsample
+#' @seealso covmat covmat.fsvdraws
 #'
 #' @export
 

@@ -61,7 +61,7 @@ and is explained there.}
  \item{\code{"colwiseng"}: }{Column-wise Normal-Gamma prior. The value of \code{priorfacload}
                              is interpreted as the shrinkage parameter \code{a}.}
 }
-For details please see the paper by Kastner (2016).}
+For details please see Kastner (2019).}
 
 \item{priorng}{Two-element vector with positive entries indicating the Normal-Gamma
 prior's hyperhyperparameters \code{c} and \code{d}.}
@@ -236,7 +236,7 @@ log-variances.}
 factor loadings.}
 
 \item{startfac}{\emph{optional} numeric matrix of dimension
-\code{c(factors, n)}, containing the starting values of the
+\code{c(n, factors)}, containing the starting values of the
 latent factors.}
 
 \item{samplefac}{If set to FALSE, the factors are not sampled (but 
