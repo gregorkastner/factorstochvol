@@ -51,7 +51,7 @@
 #'  \item{\code{"colwiseng"}: }{Column-wise Normal-Gamma prior. The value of \code{priorfacload}
 #'                              is interpreted as the shrinkage parameter \code{a}.}
 #' }
-#' For details please see the paper by Kastner (2016).
+#' For details please see Kastner (2019).
 #'
 #' @param priorng Two-element vector with positive entries indicating the Normal-Gamma
 #' prior's hyperhyperparameters \code{c} and \code{d}.
@@ -226,7 +226,7 @@
 #' factor loadings.
 #'
 #' @param startfac \emph{optional} numeric matrix of dimension
-#' \code{c(factors, n)}, containing the starting values of the
+#' \code{c(n, factors)}, containing the starting values of the
 #' latent factors.
 #'
 #' @param samplefac If set to FALSE, the factors are not sampled (but 
@@ -495,8 +495,8 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
  }
 
  if(is.matrix(priorfacload)) {
-  if(nrow(priorfacload) != m || ncol(priorfacload) != factors || any(priorfacload < 0)) {
-   stop("If argument 'priorfacload' is a matrix, it must be of appropriate dimensions and nonnegative.")
+  if(nrow(priorfacload) != m || ncol(priorfacload) != factors) {
+   stop("If argument 'priorfacload' is a matrix, it must be of appropriate dimensions.")
   }
   if (priorfacloadtype == "normal") {
    pfl <- 1L

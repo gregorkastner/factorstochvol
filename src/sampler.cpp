@@ -64,10 +64,6 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  
  const bool samplefac        = as<bool>(samplefac_in);
 
- NumericVector sv(heteroskedastic_in);
- NumericVector priorhomoskedastic(priorhomoskedastic_in);
- NumericVector priorh0(priorh0_in);
-
  //current factor loadings matrix draws
  NumericMatrix curfacload = startval["facload"];
  
