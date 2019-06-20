@@ -5,7 +5,8 @@
 \title{Evaluates the predictive log likelihood using the predicted
 covariance matrix}
 \usage{
-predloglik(x, y, ahead = 1, each = 1, alldraws = FALSE)
+predloglik(x, y, ahead = 1, each = 1, alldraws = FALSE,
+  indicator = rep(TRUE, ncol(y)))
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -23,6 +24,10 @@ for each draw that has been stored during MCMC sampling.}
 
 \item{alldraws}{Should all the draws be returned or just the final results?
 (Can be useful to assess convergence.)}
+
+\item{indicator}{Logical vector of length \code{m} indicating which
+component series should be evaluated. The default is to evaluate
+all of them.}
 }
 \value{
 Vector of length \code{length(ahead)} with log predictive

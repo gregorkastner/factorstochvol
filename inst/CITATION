@@ -29,7 +29,7 @@ citEntry(header = "To refer to the interweaving (ASIS) methodology used in facto
          journal = "Journal of Computational and Graphical Statistics",
          year = "2017",
          volume = "26",
-         issue = "4",
+         number = "4",
          pages = "905--917",
          doi = "10.1080/10618600.2017.1322091",
          textVersion = "Kastner, G., S. Frühwirth-Schnatter, H. F. Lopes (2017). Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models. Journal of Computational and Graphical Statistics, 26(4), 905-917. https://doi.org/10.1080/10618600.2017.1322091."
@@ -40,9 +40,12 @@ citEntry(header = "To refer to the shrinkage methodology used in factorstochvol 
          title = "Sparse {B}ayesian Time-Varying Covariance Estimation in Many Dimensions",
          author = personList(as.person("Gregor Kastner")),
          journal = "Journal of Econometrics",
-         year = "2018",
+         year = "2019",
+	 volume = "210",
+	 number = "1",
+	 pages = "98--115",
          doi = "10.1016/j.jeconom.2018.11.007",
-         textVersion = "Kastner, G. (2018). Sparse Bayesian Time-Varying Covariance Estimation in Many Dimensions. Journal of Econometrics. https://doi.org/10.1016/j.jeconom.2018.11.007"
+         textVersion = "Kastner, G. (2019). Sparse Bayesian Time-Varying Covariance Estimation in Many Dimensions. Journal of Econometrics, 210(1), 98-115. https://doi.org/10.1016/j.jeconom.2018.11.007"
 )
 
 citFooter("BibTeX entries of the above can be obtained by", sQuote('toBibtex(citation("factorstochvol"))'))

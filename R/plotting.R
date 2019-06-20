@@ -149,6 +149,8 @@ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
 #' with the series ordering. Other keywords
 #' (e.g. \code{'hclust'}) will be forwarded to
 #' \code{\link[corrplot]{corrMatOrder}}.
+#' @param these4order Index vector containing the time points used for
+#' ordering. Probably, the default (\code{these}) is what you want.
 #' @param plotdatedist Numerical value indicating where the dates should
 #' be plotted.
 #' @param plotCI String. If not equal to 'n', posterior credible regions are
@@ -173,6 +175,7 @@ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
 #' @export
 
 corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
+			 these4order = these,
 			 plotdatedist = 0, plotCI = 'n', date.cex = 1.5, col = NULL,
 			 fsvsimobj = NULL, plottype = "corrplot", ...) {
  type <- "cor"
@@ -194,9 +197,9 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
  if (!is.numeric(these) || min(these) < 1 || max(these) > n) stop("Illegal argument value 'these'.")
  
  if (order != 'none' && order != 'original') {
-  orderthis <- matrix(NA_real_, nrow = length(these), ncol = m)
-  for (i in seq(along = these)) {
-   this <- runningcormat(x, these[i], type = type, statistic = "mean")
+  orderthis <- matrix(NA_real_, nrow = length(these4order), ncol = m)
+  for (i in seq(along = these4order)) {
+   this <- runningcormat(x, these4order[i], type = type, statistic = "mean")
    orderthis[i,] <- corrplot::corrMatOrder(this, order = order)
   }
  } else orderthis <- matrix(1:m, nrow = length(these), ncol = m, byrow = TRUE)
@@ -1034,7 +1037,7 @@ corplot <- function(x, fsvsimobj = NULL, these = 1:(ncol(x$y)*(ncol(x$y)-1)/2), 
 
   whiches <- as.numeric(unlist(strsplit(dimnames(x$runningstore$cor)[[2]][i], "_")))
 
-  main(paste0("Estimated correlation of series ", whiches[2], " (",
+  title(paste0("Estimated correlation of series ", whiches[2], " (",
 	       snames[whiches[2]], ") and series ", whiches[1], " (",
 	       snames[whiches[1]], ") (mean +/- 2sd)"))
   

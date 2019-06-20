@@ -36,19 +36,25 @@
 #' one element, it will be recycled for all factor log-variances.
 #'
 #' @param priorfacload Either a matrix of dimensions \code{m} times \code{factors}
-#' with nonnegative elements or a single number. If a matrix is provided, its
-#' elements are the standard deviations of the Gaussian prior distributions for
-#' the factor loadings. If a single nonnegative number is provided, it will be
-#' recycled accordingly. If a single negative number is provided, a Normal-Gamma
-#' shrinkage prior for the factor loadings is assumed, where \code{-priorfacload}
-#' is interpreted as the shrinkage parameter \code{a}.
+#' with positive elements or a single number (which will be recycled accordingly).
+#' The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
+#' and is explained there.
 #'
-#' @param priorng Two-element vector with positive entries indicating the Gamma
-#' hyperprior's hyperhyperparameters \code{c} and \code{d}.
+#' @param priorfacloadtype Can be \code{"normal"} (the default), \code{"rowwiseng"}, 
+#' \code{"colwiseng"}.
+#' \itemize{
+#'  \item{\code{"normal"}: }{Default normal prior. The value of \code{priorfacload}
+#'                           is interpreted as the standard deviations of the
+#'                           Gaussian prior distributions for the factor loadings.}
+#'  \item{\code{"rowwiseng"}: }{Row-wise Normal-Gamma prior. The value of \code{priorfacload}
+#'                              is interpreted as the shrinkage parameter \code{a}.}
+#'  \item{\code{"colwiseng"}: }{Column-wise Normal-Gamma prior. The value of \code{priorfacload}
+#'                              is interpreted as the shrinkage parameter \code{a}.}
+#' }
+#' For details please see the paper by Kastner (2016).
 #'
-#' @param columnwise Set to \code{TRUE} if you want to use column-wise shrinkage
-#' and to \code{FALSE} for row-wise shrinkage. For details please see the paper
-#' by Kastner et al. (2017).
+#' @param priorng Two-element vector with positive entries indicating the Normal-Gamma
+#' prior's hyperhyperparameters \code{c} and \code{d}.
 #'
 #' @param priorh0idi Vector of length 1 or \code{m}, containing
 #' information about the Gaussian prior for the initial idiosyncratic
@@ -264,8 +270,13 @@
 #' \emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
 #' \url{http://dx.doi.org/10.1080/10618600.2017.1322091}.
 #'
+#' @references Kastner, G. (2019).
+#' Sparse Bayesian Time-Varying Covariance Estimation in Many Dimensions
+#' \emph{Journal of Econometrics}, \bold{210}(1), 98--115,
+#' \url{https://doi.org/10.1016/j.jeconom.2018.11.007}
+#'
 #' @references Kastner, G. (2016).
-#' Dealing with Stochastic Volatility in Time Series Using the R Package
+#' Dealing with stochastic volatility in time series using the R package
 #' stochvol.
 #' \emph{Journal of Statistical Software}, \bold{69}(5), 1--30,
 #' \url{http://dx.doi.org/10.18637/jss.v069.i05}.
@@ -307,8 +318,8 @@ fsvsample <- function(y, factors = 1, draws = 1000, burnin = 1000,
 		      priorphiidi = c(10, 3), priorphifac = c(10, 3),
 		      priorsigmaidi = 1, priorsigmafac = 1,
 		      priorfacload = 1,
+                      priorfacloadtype = "normal", 
 		      priorng = c(1, 1),
-                      columnwise = FALSE, 
 		      priorh0idi = "stationary",
 		      priorh0fac = "stationary",
 		      thin = 1,
@@ -475,39 +486,74 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
  cShrink <- priorng[1]
  dShrink <- priorng[2]
  
- if(!is.numeric(priorfacload)) {
-  stop("Argument 'priorfacload' must be numeric.")
+ if (!is.numeric(priorfacload) || any(priorfacload <= 0)) {
+  stop("Argument 'priorfacload' must be numeric and positive.")
+ }
+ if (!(priorfacloadtype %in% c("normal", "rowwiseng", "colwiseng", "dl"))) {
+  stop("Argument 'priorfacloadtype' must be one of: 'normal', 'rowwiseng',
+       'colwiseng', 'dl'.")
  }
 
  if(is.matrix(priorfacload)) {
   if(nrow(priorfacload) != m || ncol(priorfacload) != factors || any(priorfacload < 0)) {
    stop("If argument 'priorfacload' is a matrix, it must be of appropriate dimensions and nonnegative.")
   }
+  if (priorfacloadtype == "normal") {
+   pfl <- 1L
   starttau2 <- priorfacload^2
   aShrink <- NA
   cShrink <- NA
   dShrink <- NA
- } else {
-  if (!is.numeric(priorfacload) | length(priorfacload) != 1) {
-   stop("Argument 'priorfacload' (standard deviation of prior for facload) must be a single number or an appropriate matrix with nonnegative entries.")
+  } else if (priorfacloadtype == "rowwiseng") {
+   pfl <- 2L
+   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   aShrink <- priorfacload[,1]
+   warning("Only first column of 'priorfacload' is used.'")
+   cShrink <- rep(cShrink, m)
+   dShrink <- rep(dShrink, m)
+  } else if (priorfacloadtype == "colwiseng") {
+   pfl <- 3L
+   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   aShrink <- priorfacload[1,]
+   warning("Only first row of 'priorfacload' is used.'")
+   cShrink <- rep(cShrink, factors)
+   dShrink <- rep(dShrink, factors)
+  } else if (priorfacloadtype == "dl") {
+   pfl <- 4L
+   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   aShrink <- priorfacload[1,1]
+   warning("Only first element of 'priorfacload' is used.'")
+   cShrink <- NA
+   dShrink <- NA
   }
-  # Hack: Values => 0 mean fixed variance, values < 0 mean -aShrink for NG-prior
-  if (priorfacload >= 0) {
+ } else {
+  if (length(priorfacload) != 1) {
+   stop("If argument 'priorfacload' isn't a matrix, it must be a single number.")
+  }
+  if (priorfacloadtype == "normal") {
+   pfl <- 1L
    starttau2 <- matrix(priorfacload^2, nrow = m, ncol = factors)
    aShrink <- NA
    cShrink <- NA
    dShrink <- NA
-  } else {
+  } else if (priorfacloadtype == "rowwiseng") {
+   pfl <- 2L
    starttau2 <- matrix(1, nrow = m, ncol = factors)
-   if (columnwise) {
-    aShrink <- rep(-priorfacload, factors)
+   aShrink <- rep(priorfacload, m)
+   cShrink <- rep(cShrink, m)
+   dShrink <- rep(dShrink, m)
+  } else if (priorfacloadtype == "colwiseng") {
+   pfl <- 3L
+   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   aShrink <- rep(priorfacload, factors)
     cShrink <- rep(cShrink, factors)
     dShrink <- rep(dShrink, factors)
-   } else {
-    aShrink <- rep(-priorfacload, m)
-    cShrink <- rep(cShrink, m)
-    dShrink <- rep(dShrink, m)
-   }
+  } else if (priorfacloadtype == "dl") {
+   pfl <- 4L
+   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   aShrink <- priorfacload
+   cShrink <- NA
+   dShrink <- NA
   }
  }
  
@@ -695,11 +741,11 @@ if (missing(startfacload)) {
 
 # Some input checking for startfac
 if (missing(startfac)) {
- startfac <- matrix(rnorm(factors*n, 0, sd=.1), nrow=factors)
+ startfac <- matrix(rnorm(factors*n, 0, sd=.1), ncol=factors)
 } else {
  if (!is.numeric(startfac) || !is.matrix(startfac) ||
-     nrow(startfac) != factors || (ncol(startfac) != n && factors >= 1))
-  stop("Argument 'startfac' must be a numeric matrix of dimension c(factors, nrow(y)).")
+     ncol(startfac) != factors || (nrow(startfac) != n && factors >= 1))
+  stop("Argument 'startfac' must be a numeric matrix of dimension c(nrow(y), factors).")
 }
 
 if (is.numeric(runningstore) && length(runningstore) == 1 && runningstore >= 0 && runningstore <= 6) {
@@ -775,7 +821,7 @@ if (!isTRUE(samplefac) && isTRUE(signident)) {
 restrinv <- matrix(as.integer(!restr), nrow = nrow(restr), ncol = ncol(restr))
 
 startval <- list(facload = startfacload,
-		 fac = startfac,
+		 fac = t(startfac),
 		 para = startpara,
 		 latent = startlatent,
 		 latent0 = startlatent0,
@@ -790,7 +836,7 @@ res <- .Call("sampler", t(y), draws, burnin, startval,
 	mhsteps, B011, B022, mhcontrol, gammaprior, 
 	myoffset, truncnormal,
 	restrinv, interweaving, signswitch, runningstore,
-	runningstorethin, runningstoremoments, columnwise,
+	runningstorethin, runningstoremoments, pfl,
 	heteroskedastic, priorhomoskedastic, priorh0, samplefac,
 	PACKAGE = "factorstochvol")
 
@@ -813,7 +859,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    startlatent = startlatent,
 		    startlatent0 = startlatent0,
 		    startfacload = startfacload,
-		    startfac = startfac,
+		    startfac = t(startfac),
                     samplefac = samplefac)
  res$priors <- list(priormu = priormu,
 		    priorphiidi = priorphiidi,
@@ -821,7 +867,8 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    priorsigmaidi = priorsigmaidi,
 		    priorsigmafac = priorsigmafac,
 		    priorfacload = priorfacload,
-		    priorng = priorng, columnwise = columnwise,
+		    priorfacloadtype = priorfacloadtype,
+		    priorng = priorng,
 		    priorh0idi = priorh0idi, priorh0fac = priorh0fac,
 		    priorhomoskedastic = priorhomoskedastic)
 

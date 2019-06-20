@@ -39,7 +39,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   const SEXP restriction_in, const SEXP interweaving_in, 
   const SEXP signswitch_in, const SEXP runningstore_in,
   const SEXP runningstoreevery_in, const SEXP runningstoremoments_in,
-  const SEXP columnwise_in, const SEXP heteroskedastic_in,
+  const SEXP pfl_in, const SEXP heteroskedastic_in,
   const SEXP priorhomoskedastic_in, const SEXP priorh0_in,
   const SEXP samplefac_in) {
 
@@ -61,7 +61,6 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
 
  const bool signswitch        = as<bool>(signswitch_in);
  const int runningstore      = as<int>(runningstore_in);
- const bool columnwise        = as<bool>(columnwise_in);
  
  const bool samplefac        = as<bool>(samplefac_in);
 
@@ -77,6 +76,17 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  const int r = curfacload.ncol(); // number of latent factors
  const int mpr = m + r;
 
+ // 1 = Normal, 2 = NG (rowwise), 3 = NG (colwise), 4 = DL
+ const int pfl = as<int>(pfl_in);
+ bool ngprior = false;
+ if (r > 0 && (pfl == 2 || pfl == 3)) ngprior = true;
+ bool columnwise = false;
+ if (r > 0 && pfl == 3) columnwise = true;
+ bool dlprior = false;
+ if (r > 0 && pfl == 4) dlprior = true;
+ NumericVector sv(heteroskedastic_in);
+ NumericVector priorhomoskedastic(priorhomoskedastic_in);
+ NumericVector priorh0(priorh0_in);
  IntegerMatrix restr(restriction_in);
  arma::imat armarestr(restr.begin(), restr.nrow(), restr.ncol(), false);
  
@@ -191,7 +201,22 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   }
  }
  
+ int unrestrictedelementcount = arma::accu(armarestr);
  arma::mat armatau2(curtau2.begin(), curtau2.nrow(), curtau2.ncol(), false);
+ double tauDL = 1.; // whatever
+ double tmpcounter4samplingtauDL;
+ arma::mat armapsiDL(m, r, arma::fill::zeros);  // used for DL prior
+ arma::mat armaphiDL(m, r, arma::fill::zeros);  // used for DL prior
+ arma::mat armaTDL(m, r, arma::fill::zeros);  // used for DL prior
+ for (int i = 0; i < m; i++) {
+  for (int j = 0; j < r; j++) {
+   if (armarestr(i,j) != 0) {
+    armapsiDL(i,j) = 1./unrestrictedelementcount;
+    armaphiDL(i,j) = 1./unrestrictedelementcount;
+    armaTDL(i,j) = 1./unrestrictedelementcount;
+   }
+  }
+ }
 
  // number of MCMC draws
  const int burnin = as<int>(burnin_in);
@@ -662,6 +687,24 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
       }
      }
     }
+   }
+   // should we employ the DL-prior?
+   if (dlprior) {
+    tmpcounter4samplingtauDL = 0;
+    for (int j = 0; j < r; j++) {
+     for (int k = 0; k < m; k++) {
+      if (armarestr(k,j) != 0) {
+       armapsiDL(k,j) = 1. / do_rgig1(-.5, 1, (armafacload(k,j)*armafacload(k,j)) / (tauDL * tauDL * armaphiDL(k,j) * armaphiDL(k,j)));
+       tmpcounter4samplingtauDL += fabs(armafacload(k,j))/armaphiDL(k,j);
+       armaTDL(k,j) = do_rgig1(aShrink[0] - 1., 2*fabs(armafacload(k,j)), 1);
+      }
+     }
+    }
+    //Rprintf("%f\n", tmpcounter4samplingtauDL);
+    //if (tmpcounter4samplingtauDL < 1.) Rprintf("THIS: %f\n", armaphiDL[0,0]);
+    tauDL = do_rgig1((aShrink[0] - 1.) * unrestrictedelementcount, 2. * tmpcounter4samplingtauDL, 1);
+    armaphiDL = armaTDL / accu(armaTDL);
+    armatau2 = armapsiDL % armaphiDL % armaphiDL * tauDL * tauDL;
    }
   
    int oldpos = 0;

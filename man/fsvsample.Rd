@@ -8,11 +8,11 @@ Volatility Model.}
 fsvsample(y, factors = 1, draws = 1000, burnin = 1000,
   priormu = c(0, 10), priorphiidi = c(10, 3), priorphifac = c(10, 3),
   priorsigmaidi = 1, priorsigmafac = 1, priorfacload = 1,
-  priorng = c(1, 1), columnwise = FALSE, priorh0idi = "stationary",
-  priorh0fac = "stationary", thin = 1, keeptime = "last",
-  runningstore = 1, runningstorethin = 10, runningstoremoments = 2,
-  quiet = FALSE, restrict = "none", interweaving = 4,
-  signswitch = FALSE, heteroskedastic = TRUE,
+  priorfacloadtype = "normal", priorng = c(1, 1),
+  priorh0idi = "stationary", priorh0fac = "stationary", thin = 1,
+  keeptime = "last", runningstore = 1, runningstorethin = 10,
+  runningstoremoments = 2, quiet = FALSE, restrict = "none",
+  interweaving = 4, signswitch = FALSE, heteroskedastic = TRUE,
   priorhomoskedastic = NA, expert, startpara, startlatent, startlatent0,
   startfacload, startfac, samplefac = TRUE, signident = TRUE)
 }
@@ -46,19 +46,25 @@ prior volatilities of log-variances. If \code{priorsigmafac} has exactly
 one element, it will be recycled for all factor log-variances.}
 
 \item{priorfacload}{Either a matrix of dimensions \code{m} times \code{factors}
-with nonnegative elements or a single number. If a matrix is provided, its
-elements are the standard deviations of the Gaussian prior distributions for
-the factor loadings. If a single nonnegative number is provided, it will be
-recycled accordingly. If a single negative number is provided, a Normal-Gamma
-shrinkage prior for the factor loadings is assumed, where \code{-priorfacload}
-is interpreted as the shrinkage parameter \code{a}.}
+with positive elements or a single number (which will be recycled accordingly).
+The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
+and is explained there.}
 
-\item{priorng}{Two-element vector with positive entries indicating the Gamma
-hyperprior's hyperhyperparameters \code{c} and \code{d}.}
+\item{priorfacloadtype}{Can be \code{"normal"} (the default), \code{"rowwiseng"}, 
+\code{"colwiseng"}.
+\itemize{
+ \item{\code{"normal"}: }{Default normal prior. The value of \code{priorfacload}
+                          is interpreted as the standard deviations of the
+                          Gaussian prior distributions for the factor loadings.}
+ \item{\code{"rowwiseng"}: }{Row-wise Normal-Gamma prior. The value of \code{priorfacload}
+                             is interpreted as the shrinkage parameter \code{a}.}
+ \item{\code{"colwiseng"}: }{Column-wise Normal-Gamma prior. The value of \code{priorfacload}
+                             is interpreted as the shrinkage parameter \code{a}.}
+}
+For details please see the paper by Kastner (2016).}
 
-\item{columnwise}{Set to \code{TRUE} if you want to use column-wise shrinkage
-and to \code{FALSE} for row-wise shrinkage. For details please see the paper
-by Kastner et al. (2017).}
+\item{priorng}{Two-element vector with positive entries indicating the Normal-Gamma
+prior's hyperhyperparameters \code{c} and \code{d}.}
 
 \item{priorh0idi}{Vector of length 1 or \code{m}, containing
 information about the Gaussian prior for the initial idiosyncratic
@@ -305,8 +311,13 @@ Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Model
 \emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
 \url{http://dx.doi.org/10.1080/10618600.2017.1322091}.
 
+Kastner, G. (2019).
+Sparse Bayesian Time-Varying Covariance Estimation in Many Dimensions
+\emph{Journal of Econometrics}, \bold{210}(1), 98--115,
+\url{https://doi.org/10.1016/j.jeconom.2018.11.007}
+
 Kastner, G. (2016).
-Dealing with Stochastic Volatility in Time Series Using the R Package
+Dealing with stochastic volatility in time series using the R package
 stochvol.
 \emph{Journal of Statistical Software}, \bold{69}(5), 1--30,
 \url{http://dx.doi.org/10.18637/jss.v069.i05}.

@@ -531,6 +531,9 @@ predprecWB <- function(x, ahead = 1, each = 1) {
 #' for each draw that has been stored during MCMC sampling.
 #' @param alldraws Should all the draws be returned or just the final results?
 #' (Can be useful to assess convergence.)
+#' @param indicator Logical vector of length \code{m} indicating which
+#' component series should be evaluated. The default is to evaluate
+#' all of them.
 #'
 #' @return Vector of length \code{length(ahead)} with log predictive
 #' likelihoods.
@@ -560,13 +563,18 @@ predprecWB <- function(x, ahead = 1, each = 1) {
 #'
 #' @export
 
-predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE) {
+predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = rep(TRUE, ncol(y))) {
+ if (!is.numeric(y) || !is.matrix(y) || (ncol(y) != ncol(x$y) && ncol(y) != sum(indicator)) || nrow(y) != length(ahead))
+  stop("Argument 'y' must be a matrix of dimension c(length(ahead), ncol(x$y)).")
+ if (!is.logical(indicator) || sum(indicator) != ncol(y) && length(indicator) != ncol(y))
+  stop("If provided, argument 'indicator' must be a logical vector whose length (or sum) is equal to ncol(y).")
+ if (sum(indicator) == 0L) stop("At least one element of 'indicator' must be TRUE.")
+ if (length(indicator) == ncol(y)) y <- y[,indicator,drop=FALSE]
  predobj <- predcov(x, ahead, each)
- m <- ncol(x$y)
+ predobj <- predobj[indicator,indicator,,,drop=FALSE]
+ m <- sum(indicator)
  r <- nrow(x$f)
  n <- dim(predobj)[3]
- if (!is.numeric(y) || !is.matrix(y) || ncol(y) != m || nrow(y) != length(ahead))
-  stop("Argument 'y' must be a matrix of dimension c(length(ahead), ncol(x$y)).")
  ret <- array(NA_real_, dim = c(n, length(ahead)))
  realret <- rep(NA_real_, length(ahead))
  names(realret) <- ahead
@@ -883,9 +891,11 @@ orderident <- function(x, method = "summed") {
  x$f <- x$f[myorder,,,drop=FALSE]
  x$para[,m+(1:r),] <- x$para[,m+myorder,,drop=FALSE]
  x$h[,m+(1:r),] <- x$h[,m+myorder,,drop=FALSE]
+ if (exists("runningstore", x)) {
  if (exists("h", x$runningstore)) x$runningstore$h[,m+(1:r),] <- x$runningstore$h[,m+myorder,,drop=FALSE]
  if (exists("f", x$runningstore)) x$runningstore$f <- x$runningstore$f[myorder,,,drop=FALSE]
  if (exists("sd", x$runningstore)) x$runningstore$sd[,m+(1:r),] <- x$runningstore$sd[,m+myorder,,drop=FALSE]
  if (exists("identifier", x)) x$identifier <- x$identifier[myorder,]
+ }
  x
 }

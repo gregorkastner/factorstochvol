@@ -3,9 +3,17 @@
         available in stochvol 2.0.0.
 
 Changes in version 0.9.2
+  - Slight change in the "front-end" function fsvsample: the argument
+    "priorfacload" must now be positive, its meaning depends on the value of
+    the argument "priorfacloadtype" (new). The argument "columnwise" has been
+    removed. Sorry for any inconvenience this change may cause.
   - It's now possible to turn factor sampling off. This might be useful if one
     wants to include observed factors (instead of latent ones).
-  - TODO: Change argument structure for loadings priors.
+  - The function predloglik now takes an optional logical vector indicating
+    for which component series the predictive log likelihood should be computed.
+    Thanks to Stefan Voigt for implementing this.
+  - Fixed a few more typos in the documentation.
+  - The function corimageplot now has a new argument: these4order.
 
 Changes in version 0.9.1
   - Default for argument "restrict" in fsvsample is now "none". This

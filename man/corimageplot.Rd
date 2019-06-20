@@ -5,8 +5,9 @@
 \title{Plot correlation matrices for certain points in time}
 \usage{
 corimageplot(x, these = seq_len(nrow(x$y)), order = "original",
-  plotdatedist = 0, plotCI = "n", date.cex = 1.5, col = NULL,
-  fsvsimobj = NULL, plottype = "corrplot", ...)
+  these4order = these, plotdatedist = 0, plotCI = "n",
+  date.cex = 1.5, col = NULL, fsvsimobj = NULL,
+  plottype = "corrplot", ...)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -20,6 +21,9 @@ indicate not to mess
 with the series ordering. Other keywords
 (e.g. \code{'hclust'}) will be forwarded to
 \code{\link[corrplot]{corrMatOrder}}.}
+
+\item{these4order}{Index vector containing the time points used for
+ordering. Probably, the default (\code{these}) is what you want.}
 
 \item{plotdatedist}{Numerical value indicating where the dates should
 be plotted.}
