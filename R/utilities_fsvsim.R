@@ -17,8 +17,6 @@
 #'
 #' @family simulation
 #'
-#' @seealso covmat covmat.fsvdraws
-#'
 #' @export
 
 covmat.fsvsim <- function(x, these = seq_len(nrow(x$y)), ...) {
@@ -40,6 +38,33 @@ covmat.fsvsim <- function(x, these = seq_len(nrow(x$y)), ...) {
  }
 
  covmat
+}
+
+
+#' Extract "true" model-implied correlation matrix for several points in time
+#'
+#' \code{cormat} extracts the model-implied (time-varying) covariance matrix
+#' from an \code{fsvsim} object.
+#'
+#' @param x Object of class \code{'fsvsim'}, usually resulting from a call
+#' of the function \code{\link{fsvsim}}.
+#' @param these Vector indicating which points in time should be extracted,
+#' defaults to all.
+#' @param ... Ignored.
+#'
+#' @note Currently crudely implemented as an R loop over all time points,
+#' may be slow.
+#'
+#' @return Array of dimension \code{m} times \code{m} times
+#' \code{length(these)}, containing the model-implied correlation matrix.
+#'
+#' @family simulation
+#'
+#' @export
+
+cormat.fsvsim <- function(x, these = seq_len(nrow(x$y)), ...) {
+ mycovmat <- covmat.fsvsim(x, these, ...)
+ array(apply(mycovmat, 3, cov2cor), dim = dim(mycovmat))
 }
 
 

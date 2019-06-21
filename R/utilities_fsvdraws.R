@@ -197,8 +197,6 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #'
 #' @family extractors
 #'
-#' @seealso covmat covmat.fsvsim
-#' 
 #' @export
 
 covmat.fsvdraws <- function(x, ...) {
@@ -207,19 +205,73 @@ covmat.fsvdraws <- function(x, ...) {
  r <- ncol(x$facload)
  draws <- dim(x$facload)[3]
  tpoints <- nrow(x$h)
- covmat <- array(NA_real_, dim = c(m, m, draws, tpoints))
+ mycovmat <- array(NA_real_, dim = c(m, m, draws, tpoints))
  for (j in 1:tpoints) {
   for (i in 1:draws) {
    facload <- matrix(x$facload[,,i], nrow = m)
    facvar <- exp(x$h[j, m+(1:r),i])
    idivar <- exp(x$h[j, 1:m,i])
-   covmat[,,i,j] <- tcrossprod(sweep(facload, 2, facvar, '*'), facload)
-   diag(covmat[,,i,j]) <- diag(covmat[,,i,j]) + idivar
+   mycovmat[,,i,j] <- tcrossprod(sweep(facload, 2, facvar, '*'), facload)
+   diag(mycovmat[,,i,j]) <- diag(mycovmat[,,i,j]) + idivar
   }
  }
- covmat
+ mycovmat
 }
 
+
+#' Extract posterior draws of the model-implied correlation matrix
+#'
+#' \code{cormat} extracts draws from the model-implied correlation matrix
+#' from an \code{fsvdraws} object for all points in time which have been
+#' stored.
+#' 
+#' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
+#' of \code{\link{fsvsample}}.
+#' @param ... Ignored.
+#' 
+#' @note Currently crudely implemented as a double loop in pure R,
+#' may be slow.
+#' 
+#' @return Array of dimension \code{m} times \code{m} times \code{draws}
+#' times \code{timepoints} containing the posterior draws for the
+#' model-implied covariance matrix.
+#'
+#' @examples
+#' \dontrun{
+#' set.seed(1)
+#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+#' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
+#' cors <- cormat(res) # extract
+#'
+#' # Trace plot of determinant of posterior correlation matrix
+#' # at time t = n = 500:
+#' detdraws <- apply(cors[,,,500], 3, det)
+#' ts.plot(detdraws)
+#' abline(h = mean(detdraws), col = 2)          # posterior mean
+#' abline(h = median(detdraws), col = 4)        # posterior median
+#' abline(h = det(cormat(sim)[,,500]), col = 3) # implied by DGP
+#'
+#' # Trace plot of draws from posterior correlation of Sim1 and Sim2 at
+#' # time t = n = 500:
+#' ts.plot(cors[1,2,,500])
+#' abline(h = cormat(sim)[1,2,500], col = 3) # "true" value
+#' 
+#' # Smoothed kernel density estimate:
+#' plot(density(cors[1,2,,500], adjust = 2))
+#'
+#' # Summary statistics:
+#' summary(cors[1,2,,500])
+#' }
+#'
+#' @family extractors
+#'
+#' @export
+
+
+cormat.fsvdraws <- function(x, ...) {
+ mycovmat <- covmat.fsvdraws(x, ...)
+ array(apply(mycovmat, 3:4, cov2cor), dim = dim(mycovmat))
+}
 
 #' Predicts factor and idiosyncratic log-volatilities h
 #'

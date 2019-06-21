@@ -1011,8 +1011,7 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
  n <- nrow(x$y)
  m <- ncol(x$y)
 
- mycovmat <- covmat(res, lastkept)
- mycormat <- array(apply(mycovmat[,,,1], 3, cov2cor), dim = c(m, m, effdraws))
+ mycormat <- cormat(res)[,,,lastkept]
  if (length(quantiles) == 1) {
    plotCI <- "n"
    mycormatlower <- NULL

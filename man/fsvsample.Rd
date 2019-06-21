@@ -5,7 +5,7 @@
 \title{Markov Chain Monte Carlo (MCMC) Sampling for the Factor Stochastic
 Volatility Model.}
 \usage{
-fsvsample(y, factors = 1, draws = 10000, thin = 1, burnin = 10000,
+fsvsample(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
   restrict = "none", priorfacloadtype = "rowwiseng",
   priorfacload = 0.1, priorng = c(1, 1), priormu = c(0, 10),
   priorphiidi = c(10, 3), priorphifac = c(10, 3), priorsigmaidi = 1,

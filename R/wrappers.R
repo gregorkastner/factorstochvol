@@ -316,9 +316,9 @@
 
 fsvsample <- function(y,
 		      factors = 1,
-		      draws = 10000,
+		      draws = 1000,
 		      thin = 1,
-		      burnin = 10000, 
+		      burnin = 1000,
 		      restrict = "none",
                       priorfacloadtype = "rowwiseng", 
 		      priorfacload = .1,
