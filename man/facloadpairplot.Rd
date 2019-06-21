@@ -4,7 +4,8 @@
 \alias{facloadpairplot}
 \title{Displays bivariate marginal posterior distributions of factor loadings.}
 \usage{
-facloadpairplot(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3)
+facloadpairplot(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3,
+  colorpalette = rainbow)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -17,6 +18,8 @@ thinned accordingly.}
 \item{alpha}{Level of transparency.}
 
 \item{cex}{Controls the size of the dots.}
+
+\item{colorpalette}{A function producing color palettes.}
 }
 \value{
 Returns \code{x} invisibly.
