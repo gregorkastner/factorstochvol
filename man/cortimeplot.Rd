@@ -6,10 +6,10 @@
 \title{Plot correlations over time.}
 \usage{
 cortimeplot(x, series, these = seq_len(nrow(x$y)), type = "cor",
-  statistic = "mean", coldist = 1)
+  statistic = "mean")
 
 covtimeplot(x, series, these = seq_len(nrow(x$y)), type = "cov",
-  statistic = "mean", coldist = 1)
+  statistic = "mean")
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -24,8 +24,6 @@ to \code{seq_len(nrow(x$y))}.}
 \item{type}{What to plot, usually "cor" or "cov".}
 
 \item{statistic}{Which posterior summary should be plotted, usually "mean".}
-
-\item{coldist}{Indicates how "different" adjacent colors should be.}
 }
 \value{
 Returns \code{x} invisibly.

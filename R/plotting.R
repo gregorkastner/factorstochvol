@@ -116,7 +116,7 @@ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  dat <- matrix(x$runningstore$vol[these,,"mean",drop = FALSE], nrow = length(these))
 # plotorder <- order(colMeans(dat))
  plotorder <- seq_len(ncol(dat))
- colas <- rainbow(m)
+ colas <- seq_len(m)
 
  ts.plot(dat[,plotorder,drop = FALSE], gpars = list(col = colas, xaxt = 'n', xlab = '', ...))
  ats <- round(seq(1, length(these), length.out = min(length(these), 10)))
@@ -264,7 +264,6 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
 #' to \code{seq_len(nrow(x$y))}.
 #' @param type What to plot, usually "cor" or "cov".
 #' @param statistic Which posterior summary should be plotted, usually "mean".
-#' @param coldist Indicates how "different" adjacent colors should be.
 #' 
 #' @return Returns \code{x} invisibly.
 #' 
@@ -274,7 +273,7 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
 
 
 cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
-			type = "cor", statistic = "mean", coldist = 1) {
+			type = "cor", statistic = "mean") {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (!exists("runningstore", x) || !exists(type, x$runningstore))
   stop("What you are requesting (argument 'type') hasn't been stored during sampling.")
@@ -313,7 +312,7 @@ cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
  if (type == "cor") cornames <- snames[-series][colororder]
  if (type == "cov") cornames <- snames[colororder]
  
- colas <- rep(rainbow(m), coldist)[seq(1, coldist*(m), coldist)]
+ colas <- seq_len(m)
  ts.plot(curcors, col = colas, gpars = list(xaxt = 'n', xlab = '', ylab = ''))
  title(paste0('Posterior ', statistic, ' of pairwise ', type, 's with ', snames[series]))
  abline(h = 0, lty = 3)
@@ -331,9 +330,9 @@ cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 #' @export
 
 covtimeplot <- function(x, series, these = seq_len(nrow(x$y)),
-			type = "cov", statistic = "mean", coldist = 1) {
+			type = "cov", statistic = "mean") {
  cortimeplot(x = x, series = series, these = these, type = type,
-	     statistic = statistic, coldist = coldist)
+	     statistic = statistic)
 }
 
 
@@ -349,6 +348,7 @@ covtimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 #' the number of draws stored in \code{x} exceeds this number, draws are
 #' thinned accordingly.
 #' @param alpha Level of transparency.
+#' @param colorpalette A function producing color palettes.
 #' @param cex Controls the size of the dots.
 #' 
 #' @return Returns \code{x} invisibly.
@@ -357,7 +357,7 @@ covtimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 #'
 #' @export
 
-facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3) {
+facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3, colorpalette = rainbow) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (any(dim(x$facload) < 2)) stop("Currently implemented for two or more factors.")
  
@@ -371,7 +371,7 @@ facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3) {
 
  whiches <- matrix((1:(2*ceiling(r/2))-1) %% r + 1, nrow = 2)
  
- colas <- rainbow(m, alpha = min(alpha, 1))
+ colas <- colorpalette(m, alpha = min(alpha, 1))
 
  for (i in seq.int(ncol(whiches))) {
   tmp <- aperm(x$facload[,whiches[,i],plotthese], c(1,3,2))
