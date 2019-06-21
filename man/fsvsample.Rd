@@ -11,11 +11,11 @@ fsvsample(y, factors = 1, draws = 10000, thin = 1, burnin = 10000,
   priorphiidi = c(10, 3), priorphifac = c(10, 3), priorsigmaidi = 1,
   priorsigmafac = 1, priorh0idi = "stationary",
   priorh0fac = "stationary", keeptime = "last",
-  heteroskedastic = TRUE, priorhomoskedastic = NA, samplefac = TRUE,
-  runningstore = 6, runningstorethin = 10, runningstoremoments = 2,
-  signident = TRUE, signswitch = FALSE, interweaving = 4,
-  quiet = FALSE, expert, startpara, startlatent, startlatent0,
-  startfacload, startfac)
+  heteroskedastic = TRUE, priorhomoskedastic = NA, runningstore = 6,
+  runningstorethin = 10, runningstoremoments = 2, signident = TRUE,
+  signswitch = FALSE, interweaving = 4, quiet = FALSE,
+  samplefac = TRUE, startfac, startpara, startlatent, startlatent0,
+  startfacload, expert)
 }
 \arguments{
 \item{y}{Data matrix. Each of \code{m} columns is assumed to contain a single
@@ -49,10 +49,10 @@ of dimension \code{c(m, r)} indicating which elements should be unrestricted
 (where \code{restrict} is \code{FALSE}) or zero (where \code{restrict} is
 \code{TRUE}).}
 
-\item{priorfacloadtype}{Can be \code{"normal"} (the default), \code{"rowwiseng"}, 
+\item{priorfacloadtype}{Can be \code{"normal"}, \code{"rowwiseng"}, 
 \code{"colwiseng"}.
 \itemize{
- \item{\code{"normal"}: }{Default normal prior. The value of \code{priorfacload}
+ \item{\code{"normal"}: }{Normal prior. The value of \code{priorfacload}
                           is interpreted as the standard deviations of the
                           Gaussian prior distributions for the factor loadings.}
  \item{\code{"rowwiseng"}: }{Row-wise Normal-Gamma prior. The value of \code{priorfacload}
@@ -136,10 +136,6 @@ and dimension c(factors + m, 2). Values in column 1 will be interpreted as
 shape and values in column 2 will be interpreted as the rate parameter
 of the corresponding inverse gamma prior distribution.}
 
-\item{samplefac}{If set to FALSE, the factors are not sampled (but 
-remain at their starting values forever). This might be useful if one
-wants to include observed factors instead of latent ones.}
-
 \item{runningstore}{Because most machines these days do not have enough memory
 to store all draws for all points in time, setting \code{runningstore} to an
 integer greater than 0 will cause \code{fsvsample} to store the first
@@ -165,8 +161,8 @@ at every MCMC iteration.}
 \item{runningstoremoments}{Selects how many running moments (up to 4) should be
 calculated.}
 
-\item{signident}{If set to FALSE, no ex-post sign-identification is
-performed. Defaults to TRUE.}
+\item{signident}{If set to \code{FALSE}, no ex-post sign-identification is
+performed. Defaults to \code{TRUE}.}
 
 \item{signswitch}{Set to \code{TRUE} to turn on a random sign switch of
 factors and loadings. Note that the signs of each factor loadings matrix column
@@ -187,6 +183,34 @@ A value of 4 is the highly recommended default.}
 \item{quiet}{Logical value indicating whether the progress bar and other
 informative output during sampling should be omitted. The default
 value is \code{FALSE}, implying verbose output.}
+
+\item{samplefac}{If set to \code{FALSE}, the factors are not sampled (but 
+remain at their starting values forever). This might be useful if one
+wants to include observed factors instead of latent ones.}
+
+\item{startfac}{\emph{optional} numeric matrix of dimension
+\code{c(factors, n)}, containing the starting values of the
+latent factors.}
+
+\item{startpara}{\emph{optional} named list, containing the starting values
+for the parameter draws. If supplied, \code{startpara} must contain three
+elements named \code{mu} (vector of length \code{m}), \code{phi} (vector
+of length \code{m+r}) and \code{sigma} (vector of length \code{m+r}).
+The elements of \code{mu} can be arbitrary numerical values, the
+\code{phi}s must be real numbers between \code{-1} and \code{1}, and
+the \code{sigma}s must be positive real numbers.}
+
+\item{startlatent}{\emph{optional} numeric matrix of dimension
+\code{c(n, m + factors)}, containing the starting values of the
+latent log-variances.}
+
+\item{startlatent0}{\emph{optional} numeric vector of length
+\code{m + factors}, containing the starting values of the initial latent
+log-variances.}
+
+\item{startfacload}{\emph{optional} numeric matrix of dimension
+\code{c(m, factors)}, containing the starting values of the
+factor loadings.}
 
 \item{expert}{\emph{optional} named list of expert parameters for the
 univariate SV models (will be passed to the \code{stochvol} package). For most
@@ -222,30 +246,6 @@ referred to Kastner and Frühwirth-Schnatter (2014) and Kastner (2016). If
        \emph{proposal} density for sampling \code{(mu, phi)}.
        Defaults to \code{10^12}.}
 }}
-
-\item{startpara}{\emph{optional} named list, containing the starting values
-for the parameter draws. If supplied, \code{startpara} must contain three
-elements named \code{mu} (vector of length \code{m}), \code{phi} (vector
-of length \code{m+r}) and \code{sigma} (vector of length \code{m+r}).
-The elements of \code{mu} can be arbitrary numerical values, the
-\code{phi}s must be real numbers between \code{-1} and \code{1}, and
-the \code{sigma}s must be positive real numbers.}
-
-\item{startlatent}{\emph{optional} numeric matrix of dimension
-\code{c(n, m + factors)}, containing the starting values of the
-latent log-variances.}
-
-\item{startlatent0}{\emph{optional} numeric vector of length
-\code{m + factors}, containing the starting values of the initial latent
-log-variances.}
-
-\item{startfacload}{\emph{optional} numeric matrix of dimension
-\code{c(m, factors)}, containing the starting values of the
-factor loadings.}
-
-\item{startfac}{\emph{optional} numeric matrix of dimension
-\code{c(factors, n)}, containing the starting values of the
-latent factors.}
 }
 \value{
 The value returned is a list object of class \code{fsvdraws} holding
@@ -267,11 +267,12 @@ The value returned is a list object of class \code{fsvdraws} holding
    ex-post sign-identification along with the corresponding minimum distances to zero.
    See \code{\link{signident}} for details.}
 }
-To display the output, use \code{print}, \code{summary} and \code{plot}.
-The \code{print} method simply prints the posterior draws (which is very
-likely a lot of output); the \code{summary} method displays the summary
-statistics currently stored in the object; the \code{plot} method
-\code{\link{plot.fsvdraws}} gives a graphical overview.
+To display the output, use \code{print}, \code{plot}, and in particular specialized
+extractors and printing functions.
+The \code{print} method prints a high-level overview; specialized extractors such as
+\code{\link{covmat}} or \code{\link{runningcovmat}} are also available.
+The \code{plot} method invokes a simple covariance matrix plot; specialized plotting
+functions are linked in the documentation of \code{\link{plot.fsvdraws}}.
 }
 \description{
 \code{fsvsample} simulates from the joint posterior distribution and returns

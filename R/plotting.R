@@ -947,7 +947,7 @@ facloaddensplot <- function(x, fsvsimobj = NULL, rows = 5, thesecols = NULL, xli
  invisible(x)
 }
 
-#' Several factor SV plots
+#' Several factor SV plots useful for model diagnostics
 #'
 #' Draws a collection of plots to explore the posterior distribution
 #' of a fitted factor SV model.
@@ -965,13 +965,78 @@ facloaddensplot <- function(x, fsvsimobj = NULL, rows = 5, thesecols = NULL, xli
 #'
 #' @export
 
-plot.fsvdraws <- function(x, fsvsimobj = NULL, ...) {
+diagplot <- function(x, fsvsimobj = NULL, ...) {
+ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  r <- ncol(x$facload)
  if (r > 0) facloadpointplot(x, fsvsimobj = fsvsimobj, ...)
  logvartimeplot(x, fsvsimobj = fsvsimobj, ...)
  if (r > 0) facloaddensplot(x, fsvsimobj = fsvsimobj, ...)
  if (r > 0) facloadtraceplot(x, fsvsimobj = fsvsimobj, ...)
  paratraceplot(x, fsvsimobj = fsvsimobj, ...)
+}
+
+
+#' Default factor SV plot
+#'
+#' Displays the correlation matrix at the last sampling point in time.
+#'
+#' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
+#' to \code{\link{fsvsample}}.
+#' @param quantiles Posterior quantiles to be visualized. Must be of length 1 or 3.
+#' @param fsvsimobj To indicate data generating values in case of simulated
+#' data, pass an optional object of type \code{fsvsim} (usually the result of a
+#' call to \code{\link{fsvsim}}).
+#' @param col Optional color palette.
+#' @param ... Other arguments will be passed on to \link[corrplot]{corrplot}.
+#' 
+#' @return Returns \code{x} invisibly.
+#' 
+#' @family plotting
+#'
+#' @export
+
+plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj = NULL, ...) {
+ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
+ if (!is.null(fsvsimobj)) {
+  if (!is(fsvsimobj, "fsvsim")) stop("If provided, argument 'fsvsimobj' must be an 'fsvsim' object.")
+ }
+ if (is.null(col)) {
+  colpal <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7", 
+    "#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))
+  col <- rev(colpal(200))
+ }
+ lastkept <- ncol(x$f)
+ effdraws <- dim(x$f)[3]
+ n <- nrow(x$y)
+ m <- ncol(x$y)
+
+ mycovmat <- covmat(res, lastkept)
+ mycormat <- array(apply(mycovmat[,,,1], 3, cov2cor), dim = c(m, m, effdraws))
+ if (length(quantiles) == 1) {
+   plotCI <- "n"
+   mycormatlower <- NULL
+   mycormatmed <- apply(mycormat, 1:2, quantile, quantiles)
+   mycormatupper <- NULL
+ } else if (length(quantiles) == 3) {
+   plotCI <- "circle"
+   mycormatlower <- apply(mycormat, 1:2, quantile, quantiles[1])
+   mycormatmed <- apply(mycormat, 1:2, quantile, quantiles[2])
+   mycormatupper <- apply(mycormat, 1:2, quantile, quantiles[3])
+ } else {
+   stop("Length of argument 'quantiles' must be one or three.")
+ }
+ 
+ corrplot::corrplot(mycormatmed, plotCI = plotCI, lowCI.mat = mycormatlower, uppCI.mat = mycormatupper, col = col)
+
+ if (!is.null(fsvsimobj)) {
+   cortrue <- cov2cor(covmat(fsvsimobj, n)[,,1])
+   diag(cortrue) <- NA
+   oldpar <- par(xpd = TRUE)
+   symbols(rep(1:m, each = m), rep(m:1, m),
+	   circles = .9*abs(as.numeric(cortrue))^0.5/2,
+	   fg = "green", inches = FALSE, add = TRUE)
+   par(oldpar)
+  }
 }
 
 #' Plots pairwise correlations over time

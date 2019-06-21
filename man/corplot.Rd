@@ -35,7 +35,7 @@ Throws a warning if these haven't been stored during sampling.
 \seealso{
 Other plotting: \code{\link{comtimeplot}},
   \code{\link{corimageplot}}, \code{\link{cortimeplot}},
-  \code{\link{facloadcredplot}},
+  \code{\link{diagplot}}, \code{\link{facloadcredplot}},
   \code{\link{facloaddensplot}},
   \code{\link{facloadpairplot}},
   \code{\link{facloadpointplot}},

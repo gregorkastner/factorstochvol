@@ -2,31 +2,36 @@
 % Please edit documentation in R/plotting.R
 \name{plot.fsvdraws}
 \alias{plot.fsvdraws}
-\title{Several factor SV plots}
+\title{Default factor SV plot}
 \usage{
-\method{plot}{fsvdraws}(x, fsvsimobj = NULL, ...)
+\method{plot}{fsvdraws}(x, quantiles = c(0.05, 0.5, 0.95), col = NULL,
+  fsvsimobj = NULL, ...)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
 to \code{\link{fsvsample}}.}
 
+\item{quantiles}{Posterior quantiles to be visualized. Must be of length 1 or 3.}
+
+\item{col}{Optional color palette.}
+
 \item{fsvsimobj}{To indicate data generating values in case of simulated
-data, pass an object of type \code{fsvsim} (usually the result of a
+data, pass an optional object of type \code{fsvsim} (usually the result of a
 call to \code{\link{fsvsim}}).}
 
-\item{...}{Other arguments will be passed on to the subfunctions.}
+\item{...}{Other arguments will be passed on to \link[corrplot]{corrplot}.}
 }
 \value{
 Returns \code{x} invisibly.
 }
 \description{
-Draws a collection of plots to explore the posterior distribution
-of a fitted factor SV model.
+Displays the correlation matrix at the last sampling point in time.
 }
 \seealso{
 Other plotting: \code{\link{comtimeplot}},
   \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{cortimeplot}}, \code{\link{facloadcredplot}},
+  \code{\link{cortimeplot}}, \code{\link{diagplot}},
+  \code{\link{facloadcredplot}},
   \code{\link{facloaddensplot}},
   \code{\link{facloadpairplot}},
   \code{\link{facloadpointplot}},

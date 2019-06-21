@@ -38,7 +38,7 @@ sampling, \code{comtimeplot} produces an error.
 \seealso{
 Other plotting: \code{\link{corimageplot}},
   \code{\link{corplot}}, \code{\link{cortimeplot}},
-  \code{\link{facloadcredplot}},
+  \code{\link{diagplot}}, \code{\link{facloadcredplot}},
   \code{\link{facloaddensplot}},
   \code{\link{facloadpairplot}},
   \code{\link{facloadpointplot}},

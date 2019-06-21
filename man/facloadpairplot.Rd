@@ -29,7 +29,8 @@ factor loadings distribution. For a monochrome variant, see
 \seealso{
 Other plotting: \code{\link{comtimeplot}},
   \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{cortimeplot}}, \code{\link{facloadcredplot}},
+  \code{\link{cortimeplot}}, \code{\link{diagplot}},
+  \code{\link{facloadcredplot}},
   \code{\link{facloaddensplot}},
   \code{\link{facloadpointplot}},
   \code{\link{facloadtraceplot}},

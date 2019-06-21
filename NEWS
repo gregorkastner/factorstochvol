@@ -23,6 +23,8 @@ Changes in version 0.9.2
     * draws = 10000 (was 1000)
     * burnin = 10000 (was 1000)
   - Arguments to fsvsample were reordered.
+  - Previous default plotting function plot.fsvsdraws has been renamed to
+    diagplot. New default plotting function now shows a correlation matrix.
 
 Changes in version 0.9.1
   - Default for argument "restrict" in fsvsample is now "none". This

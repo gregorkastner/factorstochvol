@@ -40,10 +40,10 @@
 #' The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
 #' and is explained there.
 #'
-#' @param priorfacloadtype Can be \code{"normal"} (the default), \code{"rowwiseng"}, 
+#' @param priorfacloadtype Can be \code{"normal"}, \code{"rowwiseng"}, 
 #' \code{"colwiseng"}.
 #' \itemize{
-#'  \item{\code{"normal"}: }{Default normal prior. The value of \code{priorfacload}
+#'  \item{\code{"normal"}: }{Normal prior. The value of \code{priorfacload}
 #'                           is interpreted as the standard deviations of the
 #'                           Gaussian prior distributions for the factor loadings.}
 #'  \item{\code{"rowwiseng"}: }{Row-wise Normal-Gamma prior. The value of \code{priorfacload}
@@ -229,12 +229,12 @@
 #' \code{c(factors, n)}, containing the starting values of the
 #' latent factors.
 #'
-#' @param samplefac If set to FALSE, the factors are not sampled (but 
+#' @param samplefac If set to \code{FALSE}, the factors are not sampled (but 
 #' remain at their starting values forever). This might be useful if one
 #' wants to include observed factors instead of latent ones.
 #'
-#' @param signident If set to FALSE, no ex-post sign-identification is
-#' performed. Defaults to TRUE.
+#' @param signident If set to \code{FALSE}, no ex-post sign-identification is
+#' performed. Defaults to \code{TRUE}.
 #' 
 #' @details For details concerning the factor SV algorithm please see
 #' Kastner et al. (2017), details about the univariate SV estimation
@@ -259,11 +259,12 @@
 #'    ex-post sign-identification along with the corresponding minimum distances to zero.
 #'    See \code{\link{signident}} for details.}
 #' }
-#' To display the output, use \code{print}, \code{summary} and \code{plot}.
-#' The \code{print} method simply prints the posterior draws (which is very
-#' likely a lot of output); the \code{summary} method displays the summary
-#' statistics currently stored in the object; the \code{plot} method
-#' \code{\link{plot.fsvdraws}} gives a graphical overview.
+#' To display the output, use \code{print}, \code{plot}, and in particular specialized
+#' extractors and printing functions.
+#' The \code{print} method prints a high-level overview; specialized extractors such as
+#' \code{\link{covmat}} or \code{\link{runningcovmat}} are also available.
+#' The \code{plot} method invokes a simple covariance matrix plot; specialized plotting
+#' functions are linked in the documentation of \code{\link{plot.fsvdraws}}.
 #' 
 #' @references Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2017).
 #' Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models.
@@ -332,7 +333,6 @@ fsvsample <- function(y,
 		      keeptime = "last",
 		      heteroskedastic = TRUE,
 		      priorhomoskedastic = NA,
-		      samplefac = TRUE,
 		      runningstore = 6,
 		      runningstorethin = 10,
 		      runningstoremoments = 2,
@@ -340,12 +340,13 @@ fsvsample <- function(y,
 		      signswitch = FALSE, 
 		      interweaving = 4,
 		      quiet = FALSE,
-		      expert,
+		      samplefac = TRUE,
+		      startfac,
 		      startpara,
 		      startlatent,
 		      startlatent0,
 		      startfacload,
-		      startfac
+		      expert
 		      ) {
  
  # Some error checking for y
