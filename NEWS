@@ -7,8 +7,8 @@
 Changes in version 0.9.2
   - Slight change in the "front-end" function fsvsample: the argument
     "priorfacload" must now be positive, its meaning depends on the value of
-    the argument "priorfacloadtype" (new). The argument "columnwise" has been
-    removed. Sorry for any inconvenience this change may cause.
+    the argument "priorfacloadtype" (new argument). The argument "columnwise"
+    has been removed. Sorry for any inconvenience this change may cause.
   - It's now possible to turn factor sampling off. This might be useful if one
     wants to include observed factors (instead of latent ones).
   - The function predloglik now takes an optional logical vector indicating
@@ -22,7 +22,7 @@ Changes in version 0.9.2
     * runningstore = 6 (was: 1)
     * draws = 10000 (was 1000)
     * burnin = 10000 (was 1000)
-  - Arguments to fsvsample were reordered
+  - Arguments to fsvsample were reordered.
 
 Changes in version 0.9.1
   - Default for argument "restrict" in fsvsample is now "none". This
