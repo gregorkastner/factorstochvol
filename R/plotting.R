@@ -348,7 +348,6 @@ covtimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 #' the number of draws stored in \code{x} exceeds this number, draws are
 #' thinned accordingly.
 #' @param alpha Level of transparency.
-#' @param colorpalette A function producing color palettes.
 #' @param cex Controls the size of the dots.
 #' 
 #' @return Returns \code{x} invisibly.
@@ -357,7 +356,7 @@ covtimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 #'
 #' @export
 
-facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3, colorpalette = rainbow) {
+facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (any(dim(x$facload) < 2)) stop("Currently implemented for two or more factors.")
  
@@ -371,7 +370,9 @@ facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3, c
 
  whiches <- matrix((1:(2*ceiling(r/2))-1) %% r + 1, nrow = 2)
  
- colas <- colorpalette(m, alpha = min(alpha, 1))
+ alpha <- min(alpha, 1)
+ colas <- apply(sapply(palette(), col2rgb)/255, 2,
+                function (cc, alpha) rgb(cc[1], cc[2], cc[3], alpha = alpha), alpha)
 
  for (i in seq.int(ncol(whiches))) {
   tmp <- aperm(x$facload[,whiches[,i],plotthese], c(1,3,2))
