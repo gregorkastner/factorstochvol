@@ -40,7 +40,8 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     const SEXP signswitch_in, const SEXP runningstore_in,
     const SEXP runningstoreevery_in, const SEXP runningstoremoments_in,
     const SEXP columnwise_in, const SEXP heteroskedastic_in,
-    const SEXP priorhomoskedastic_in, const SEXP priorh0_in) {
+    const SEXP priorhomoskedastic_in, const SEXP priorh0_in,
+    const SEXP svlcontrol_in) {
 
   // note: SEXP to Rcpp conversion REUSES memory unless "clone"d
   // Rcpp to Armadillo conversion allocates NEW memory unless deact'd
@@ -56,11 +57,12 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   // 5 = "shallow interweaving" (random element)
   // 6 = "deep interweaving" (random element)
 
-  const int interweaving       = as<int>(interweaving_in);
+  const int interweaving  = as<int>(interweaving_in);
 
-  const bool signswitch        = as<bool>(signswitch_in);
-  const int runningstore      = as<int>(runningstore_in);
-  const bool columnwise        = as<bool>(columnwise_in);
+  const bool signswitch   = as<bool>(signswitch_in);
+  const int runningstore  = as<int>(runningstore_in);
+  const bool columnwise   = as<bool>(columnwise_in);
+  const double svlcontrol = as<double>(svlcontrol_in);
 
   NumericVector sv(heteroskedastic_in);
   NumericVector priorhomoskedastic(priorhomoskedastic_in);
@@ -232,12 +234,12 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
 
   // "expert" settings:
   const double B011inv         = 1./as<double>(B011_in);
-  //const double B022inv         = 1./as<double>(B022_in);
+  const double B022inv         = 1./as<double>(B022_in);
   const bool Gammaprior        = as<bool>(gammaprior_in);
-  //const bool truncnormal       = as<bool>(truncnormal_in);
-  //const double MHcontrol       = as<double>(mhcontrol_in);
+  const bool truncnormal       = as<bool>(truncnormal_in);
+  const double MHcontrol       = as<double>(mhcontrol_in);
   const int MHsteps            = as<int>(MHsteps_in);
-  //const int parameterization   = as<int>(para_in);
+  const int parameterization   = as<int>(para_in);
 
   // offset (only used in zero-factor model)
   const double offset          = as<double>(offset_in);
@@ -598,9 +600,9 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     for (int j = 0; j < m; j++) {
       if (sv(j) == true) {
         double curh0j = curh0(j);
-        arma::vec curpara_j = curpara_arma.unsafe_col(j);
+        //arma::vec curpara_j = curpara_arma.unsafe_col(j);
         arma::vec curh_j = armah.unsafe_col(j);
-        arma::vec curmixprob_j = curmixprob_arma.unsafe_col(j);
+        //arma::vec curmixprob_j = curmixprob_arma.unsafe_col(j);
         arma::ivec curmixind_j = curmixind_arma.unsafe_col(j);
         //stochvol::update_sv(armaynorm.row(j).t(), curpara_j, curh_j, curh0j, curmixprob_j, curmixind_j,
         //      centered_baseline, C0(j), cT, Bsigma(j), a0idi, b0idi, bmu, Bmu, B011inv, B022inv, Gammaprior,
@@ -610,10 +612,11 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
                sigma2 = pow(curpara_arma(2, j), 2),
                rho = curpara_arma(3, j);
         arma::vec curht_j = armaht.unsafe_col(j);
-        const arma::mat proposal_chol = 0.08*arma::eye(4, 4);
+        const arma::mat proposal_chol = svlcontrol*arma::eye(4, 4);
+        const arma::mat proposal_chol_inv = (1.0/svlcontrol)*arma::eye(4, 4);
         stochvol::update_svl(armayleft.row(j).t(), armaynorm.row(j).t(), curmixind_j,
-            mu, phi, sigma2, rho, curh_j, curht_j, priorphi_idi, {4, 4}, {.5, .5/Bsigma(j)}, priormu,
-            proposal_chol, proposal_chol, true, true, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1}, false);
+            phi, rho, sigma2, mu, curh_j, curht_j, priorphi_idi, {4, 4}, {.5, .5/Bsigma(j)}, priormu,
+            proposal_chol, proposal_chol_inv, true, true, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1}, false);
         curpara_arma(0, j) = mu;
         curpara_arma(1, j) = phi;
         curpara_arma(2, j) = sqrt(sigma2);
@@ -630,26 +633,14 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     for (int j = m; j < mpr; j++) {
       if (sv(j) == true) {
         double curh0j = curh0(j);
-        arma::vec curpara_j = curpara_arma.unsafe_col(j);
+        arma::vec curpara_j = curpara_arma.submat(0, j, 2, j);
         arma::vec curh_j = armah.unsafe_col(j);
         arma::vec curmixprob_j = curmixprob_arma.unsafe_col(j);
         arma::ivec curmixind_j = curmixind_arma.unsafe_col(j);
-        //stochvol::update_sv(armafnorm.row(j-m).t(), curpara_j, curh_j, curh0j, curmixprob_j, curmixind_j,
-        //    centered_baseline, C0(j), cT, Bsigma(j), a0fac, b0fac, bmu, Bmu, B011inv, B022inv, Gammaprior,
-        //    truncnormal, MHcontrol, MHsteps, parameterization, true, priorh0(j));
-        double mu = curpara_arma(0, j),
-               phi = curpara_arma(1, j),
-               sigma2 = pow(curpara_arma(2, j), 2),
-               rho = curpara_arma(3, j);
-        arma::vec curht_j = armaht.unsafe_col(j);
-        const arma::mat proposal_chol = 0.08*arma::eye(4, 4);
-        stochvol::update_svl(armaf.row(j-m).t(), armafnorm.row(j-m).t(), curmixind_j,
-            mu, phi, sigma2, rho, curh_j, curht_j, priorphi_fac, {4, 4}, {.5, .5/Bsigma(j)}, priormu,
-            proposal_chol, proposal_chol, true, true, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1}, false);
-        curpara_arma(0, j) = mu;
-        curpara_arma(1, j) = phi;
-        curpara_arma(2, j) = sqrt(sigma2);
-        curpara_arma(3, j) = rho;
+        stochvol::update_sv(armafnorm.row(j-m).t(), curpara_j, curh_j, curh0j, curmixprob_j, curmixind_j,
+            true, C0(j), cT, Bsigma(j), priorphi_fac(0), priorphi_fac(1), bmu, Bmu, B011inv, B022inv, Gammaprior,
+            truncnormal, MHcontrol, MHsteps, parameterization, true, priorh0(j));
+        curpara_arma.submat(0, j, 2, j) = curpara_j;
         curh0(j) = curh0j;
       }
     }

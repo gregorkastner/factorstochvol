@@ -534,6 +534,7 @@ shrinkagepriors <- list(a = aShrink,
   mhsteps <- 2L
   B011 <- 10^8
   B022 <- 10^12
+  svlcontrol <- 0.1
  } else {
   expertnames <- names(expert)
   if (!is.list(expert) | is.null(expertnames) | any(expertnames == ""))
@@ -542,7 +543,7 @@ shrinkagepriors <- list(a = aShrink,
    stop("No duplicate elements allowed in argument 'expert'.")
   allowednames <- c("parameterization", "mhcontrol", "gammaprior",
 		    "truncnormal", "mhsteps", "proposalvar4sigmaphi",
-		    "proposalvar4sigmatheta")
+		    "proposalvar4sigmatheta", "svlcontrol")
   exist <- pmatch(expertnames, allowednames)
   if (any(is.na(exist)))
    stop(paste("Illegal element '", paste(expertnames[is.na(exist)], collapse="' and '"), "' in argument 'expert'.", sep=''))
@@ -573,6 +574,15 @@ shrinkagepriors <- list(a = aShrink,
     stop("Argument 'mhcontrol' must be a single number.")
   } else {
    mhcontrol <- -1
+  }
+
+  # Remark: TODO
+  if (exists("svlcontrol", expertenv)) {
+   svlcontrol <- expert[["svlcontrol"]]
+   if (!is.numeric(svlcontrol) || length(svlcontrol) != 1 || svlcontrol <= 0)
+    stop("Argument 'svlcontrol' must be a single positive number.")
+  } else {
+   svlcontrol <- 0.1
   }
 
   # use a Gamma prior for sigma^2 in C?
@@ -765,6 +775,7 @@ res <- .Call("sampler", t(y), draws, burnin, startval,
 	restrinv, interweaving, signswitch, runningstore,
 	runningstorethin, runningstoremoments, columnwise,
 	heteroskedastic, priorhomoskedastic, priorh0,
+  svlcontrol,
 	PACKAGE = "factorstochvol")
 
 res$y <- y

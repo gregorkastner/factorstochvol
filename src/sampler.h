@@ -15,6 +15,6 @@ RcppExport SEXP sampler(const SEXP, const SEXP, const SEXP,
   const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
   const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
   const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP, const SEXP);
+  const SEXP, const SEXP, const SEXP, const SEXP);
 
 #endif
