@@ -1038,6 +1038,7 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
 	   fg = "green", inches = FALSE, add = TRUE)
    par(oldpar)
   }
+ invisible(x)
 }
 
 #' Plots pairwise correlations over time
