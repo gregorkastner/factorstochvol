@@ -4,11 +4,15 @@
 \alias{cormat.fsvdraws}
 \title{Extract posterior draws of the model-implied correlation matrix}
 \usage{
-\method{cormat}{fsvdraws}(x, ...)
+\method{cormat}{fsvdraws}(x, timepoints = "all", ...)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
 of \code{\link{fsvsample}}.}
+
+\item{timepoints}{Vector indicating at which point(s) in time (of those that
+have been stored during sampling) the correlation matrices should be extracted.
+Can also be "all" or "last".}
 
 \item{...}{Ignored.}
 }
@@ -31,26 +35,26 @@ may be slow.
 set.seed(1)
 sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
-cors <- cormat(res) # extract
+cors <- cormat(res, "last") # extract
 
 # Trace plot of determinant of posterior correlation matrix
 # at time t = n = 500:
-detdraws <- apply(cors[,,,500], 3, det)
+detdraws <- apply(cors[,,,1], 3, det)
 ts.plot(detdraws)
 abline(h = mean(detdraws), col = 2)          # posterior mean
 abline(h = median(detdraws), col = 4)        # posterior median
-abline(h = det(cormat(sim)[,,500]), col = 3) # implied by DGP
+abline(h = det(cormat(sim, "last")[,,1]), col = 3) # implied by DGP
 
 # Trace plot of draws from posterior correlation of Sim1 and Sim2 at
 # time t = n = 500:
-ts.plot(cors[1,2,,500])
-abline(h = cormat(sim)[1,2,500], col = 3) # "true" value
+ts.plot(cors[1,2,,1])
+abline(h = cormat(sim, "last")[1,2,1], col = 3) # "true" value
 
 # Smoothed kernel density estimate:
-plot(density(cors[1,2,,500], adjust = 2))
+plot(density(cors[1,2,,1], adjust = 2))
 
 # Summary statistics:
-summary(cors[1,2,,500])
+summary(cors[1,2,,1])
 }
 
 }

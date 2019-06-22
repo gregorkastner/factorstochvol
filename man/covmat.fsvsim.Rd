@@ -4,20 +4,20 @@
 \alias{covmat.fsvsim}
 \title{Extract "true" model-implied covariance matrix for several points in time}
 \usage{
-\method{covmat}{fsvsim}(x, these = seq_len(nrow(x$y)), ...)
+\method{covmat}{fsvsim}(x, timepoints = "all", ...)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvsim'}, usually resulting from a call
 of the function \code{\link{fsvsim}}.}
 
-\item{these}{Vector indicating which points in time should be extracted,
-defaults to all.}
+\item{timepoints}{Vector indicating at which point(s) in time the
+correlation matrices should be extracted. Can also be "all" or "last".}
 
 \item{...}{Ignored.}
 }
 \value{
 Array of dimension \code{m} times \code{m} times
-\code{length(these)}, containing the model-implied covariance matrix.
+\code{length(timepoints)}, containing the model-implied covariance matrix.
 }
 \description{
 \code{covmat} extracts the model-implied (time-varying) covariance matrix

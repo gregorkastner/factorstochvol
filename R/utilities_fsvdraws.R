@@ -128,7 +128,7 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 #' lower <- cor100mean - 2*cor100sd
 #' upper <- cor100mean + 2*cor100sd
 #'
-#' true <- cov2cor(covmat(sim, 100)[,,1]) # true value
+#' true <- cormat(sim, 100)[,,1] # true value
 #'
 #' # Visualize mean +/- 2sd and data generating values
 #' par(mfrow = c(3,3), mar = c(2, 2, 2, 2))
@@ -159,6 +159,9 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' 
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
+#' @param timepoints Vector indicating at which point(s) in time (of those that
+#' have been stored during sampling) the correlation matrices should be
+#' extracted. Can also be "all" or "last".
 #' @param ... Ignored.
 #' 
 #' @note Currently crudely implemented as a double loop in pure R,
@@ -173,40 +176,44 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
-#' covs <- covmat(res) # extract
+#' covs <- covmat(res, "last") # extract
 #'
 #' # Trace plot of determinant of posterior covariance matrix
 #' # at time t = n = 500:
-#' detdraws <- apply(covs[,,,500], 3, det)
+#' detdraws <- apply(covs[,,,1], 3, det)
 #' ts.plot(detdraws)
 #' abline(h = mean(detdraws), col = 2)          # posterior mean
 #' abline(h = median(detdraws), col = 4)        # posterior median
-#' abline(h = det(covmat(sim)[,,500]), col = 3) # implied by DGP
+#' abline(h = det(covmat(sim, "last")[,,1]), col = 3) # implied by DGP
 #'
 #' # Trace plot of draws from posterior covariance of Sim1 and Sim2 at
 #' # time t = n = 500:
-#' ts.plot(covs[1,2,,500])
-#' abline(h = covmat(sim)[1,2,500], col = 3) # "true" value
+#' ts.plot(covs[1,2,,1])
+#' abline(h = covmat(sim, "last")[1,2,1], col = 3) # "true" value
 #' 
 #' # Smoothed kernel density estimate:
-#' plot(density(covs[1,2,,500], adjust = 2))
+#' plot(density(covs[1,2,,1], adjust = 2))
 #'
 #' # Summary statistics:
-#' summary(covs[1,2,,500])
+#' summary(covs[1,2,,1])
 #' }
 #'
 #' @family extractors
 #'
 #' @export
 
-covmat.fsvdraws <- function(x, ...) {
+covmat.fsvdraws <- function(x, timepoints = "all", ...) {
  if (!is(x, "fsvdraws")) stop("Argument 'x' must be of class 'fsvdraws'.")
+ if (is.character(timepoints)) {
+   if (timepoints == "all") timepoints <- seq_len(ncol(x$f)) else if (timepoints == "last") timepoints <- length(ncol(x$f))
+ } else if (!is.numeric(timepoints) || max(timepoints) > ncol(x$f) || min(timepoints) < 1L) {
+   stop("Illegal value for 'timepoints'.")
+ }
  m <- nrow(x$facload)
  r <- ncol(x$facload)
  draws <- dim(x$facload)[3]
- tpoints <- nrow(x$h)
- mycovmat <- array(NA_real_, dim = c(m, m, draws, tpoints))
- for (j in 1:tpoints) {
+ mycovmat <- array(NA_real_, dim = c(m, m, draws, length(timepoints)))
+ for (j in timepoints) {
   for (i in 1:draws) {
    facload <- matrix(x$facload[,,i], nrow = m)
    facvar <- exp(x$h[j, m+(1:r),i])
@@ -227,6 +234,9 @@ covmat.fsvdraws <- function(x, ...) {
 #' 
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
+#' @param timepoints Vector indicating at which point(s) in time (of those that
+#' have been stored during sampling) the correlation matrices should be extracted.
+#' Can also be "all" or "last".
 #' @param ... Ignored.
 #' 
 #' @note Currently crudely implemented as a double loop in pure R,
@@ -241,37 +251,37 @@ covmat.fsvdraws <- function(x, ...) {
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
-#' cors <- cormat(res) # extract
+#' cors <- cormat(res, "last") # extract
 #'
 #' # Trace plot of determinant of posterior correlation matrix
 #' # at time t = n = 500:
-#' detdraws <- apply(cors[,,,500], 3, det)
+#' detdraws <- apply(cors[,,,1], 3, det)
 #' ts.plot(detdraws)
 #' abline(h = mean(detdraws), col = 2)          # posterior mean
 #' abline(h = median(detdraws), col = 4)        # posterior median
-#' abline(h = det(cormat(sim)[,,500]), col = 3) # implied by DGP
+#' abline(h = det(cormat(sim, "last")[,,1]), col = 3) # implied by DGP
 #'
 #' # Trace plot of draws from posterior correlation of Sim1 and Sim2 at
 #' # time t = n = 500:
-#' ts.plot(cors[1,2,,500])
-#' abline(h = cormat(sim)[1,2,500], col = 3) # "true" value
+#' ts.plot(cors[1,2,,1])
+#' abline(h = cormat(sim, "last")[1,2,1], col = 3) # "true" value
 #' 
 #' # Smoothed kernel density estimate:
-#' plot(density(cors[1,2,,500], adjust = 2))
+#' plot(density(cors[1,2,,1], adjust = 2))
 #'
 #' # Summary statistics:
-#' summary(cors[1,2,,500])
+#' summary(cors[1,2,,1])
 #' }
 #'
 #' @family extractors
 #'
 #' @export
 
-
-cormat.fsvdraws <- function(x, ...) {
- mycovmat <- covmat.fsvdraws(x, ...)
+cormat.fsvdraws <- function(x, timepoints = "all", ...) {
+ mycovmat <- covmat.fsvdraws(x, timepoints, ...)
  array(apply(mycovmat, 3:4, cov2cor), dim = dim(mycovmat))
 }
+
 
 #' Predicts factor and idiosyncratic log-volatilities h
 #'

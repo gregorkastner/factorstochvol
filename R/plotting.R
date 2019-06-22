@@ -1006,12 +1006,11 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
     "#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))
   col <- rev(colpal(200))
  }
- lastkept <- ncol(x$f)
  effdraws <- dim(x$f)[3]
  n <- nrow(x$y)
  m <- ncol(x$y)
 
- mycormat <- cormat(res)[,,,lastkept]
+ mycormat <- cormat(res, "last")[,,,1]
  if (length(quantiles) == 1) {
    plotCI <- "n"
    mycormatlower <- NULL
@@ -1029,7 +1028,7 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
  corrplot::corrplot(mycormatmed, plotCI = plotCI, lowCI.mat = mycormatlower, uppCI.mat = mycormatupper, col = col)
 
  if (!is.null(fsvsimobj)) {
-   cortrue <- cov2cor(covmat(fsvsimobj, n)[,,1])
+   cortrue <- cormat(fsvsimobj, n)[,,1]
    diag(cortrue) <- NA
    oldpar <- par(xpd = TRUE)
    symbols(rep(1:m, each = m), rep(m:1, m),

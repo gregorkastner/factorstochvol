@@ -38,7 +38,7 @@ cor100sd <- runningcormat(res, 100, statistic = "sd") # extract sd
 lower <- cor100mean - 2*cor100sd
 upper <- cor100mean + 2*cor100sd
 
-true <- cov2cor(covmat(sim, 100)[,,1]) # true value
+true <- cormat(sim, 100)[,,1] # true value
 
 # Visualize mean +/- 2sd and data generating values
 par(mfrow = c(3,3), mar = c(2, 2, 2, 2))
