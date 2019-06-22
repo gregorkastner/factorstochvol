@@ -1,5 +1,3 @@
-- TODO: stochvol::paratraceplot vs. factorstochvol::paratraceplot
-- TODO: stochvol::logret vs. factorstochvol::logret
 - TODO: Match startfac / startpara / startlatent / startlatent0 / startfacload
         with output (maybe restructure into startvals?)
 - TODO: Allow also for ones in the loadings matrix a priori (not only zeros)
@@ -26,6 +24,8 @@ Changes in version 0.9.2
   - Previous default plotting function plot.fsvsdraws has been renamed to
     plotalot. New default plotting function now shows a correlation matrix.
   - New generic extractor: cormat (cormat.fsvdraws and cormat.fsvsim)
+  - Fixed namespace clashes between stochvol and factorstochvol (concerned
+    logret and paratraceplot); now DEPENDS on stochvol
 
 Changes in version 0.9.1
   - Default for argument "restrict" in fsvsample is now "none". This

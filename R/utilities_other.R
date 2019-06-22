@@ -1,4 +1,23 @@
-#' @describeIn logret (De-meaned) log returns
+#' Computes the log returns of a vector-valued time series
+#'
+#' \code{logret} computes the log returns of a multivariate time
+#' series, with optional de-meaning.
+#'
+#' @param dat The raw data, a matrix or data frame with \code{n}
+#'  (number of timepoints) rows and \code{m}
+#'  (number of component series) columns.
+#' @param demean Logical value indicating whether the data should
+#' be de-meaned.
+#' @param standardize Logical value indicating whether the data should
+#' be standardized (in the sense that each component series has an empirical
+#' variance equal to one).
+#' @param ... Ignored.
+#'
+#' @return Matrix containing the log returns of the (de-meaned)
+#' data.
+#'
+#' @rdname logret
+#' @name logret
 #' @export
 
 logret.matrix <- function(dat, demean = FALSE, standardize = FALSE, ...) {
@@ -10,12 +29,13 @@ logret.matrix <- function(dat, demean = FALSE, standardize = FALSE, ...) {
 }
 
 
-#' @describeIn logret (De-meaned) log returns
+#' @rdname logret
+#' @name logret
 #' @export
 
-logret.data.frame <- function(dat, ...) {
+logret.data.frame <- function(dat, demean = FALSE, standardize = FALSE, ...) {
  dat <- data.matrix(dat)
- logret(dat, ...)
+ logret(dat, demean, standardize, ...)
 }
 
 

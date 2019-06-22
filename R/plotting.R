@@ -673,7 +673,7 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
  invisible(x)
 }
 
-#' Trace plots of parameter draws
+#' Trace plots of parameter draws.
 #'
 #' \code{paratraceplot} draws trace plots of all parameters (\code{mu, phi,
 #' sigma}). Can be an important tool to check MCMC convergence if inference
@@ -686,14 +686,19 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
 #' call to \code{\link{fsvsim}}).
 #' @param thinning Plot every \code{thinning}th draw.
 #' @param maxrows Indicates the maximum number of rows to be drawn per page.
+#' @param ... Ignored.
 #' 
 #' @return Returns \code{x} invisibly.
 #' 
 #' @family plotting
 #'
+#' @rdname paratraceplot
+#'
+#' @name paratraceplot
+#'
 #' @export
 
-paratraceplot <- function(x, fsvsimobj = NULL, thinning = NULL, maxrows = 3) {
+paratraceplot.fsvdraws <- function(x, fsvsimobj = NULL, thinning = NULL, maxrows = 3, ...) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  m <- ncol(x$y)
  n <- nrow(x$y)
@@ -1010,7 +1015,7 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
  n <- nrow(x$y)
  m <- ncol(x$y)
 
- mycormat <- cormat(res, "last")[,,,1]
+ mycormat <- cormat(x, "last")[,,,1]
  if (length(quantiles) == 1) {
    plotCI <- "n"
    mycormatlower <- NULL
