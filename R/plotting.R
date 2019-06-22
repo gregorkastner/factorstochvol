@@ -966,7 +966,7 @@ facloaddensplot <- function(x, fsvsimobj = NULL, rows = 5, thesecols = NULL, xli
 #'
 #' @export
 
-diagplot <- function(x, fsvsimobj = NULL, ...) {
+plotalot <- function(x, fsvsimobj = NULL, ...) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  r <- ncol(x$facload)
  if (r > 0) facloadpointplot(x, fsvsimobj = fsvsimobj, ...)
