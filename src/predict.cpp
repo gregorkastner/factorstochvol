@@ -14,7 +14,7 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
  const int horizon = store(storelen - 1);
  const int each = as<int>(each_in);
 
- NumericVector h = obj["h"];
+ NumericVector h = obj["logvar"];
  const IntegerVector hDims = h.attr("dim");
 
  NumericVector facload = obj["facload"];

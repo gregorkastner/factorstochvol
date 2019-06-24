@@ -23,8 +23,8 @@ covmat.fsvsim <- function(x, timepoints = "all", ...) {
  if (!is(x, "fsvsim")) stop("Argument 'x' must be of class 'fsvsim'.")
  
  if (is.character(timepoints)) {
-   if (timepoints == "all") timepoints <- seq_len(ncol(x$f)) else if (timepoints == "last") timepoints <- length(ncol(x$f))
- } else if (!is.numeric(timepoints) || max(timepoints) > ncol(x$f) || min(timepoints) < 1L) {
+   if (timepoints == "all") timepoints <- seq_len(ncol(x$fac)) else if (timepoints == "last") timepoints <- length(ncol(x$fac))
+ } else if (!is.numeric(timepoints) || max(timepoints) > ncol(x$fac) || min(timepoints) < 1L) {
    stop("Illegal value for 'timepoints'.")
  }
 

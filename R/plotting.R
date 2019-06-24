@@ -106,7 +106,7 @@ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  }
  n <- nrow(x$y)
  m <- ncol(x$y)
- r <- dim(x$h)[2] - m
+ r <- dim(x$logvar)[2] - m
  draws <- dim(x$para)[3]
  snames <- colnames(x$y)
  dates <- rownames(x$y)
@@ -188,7 +188,7 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
   stop("Correlations haven't been stored during sampling.")
  n <- nrow(x$y)
  m <- ncol(x$y)
- r <- dim(x$h)[2] - m
+ r <- dim(x$logvar)[2] - m
  draws <- dim(x$para)[3]
  snames <- colnames(x$y)
  dates <- rownames(x$y)
@@ -282,7 +282,7 @@ cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
  } else series <- as.integer(series)
  m <- ncol(x$y)
  n <- nrow(x$y)
- r <- dim(x$h)[2] - m
+ r <- dim(x$logvar)[2] - m
  draws <- dim(x$para)[3]
  snames <- colnames(x$y)
  dates <- rownames(x$y)
@@ -646,8 +646,8 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
 
  for (i in thesei) {
   if (i == 1) par(mfrow = c(min(maxrows, m), 1))
-  thismean <- x$runningstore$h[,i,"mean"]
-  thissd <- x$runningstore$h[,i,"sd"]
+  thismean <- x$runningstore$logvar[,i,"mean"]
+  thissd <- x$runningstore$logvar[,i,"sd"]
   ts.plot(cbind(thismean - 2*thissd, thismean, thismean + 2*thissd),
 	  lwd = c(1, 2, 1), main = "", xlab = "", ylab = "",
 	  gpars = list(xaxt = 'n'))
@@ -1011,7 +1011,7 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
     "#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))
   col <- rev(colpal(200))
  }
- effdraws <- dim(x$f)[3]
+ effdraws <- dim(x$fac)[3]
  n <- nrow(x$y)
  m <- ncol(x$y)
 
@@ -1076,7 +1076,7 @@ corplot <- function(x, fsvsimobj = NULL, these = 1:(ncol(x$y)*(ncol(x$y)-1)/2), 
 
  m <- ncol(x$y)
  n <- nrow(x$y)
- r <- dim(x$h)[2] - m
+ r <- dim(x$logvar)[2] - m
  draws <- dim(x$para)[3]
  snames <- colnames(x$y)
  dates <- rownames(x$y)

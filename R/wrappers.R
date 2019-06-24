@@ -257,12 +257,12 @@
 #' 
 #' @return The value returned is a list object of class \code{fsvdraws} holding
 #'  \itemize{
-#'  \item{\code{f}: }{Array containing factor draws from the posterior distribution.}
-#'  \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
-#'  \item{\code{h0}: }{Array containing idiosyncratic and factor initial log variance draws.}
-#'  \item{\code{h}: }{Array containing idiosyncratic and factor log variance draws.}
 #'  \item{\code{facload}: }{Array containing draws from the posterior distribution of the
 #'                 factor loadings matrix.}
+#'  \item{\code{fac}: }{Array containing factor draws from the posterior distribution.}
+#'  \item{\code{logvar}: }{Array containing idiosyncratic and factor initial log variance draws.}
+#'  \item{\code{logvar0}: }{Array containing idiosyncratic and factor log variance draws.}
+#'  \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
 #'  \item{\code{y}: }{Matrix containing the data supplied.}
 #'  \item{\code{runningstore}: }{List whose elements contain ergodic moments of certain
 #'                      variables of interest. See argument
@@ -954,23 +954,23 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
  
  if (runningstore >= 3L) {  # stored running factor sds, factors, and factor log variances
    res$runningstore$sd <- standardizer(force(array(unlist(res$runningstore$sd, FALSE, FALSE),
-     dim = c(dim(res$runningstore$h$mean), runningstoremoments),
+     dim = c(dim(res$runningstore$logvar$mean), runningstoremoments),
      dimnames = list(NULL, NULL, mynames))))
  } else {
    res$runningstore$sd <- NULL
  }
 
  if (runningstore >= 2L) {  # stored running factors and factor log variances
-   res$runningstore$f <- standardizer(force(array(unlist(res$runningstore$f, FALSE, FALSE),
-     dim = c(dim(res$runningstore$f$mean), runningstoremoments),
+   res$runningstore$fac <- standardizer(force(array(unlist(res$runningstore$fac, FALSE, FALSE),
+     dim = c(dim(res$runningstore$fac$mean), runningstoremoments),
      dimnames = list(NULL, NULL, mynames))))
  } else {
-   res$runningstore$f <- NULL
+   res$runningstore$fac <- NULL
  }
 
  if (runningstore >= 1L) {  # stored running factor log variances
-    res$runningstore$h <- standardizer(force(array(unlist(res$runningstore$h, FALSE, FALSE),
-      dim = c(dim(res$runningstore$h$mean), runningstoremoments),
+    res$runningstore$logvar <- standardizer(force(array(unlist(res$runningstore$logvar, FALSE, FALSE),
+      dim = c(dim(res$runningstore$logvar$mean), runningstoremoments),
       dimnames = list(NULL, NULL, mynames))))
  } else {
   res$runningstore <- NULL

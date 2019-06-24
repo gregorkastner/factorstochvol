@@ -265,12 +265,12 @@ referred to Kastner and Frühwirth-Schnatter (2014) and Kastner (2016). If
 \value{
 The value returned is a list object of class \code{fsvdraws} holding
  \itemize{
- \item{\code{f}: }{Array containing factor draws from the posterior distribution.}
- \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
- \item{\code{h0}: }{Array containing idiosyncratic and factor initial log variance draws.}
- \item{\code{h}: }{Array containing idiosyncratic and factor log variance draws.}
  \item{\code{facload}: }{Array containing draws from the posterior distribution of the
                 factor loadings matrix.}
+ \item{\code{fac}: }{Array containing factor draws from the posterior distribution.}
+ \item{\code{logvar}: }{Array containing idiosyncratic and factor initial log variance draws.}
+ \item{\code{logvar0}: }{Array containing idiosyncratic and factor log variance draws.}
+ \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
  \item{\code{y}: }{Matrix containing the data supplied.}
  \item{\code{runningstore}: }{List whose elements contain ergodic moments of certain
                      variables of interest. See argument

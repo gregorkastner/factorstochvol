@@ -205,8 +205,8 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 covmat.fsvdraws <- function(x, timepoints = "all", ...) {
  if (!is(x, "fsvdraws")) stop("Argument 'x' must be of class 'fsvdraws'.")
  if (is.character(timepoints)) {
-   if (timepoints == "all") timepoints <- seq_len(ncol(x$f)) else if (timepoints == "last") timepoints <- length(ncol(x$f))
- } else if (!is.numeric(timepoints) || max(timepoints) > ncol(x$f) || min(timepoints) < 1L) {
+   if (timepoints == "all") timepoints <- seq_len(ncol(x$fac)) else if (timepoints == "last") timepoints <- length(ncol(x$fac))
+ } else if (!is.numeric(timepoints) || max(timepoints) > ncol(x$fac) || min(timepoints) < 1L) {
    stop("Illegal value for 'timepoints'.")
  }
  m <- nrow(x$facload)
@@ -216,8 +216,8 @@ covmat.fsvdraws <- function(x, timepoints = "all", ...) {
  for (j in timepoints) {
   for (i in 1:draws) {
    facload <- matrix(x$facload[,,i], nrow = m)
-   facvar <- exp(x$h[j, m+(1:r),i])
-   idivar <- exp(x$h[j, 1:m,i])
+   facvar <- exp(x$logvar[j, m+(1:r),i])
+   idivar <- exp(x$logvar[j, 1:m,i])
    mycovmat[,,i,j] <- tcrossprod(sweep(facload, 2, facvar, '*'), facload)
    diag(mycovmat[,,i,j]) <- diag(mycovmat[,,i,j]) + idivar
   }
@@ -339,12 +339,12 @@ predh <- function(x, ahead = 1, each = 1) {
  if (length(each) > 1 || each < 1) stop("Argument 'each' must be greater or equal to 1.")
 
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
 
  mus <- matrix(rep(x$para["mu",,], each), nrow = m + r)
  phis <- matrix(rep(x$para["phi",,], each), nrow = m + r)
  sigmas <- matrix(rep(x$para["sigma",,], each), nrow = m + r)
- hpredtmp <- matrix(rep(x$h[nrow(x$h),,], each), nrow = m + r)
+ hpredtmp <- matrix(rep(x$logvar[nrow(x$logvar),,], each), nrow = m + r)
 
  len <- ncol(sigmas)
  hpreds <- array(NA_real_, dim = c(m+r, len, length(ahead)))
@@ -414,7 +414,7 @@ predh <- function(x, ahead = 1, each = 1) {
 predcov <- function(x, ahead = 1, each = 1) {
  pred <- predh(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  ret <- array(NA_real_, dim = c(m, m, dim(pred$idih)[2], length(ahead)))
  dimnames(ret) <- list(colnames(x$y), colnames(x$y), NULL, ahead)
  for (i in seq_along(ahead)) {
@@ -481,7 +481,7 @@ predcov <- function(x, ahead = 1, each = 1) {
 predcor <- function(x, ahead = 1, each = 1) {
  pred <- predh(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  ret <- array(NA_real_, dim = c(m, m, dim(pred$idih)[2], length(ahead)))
  dimnames(ret) <- list(colnames(x$y), colnames(x$y), NULL, ahead)
  for (i in seq_along(ahead)) {
@@ -538,7 +538,7 @@ predcor <- function(x, ahead = 1, each = 1) {
 predprecWB <- function(x, ahead = 1, each = 1) {
  pred <- predh(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  ret <- array(NA_real_, dim = c(m, m, dim(pred$idih)[2], length(ahead)))
  logdet <- array(NA_real_, dim = c(dim(pred$idih)[2], length(ahead)))
  dimnames(ret) <- list(colnames(x$y), colnames(x$y), NULL, ahead)
@@ -635,7 +635,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
  predobj <- predcov(x, ahead, each)
  predobj <- predobj[indicator,indicator,,,drop=FALSE]
  m <- sum(indicator)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  n <- dim(predobj)[3]
  ret <- array(NA_real_, dim = c(n, length(ahead)))
  realret <- rep(NA_real_, length(ahead))
@@ -708,7 +708,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
 predloglikWB <- function(x, y, ahead = 1, each = 1, alldraws = FALSE) {
  covinvdet <- predprecWB(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  if (!is.numeric(y) || !is.matrix(y) || ncol(y) != m || nrow(y) != length(ahead))
   stop("Argument 'y' must be a matrix of dimension c(length(ahead), ncol(x$y)).")
  ret <- array(NA_real_, dim = c(dim(covinvdet$precisionlogdet)[1], length(ahead)))
@@ -748,12 +748,12 @@ predcondOLD <- function(x, ahead = 1, each = 1, ...) {
  if (length(each) > 1 || each < 1) stop("Argument 'each' must be greater or equal to 1.")
 
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
 
  mus <- matrix(rep(x$para["mu",,], each), nrow = m + r)
  phis <- matrix(rep(x$para["phi",,], each), nrow = m + r)
  sigmas <- matrix(rep(x$para["sigma",,], each), nrow = m + r)
- hpredtmp <- matrix(rep(x$h[nrow(x$h),,], each), nrow = m + r)
+ hpredtmp <- matrix(rep(x$logvar[nrow(x$logvar),,], each), nrow = m + r)
 
  len <- ncol(sigmas)
  hpreds <- array(NA_real_, dim = c(m+r, len, length(ahead)))
@@ -838,7 +838,7 @@ signident <- function(x, method = "maximin", implementation = 3) {
  if (method != "diagonal" & method != "maximin")
   stop("Argument 'method' must either be 'diagonal' or 'maximin'.")
  r <- dim(x$facload)[2]
- ftpoints <- dim(x$f)[2]
+ ftpoints <- dim(x$fac)[2]
 
  if (r == 0) {
   x$identifier <- matrix(NA_real_, nrow = 0, ncol = 2)
@@ -857,14 +857,14 @@ signident <- function(x, method = "maximin", implementation = 3) {
    mysig <- sign(faccol[identifier[i],])
    x$facload[,i,] <- t(t(faccol) * mysig)
    if (implementation == 1) {
-    x$f[i,,] <- x$f[i,,] * rep(mysig, each = ftpoints)
+    x$fac[i,,] <- x$fac[i,,] * rep(mysig, each = ftpoints)
    } else if (implementation == 2) {
     for (j in seq(along = mysig)) {
-     x$f[i,,j] <- x$f[i,,j] * mysig[j]
+     x$fac[i,,j] <- x$fac[i,,j] * mysig[j]
     }
    } else if (implementation == 3) {
     for (j in 1:ftpoints) {
-     x$f[i,j,] <- x$f[i,j,] * mysig
+     x$fac[i,j,] <- x$fac[i,j,] * mysig
     }
    } else stop("Err0r.")
   }
@@ -950,12 +950,12 @@ orderident <- function(x, method = "summed") {
  m <- nrow(x$facload)
  r <- ncol(x$facload)
  x$facload <- x$facload[,myorder,,drop=FALSE]
- x$f <- x$f[myorder,,,drop=FALSE]
+ x$fac <- x$fac[myorder,,,drop=FALSE]
  x$para[,m+(1:r),] <- x$para[,m+myorder,,drop=FALSE]
- x$h[,m+(1:r),] <- x$h[,m+myorder,,drop=FALSE]
+ x$logvar[,m+(1:r),] <- x$logvar[,m+myorder,,drop=FALSE]
  if (exists("runningstore", x)) {
- if (exists("h", x$runningstore)) x$runningstore$h[,m+(1:r),] <- x$runningstore$h[,m+myorder,,drop=FALSE]
- if (exists("f", x$runningstore)) x$runningstore$f <- x$runningstore$f[myorder,,,drop=FALSE]
+ if (exists("h", x$runningstore)) x$runningstore$logvar[,m+(1:r),] <- x$runningstore$logvar[,m+myorder,,drop=FALSE]
+ if (exists("f", x$runningstore)) x$runningstore$fac <- x$runningstore$fac[myorder,,,drop=FALSE]
  if (exists("sd", x$runningstore)) x$runningstore$sd[,m+(1:r),] <- x$runningstore$sd[,m+myorder,,drop=FALSE]
  if (exists("identifier", x)) x$identifier <- x$identifier[myorder,]
  }
