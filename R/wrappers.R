@@ -17,23 +17,23 @@
 #' @param burnin Number of initial MCMC draws to be discarded.
 #'
 #' @param priormu Vector of length 2 denoting prior mean and standard deviation
-#' for unconditional levels of the idiosyncratic log-variance processes.
+#' for unconditional levels of the idiosyncratic log variance processes.
 #'
 #' @param priorphiidi Vector of length 2, indicating the shape parameters for the
 #' Beta prior distributions of the transformed parameters \code{(phi+1)/2}, where
-#' \code{phi} denotes the persistence of the idiosyncratic log-variances.
+#' \code{phi} denotes the persistence of the idiosyncratic log variances.
 #'
 #' @param priorphifac Vector of length 2, indicating the shape parameters for the
 #' Beta prior distributions of the transformed parameters \code{(phi+1)/2}, where
-#' \code{phi} denotes the persistence of the factor log-variances.
+#' \code{phi} denotes the persistence of the factor log variances.
 #'
 #' @param priorsigmaidi Vector of length \code{m} containing the
-#' prior volatilities of log-variances. If \code{priorsigmaidi} has exactly
-#' one element, it will be recycled for all idiosyncratic log-variances.
+#' prior volatilities of log variances. If \code{priorsigmaidi} has exactly
+#' one element, it will be recycled for all idiosyncratic log variances.
 #'
 #' @param priorsigmafac Vector of length \code{factors} containing the
-#' prior volatilities of log-variances. If \code{priorsigmafac} has exactly
-#' one element, it will be recycled for all factor log-variances.
+#' prior volatilities of log variances. If \code{priorsigmafac} has exactly
+#' one element, it will be recycled for all factor log variances.
 #'
 #' @param priorfacload Either a matrix of dimensions \code{m} times \code{factors}
 #' with positive elements or a single number (which will be recycled accordingly).
@@ -58,9 +58,9 @@
 #'
 #' @param priorh0idi Vector of length 1 or \code{m}, containing
 #' information about the Gaussian prior for the initial idiosyncratic
-#' log-variances.
+#' log variances.
 #' If an element of \code{priorh0idi} is a nonnegative number, the conditional
-#' prior of the corresponding initial log-variance h0 is assumed to be Gaussian
+#' prior of the corresponding initial log variance h0 is assumed to be Gaussian
 #' with mean 0 and standard deviation \code{priorh0idi} times $sigma$.
 #' If an element of
 #' \code{priorh0idi} is the string 'stationary', the prior of the corresponding
@@ -69,9 +69,9 @@
 #'
 #' @param priorh0fac Vector of length 1 or \code{factors}, containing
 #' information about the Gaussian prior for the initial factor
-#' log-variances.
+#' log variances.
 #' If an element of \code{priorh0fac} is a nonnegative number, the conditional
-#' prior of the corresponding initial log-variance h0 is assumed to be Gaussian
+#' prior of the corresponding initial log variance h0 is assumed to be Gaussian
 #' with mean 0 and standard deviation \code{priorh0fac} times $sigma$.
 #' If an element of
 #' \code{priorh0fac} is the string 'stationary', the prior of the corresponding
@@ -86,12 +86,12 @@
 #' @param keeptime Either a number coercible to a positive integer, or a string
 #' equal to "all" or "last". If a number different from 1 is provided, only every
 #' \code{keeptime}th latent log-volatility is being monitored. If, e.g.,
-#' \code{keeptime = 3}, draws for the latent log-variances
+#' \code{keeptime = 3}, draws for the latent log variances
 #' \code{h_1,h_4,h_7,...} will
 #' be kept. If \code{keeptime} is set to "all", this is equivalent to setting it
 #' to 1. If
 #' \code{keeptime} is set to "last" (the default), only draws for the very last
-#' latent log-variances h_n are kept.
+#' latent log variances h_n are kept.
 #'
 #' @param runningstore Because most machines these days do not have enough memory
 #' to store all draws for all points in time, setting \code{runningstore} to an
@@ -101,7 +101,7 @@
 #' variance, skewness, etc. will be stored for certain variables
 #' if \code{runningstore} is set to a value...
 #' \itemize{
-#'  \item{\code{>= 1}: }{Latent log-variances \code{h_1,h_2,...,h_(n+r)}.}
+#'  \item{\code{>= 1}: }{Latent log variances \code{h_1,h_2,...,h_(n+r)}.}
 #'  \item{\code{>= 2}: }{Latent factors \code{f_1,...,f_r}.}
 #'  \item{\code{>= 3}: }{Latent volatilities \code{sqrt(exp(h_1,h_2,...,h_(n+r)))}.}
 #'  \item{\code{>= 4}: }{Conditional covariance matrix and the square roots of its
@@ -205,29 +205,44 @@
 #'        Defaults to \code{10^12}.}
 #' }
 #'
-#' @param startpara \emph{optional} named list, containing the starting values
-#' for the parameter draws. If supplied, \code{startpara} must contain three
-#' elements named \code{mu} (vector of length \code{m}), \code{phi} (vector
-#' of length \code{m+r}) and \code{sigma} (vector of length \code{m+r}).
-#' The elements of \code{mu} can be arbitrary numerical values, the
-#' \code{phi}s must be real numbers between \code{-1} and \code{1}, and
-#' the \code{sigma}s must be positive real numbers.
+#' @param startpara \emph{optional} numeric matrix of dimension
+#' \code{c(3, m + factors)}, containing the starting values
+#' for the parameter draws. The first \code{m} columns must contain 
+#' parameters values corresponding to the idiosyncratic volatilities,
+#' the subsequent \code{factor} columns must contain parameter values
+#' corresponding to the factor volatilities. The first row of \code{startpara}
+#' corresponds to \code{mu}, the level of the log variances (can be arbitrary
+#' numerical values), the second row corresponds to \code{phi}, the persistence
+#' parameters of the log variances (numeric values between \code{-1} and \code{1}),
+#' and the third row corresponds to \code{sigma} (positive numeric values).
 #'
-#' @param startlatent \emph{optional} numeric matrix of dimension
+#' @param startlogvar \emph{optional} numeric matrix of dimension
 #' \code{c(n, m + factors)}, containing the starting values of the
-#' latent log-variances.
+#' latent log variances.
+#' The first \code{m} rows correspond to the idiosyncratic log variances,
+#' the subsequent \code{factor} rows correspond to the factor log variances.
+#' Was previously called startlatent.
 #'
-#' @param startlatent0 \emph{optional} numeric vector of length
+#' @param startlatent \emph{Deprecated.} Please use \code{startlogvar} instead.
+#'
+#' @param startlogvar0 \emph{optional} numeric vector of length
 #' \code{m + factors}, containing the starting values of the initial latent
-#' log-variances.
+#' log variances.
+#' The first \code{m} elements correspond to the idiosyncratic log variances,
+#' the subsequent \code{factor} elements correspond to the factor log variances.
+#' Was previously called startlatent0.
+#'
+#' @param startlatent0 \emph{Deprecated.} Please use \code{startlogvar0} instead.
 #'
 #' @param startfacload \emph{optional} numeric matrix of dimension
 #' \code{c(m, factors)}, containing the starting values of the
 #' factor loadings.
+#' In case of a single factor model, a numeric vector of length \code{n} is also accepted.
 #'
 #' @param startfac \emph{optional} numeric matrix of dimension
 #' \code{c(factors, n)}, containing the starting values of the
 #' latent factors.
+#' In case of a single factor model, a numeric vector of length \code{n} is also accepted.
 #'
 #' @param samplefac If set to \code{FALSE}, the factors are not sampled (but 
 #' remain at their starting values forever). This might be useful if one
@@ -244,8 +259,8 @@
 #'  \itemize{
 #'  \item{\code{f}: }{Array containing factor draws from the posterior distribution.}
 #'  \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
-#'  \item{\code{h0}: }{Array containing idiosyncratic and factor initial log-variance draws.}
-#'  \item{\code{h}: }{Array containing idiosyncratic and factor log-variance draws.}
+#'  \item{\code{h0}: }{Array containing idiosyncratic and factor initial log variance draws.}
+#'  \item{\code{h}: }{Array containing idiosyncratic and factor log variance draws.}
 #'  \item{\code{facload}: }{Array containing draws from the posterior distribution of the
 #'                 factor loadings matrix.}
 #'  \item{\code{y}: }{Matrix containing the data supplied.}
@@ -343,12 +358,21 @@ fsvsample <- function(y,
 		      samplefac = TRUE,
 		      startfac,
 		      startpara,
+		      startlogvar,
 		      startlatent,
+		      startlogvar0,
 		      startlatent0,
 		      startfacload,
 		      expert
 		      ) {
  
+ # startlatent and startlogvar0 are being faded out
+ if (!missing("startlatent") || !missing("startlatent0")) {
+  warning("The arguments 'startlatent' and 'startlatent0' were renamed to 'startlogvar' and 'startlogvar0', respectively. Please use the new argument names.")
+  if (missing("startlogvar") && !missing("startlatent")) startlogvar <- startlatent
+  if (missing("startlogvar0") && !missing("startlatent0")) startlogvar0 <- startlatent0
+ }
+
  # Some error checking for y
  if (is(y, "fsvsim")) {
   y <- y[["y"]]
@@ -578,7 +602,7 @@ shrinkagepriors <- list(a = aShrink,
 
  # Some error checking for thin
  if (!is.numeric(thin) | thin < 1) {
-  stop("Argument 'thin' (thinning parameter for the latent log-variances and parameters) must be a single number >= 1.")
+  stop("Argument 'thin' (thinning parameter for the latent log variances and parameters) must be a single number >= 1.")
  } else {
   thin <- as.integer(thin)
  }
@@ -696,6 +720,8 @@ if (missing(startfacload)) {
 # if (factors >= 1) for (i in 1:factors) startfacload[i,] <- c(rep(1/i,i) + rnorm(i, sd=.1), rep(0,factors-i))
 # startfacload[-(1:factors),] <- 1/factors + rnorm((m-factors)*factors, sd=.1)
 } else {
+ if (factors == 1L && is.numeric(startfacload) && is.vector(startfacload) && length(startfacload) == m)
+  startfacload <- matrix(startfacload, ncol = 1L)
  if (!is.numeric(startfacload) || !is.matrix(startfacload) ||
      (nrow(startfacload) != m && factors >= 1) || ncol(startfacload) != factors)
   stop("Argument 'startfacload' must be a numeric matrix of dimension c(ncol(y), factors).")
@@ -707,57 +733,45 @@ if (missing(startfacload)) {
 		    phi = c(rep(.8, m), rep(.8, factors)) + pmin(rnorm(m + factors, sd=.06), .095),
 		    sigma = rep(.1, m + factors) + rgamma(m + factors, 1, 10)) 
  } else {
-  if (!is.list(startpara))
-   stop("Argument 'startpara' must be a list with three elements named 'mu', 'phi', 'sigma'.")
+  if (!is.numeric(startpara) || !is.matrix(startpara) || nrow(startpara) != 3 || ncol(startpara) != m + factors)
+   stop("Argument 'startpara' must be a numeric matrix of dimension c(3, ncol(y) + factors).")
   
-  if (!is.numeric(startpara[["mu"]]))
-   stop('Argument \'startpara[["mu"]]\' must exist and be numeric.')
-  
-  if (!is.numeric(startpara[["phi"]]))
-   stop('Argument \'startpara[["phi"]]\' must exist and be numeric.')
-  
-  if (any(abs(startpara[["phi"]]) >= 1))
-   stop('Argument \'startpara[["phi"]]\' must be between -1 and 1.')
-
-  if (!is.numeric(startpara[["sigma"]]))
-   stop('Argument \'startpara[["sigma"]]\' must exist and be numeric.')
-  
-  if (any(startpara[["sigma"]] <= 0))
-   stop('Argument \'startpara[["sigma"]]\' must be positive.')
-  
-  if (length(startpara[["mu"]]) != m) {
-   stop('Argument \'startpara[["mu"]]\' must be of length nrow(y).')
-  } else {
-   startpara[["mu"]] <- c(startpara[["mu"]], rep(0, factors))
+  if (any(startpara[1, m + seq_len(factors)] != 0)) {
+   warning("Some of the levels of the factor log variance starting values are different from zero. Setting those to zero for you.")
+   startpara[1, m + seq_len(factors)] <- 0
   }
   
-  if (length(startpara[["phi"]]) != factors + m)
-   stop('Argument \'startpara[["phi"]]\' must be of length nrow(y) + factors.')
-  
-  if (length(startpara[["sigma"]]) != factors + m)
-   stop('Argument \'startpara[["sigma"]]\' must be of length nrow(y) + factors.')
+  if (any(abs(startpara[2,]) >= 1))
+   stop("All elements of 'startpara[2,]' must be between -1 and 1.")
+
+  if (any(startpara[3,] <= 0))
+   stop("All elements of 'startpara[3,]' must be positive.")
+ 
+  startpara <- list(mu = startpara[1,], phi = startpara[2,], sigma = startpara[3,]) # this is what the sampler expects
  }
 
- # Some input checking for startlatent
- if (missing(startlatent)) {
-  startlatent <- matrix(startpara[["mu"]][1] + rnorm(n*(m + factors)), n, m + factors)
+ # Some input checking for startlogvar
+ if (missing(startlogvar)) {
+  startlogvar <- matrix(startpara[["mu"]][1] + rnorm(n*(m + factors)), n, m + factors)
  } else {
-  if (!is.numeric(startlatent) || !is.matrix(startlatent) ||
-      nrow(startlatent) != nrow(y) || ncol(startlatent) != factors + m)
-   stop("Argument 'startlatent' must be a numeric matrix of dimension c(nrow(y), factors + ncol(y)).")
+  if (!is.numeric(startlogvar) || !is.matrix(startlogvar) ||
+      nrow(startlogvar) != nrow(y) || ncol(startlogvar) != factors + m)
+   stop("Argument 'startlogvar' must be a numeric matrix of dimension c(nrow(y), ncol(y) + factors).")
  }
 
- if (missing(startlatent0)) {
-  startlatent0 <- startpara[["mu"]][1] + rnorm(m + factors)
+ if (missing(startlogvar0)) {
+  startlogvar0 <- startpara[["mu"]][1] + rnorm(m + factors)
  } else {
-  if (!is.numeric(startlatent0) || length(startlatent0) != (m + factors))
-   stop("Argument 'startlatent0' must be a vector of length factors + ncol(y).")
+  if (!is.numeric(startlogvar0) || length(startlogvar0) != (m + factors))
+   stop("Argument 'startlogvar0' must be a vector of length ncol(y) + factors.")
  }
 
 # Some input checking for startfac
 if (missing(startfac)) {
  startfac <- matrix(rnorm(factors*n, 0, sd=.1), nrow=factors)
 } else {
+ if (factors == 1L && is.numeric(startfac) && is.vector(startfac) && length(startfac) == n)
+  startfac <- matrix(startfac, nrow = 1L)
  if (!is.numeric(startfac) || !is.matrix(startfac) ||
      nrow(startfac) != factors || (ncol(startfac) != n && factors >= 1))
   stop("Argument 'startfac' must be a numeric matrix of dimension c(factors, nrow(y)).")
@@ -838,8 +852,8 @@ restrinv <- matrix(as.integer(!restr), nrow = nrow(restr), ncol = ncol(restr))
 startval <- list(facload = startfacload,
 		 fac = startfac,
 		 para = startpara,
-		 latent = startlatent,
-		 latent0 = startlatent0,
+		 latent = startlogvar,
+		 latent0 = startlogvar0,
 		 tau2 = starttau2)
 
 auxstore <- FALSE
@@ -871,8 +885,8 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 				  mhsteps = mhsteps,
 				  B011 = B011, B022 = B022),
 		    startpara = startpara,
-		    startlatent = startlatent,
-		    startlatent0 = startlatent0,
+		    startlogvar = startlogvar,
+		    startlogvar0 = startlogvar0,
 		    startfacload = startfacload,
 		    startfac = startfac,
                     samplefac = samplefac)
