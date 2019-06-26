@@ -31,7 +31,7 @@ from an \code{fsvdraws} object for one point in time.
 \dontrun{
 set.seed(1)
 sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
-res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
+res <- fsvsample(sim$y, factors = 1) # estimate
 
 cov100mean <- runningcovmat(res, 100) # extract mean at t = 100
 cov100sd <- runningcovmat(res, 100, statistic = "sd") # extract sd

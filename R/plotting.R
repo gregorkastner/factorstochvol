@@ -58,7 +58,7 @@ comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
   thismean <- x$runningstore$com[,i,"mean"]
   thissd <- x$runningstore$com[,i,"sd"]
   ts.plot(cbind(thismean - 2*thissd, thismean, thismean + 2*thissd),
-	  col = c("gray", 1, "gray"), main = "", xlab = "", ylab = "",
+	  lwd = c(1, 2, 1), main = "", xlab = "", ylab = "",
 	  gpars = list(xaxt = 'n'), ylim = ylim)
   ats <- seq(1, n, len = 11)
   axis(1, labels = dates[ats], at = ats)
@@ -116,7 +116,7 @@ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  dat <- matrix(x$runningstore$vol[these,,"mean",drop = FALSE], nrow = length(these))
 # plotorder <- order(colMeans(dat))
  plotorder <- seq_len(ncol(dat))
- colas <- seq_len(m)
+ if (length(palette()) != m) colas <- rainbow(m) else colas <- seq_len(m)
 
  ts.plot(dat[,plotorder,drop = FALSE], gpars = list(col = colas, xaxt = 'n', xlab = '', ...))
  ats <- round(seq(1, length(these), length.out = min(length(these), 10)))
@@ -312,7 +312,9 @@ cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
  if (type == "cor") cornames <- snames[-series][colororder]
  if (type == "cov") cornames <- snames[colororder]
  
- colas <- seq_len(m)
+
+ if (length(palette()) != m) colas <- rainbow(m) else colas <- seq_len(m)
+
  ts.plot(curcors, col = colas, gpars = list(xaxt = 'n', xlab = '', ylab = ''))
  title(paste0('Posterior ', statistic, ' of pairwise ', type, 's with ', snames[series]))
  abline(h = 0, lty = 3)
@@ -320,8 +322,9 @@ cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
  axis(1, labels = dates[these][myseq], at = myseq)
  text(-.018*length(these), curcors[1,], cornames, col = colas)
  text(1.018*length(these), curcors[nrow(curcors),], cornames, col = colas)
+ 
  par(oldpar)
-
+ 
  invisible(x)
 }
 
@@ -371,6 +374,8 @@ facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3) {
  whiches <- matrix((1:(2*ceiling(r/2))-1) %% r + 1, nrow = 2)
  
  alpha <- min(alpha, 1)
+ if (length(palette()) != m) oldpal <- palette(rainbow(m))
+ 
  colas <- apply(sapply(palette(), col2rgb)/255, 2,
                 function (cc, alpha) rgb(cc[1], cc[2], cc[3], alpha = alpha), alpha)
 
@@ -386,6 +391,9 @@ facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3) {
   abline(h = 0, lty = 3)
   abline(v = 0, lty = 3)
  }
+
+ if (exists("oldpal")) palette(oldpal)
+
  invisible(x)
 }
 

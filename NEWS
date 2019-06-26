@@ -18,7 +18,7 @@ Changes in version 0.9.2
     wants to include observed factors (instead of latent ones).
   - The function predloglik now takes an optional logical vector indicating
     for which component series the predictive log likelihood should be computed.
-    Thanks to Stefan Voigt for implementing this.
+    Thanks to Stefan Voigt for pointing this out.
   - Fixed a few more typos in the documentation.
   - The function corimageplot now has a new argument: these4order.
   - Some default settings have changed:
@@ -30,7 +30,8 @@ Changes in version 0.9.2
     plotalot. New default plotting function now shows a correlation matrix.
   - New generic extractor: cormat (cormat.fsvdraws and cormat.fsvsim)
   - Fixed namespace clashes between stochvol and factorstochvol (concerned
-    logret and paratraceplot); now DEPENDS on stochvol
+    logret and paratraceplot); factorstochvol now DEPENDS on stochvol.
+  - Some plotting function now respect the session-wide palette.
 
 Changes in version 0.9.1
   - Default for argument "restrict" in fsvsample is now "none". This
