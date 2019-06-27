@@ -12,5 +12,4 @@ Depends: R (>= 3.0.2), stochvol (>= 2.0.4)
 Imports: GIGrvg (>= 0.4), Rcpp (>= 1.0.0), corrplot, methods, grDevices, graphics, stats, utils
 Suggests: LSD (>= 4.0-0), coda (>= 0.19-2), knitr, RColorBrewer
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7.500.0.0), stochvol
-VignetteBuilder: knitr
 RoxygenNote: 6.1.1

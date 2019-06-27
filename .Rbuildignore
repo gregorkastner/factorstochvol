@@ -1,6 +1,6 @@
-figure$
-cache$
 jss.bst
 jss.cls
 jsslogo.jpg
-vignettes/.git
+vignettes/doc/.git
+vignettes/doc/figure
+vignettes/doc/cache
