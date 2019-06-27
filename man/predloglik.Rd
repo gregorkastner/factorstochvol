@@ -40,7 +40,7 @@ matrix and evaluating the corresponding multivariate normal
 distribution.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 
 # Simulate a time series of length 1100:

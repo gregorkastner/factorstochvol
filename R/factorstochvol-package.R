@@ -56,7 +56,7 @@
 #' @useDynLib factorstochvol, .registration = TRUE
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' 
 #' # simulate data from a (small) factor SV model:

@@ -40,7 +40,7 @@ typos, inconsistencies, or even bugs. Your comments and suggestions
 are warmly welcome!
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 
 # simulate data from a (small) factor SV model:

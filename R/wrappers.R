@@ -306,7 +306,7 @@
 #' @family wrappers
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Load exchange rate data (ships with stochvol):
 #' data(exrates, package = "stochvol")
 #' exrates$date <- NULL
@@ -1024,7 +1024,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' }
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 4, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate

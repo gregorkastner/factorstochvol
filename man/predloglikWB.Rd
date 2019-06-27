@@ -38,7 +38,7 @@ Currently crudely implemented as a triple loop in pure R,
 may be slow.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 
 # Simulate a time series of length 1100:

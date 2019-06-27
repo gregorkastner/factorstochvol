@@ -300,7 +300,7 @@ Kastner et al. (2017), details about the univariate SV estimation
 can be found in Kastner and Frühwirth-Schnatter (2014).
 }
 \examples{
-\dontrun{
+\donttest{
 # Load exchange rate data (ships with stochvol):
 data(exrates, package = "stochvol")
 exrates$date <- NULL

@@ -34,7 +34,7 @@ the product of the marginals but introduces sampling uncertainty
 that grows with the number of factors used.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 sim <- fsvsim(n = 500, series = 4, factors = 1) # simulate 
 res <- fsvsample(sim$y, factors = 1) # estimate

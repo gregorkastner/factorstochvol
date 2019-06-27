@@ -43,7 +43,7 @@ print.fsvdraws <- function(x, ...) {
 #' @return Matrix containing the requested covariance matrix summary statistic.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate
@@ -118,7 +118,7 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 #' @return Matrix containing the requested correlation matrix summary statistic.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
@@ -172,7 +172,7 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' model-implied covariance matrix.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
@@ -247,7 +247,7 @@ covmat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' model-implied covariance matrix.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
@@ -306,7 +306,7 @@ cormat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' }
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate
@@ -387,7 +387,7 @@ predh <- function(x, ahead = 1, each = 1) {
 #' may be slow.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate
@@ -454,7 +454,7 @@ predcov <- function(x, ahead = 1, each = 1) {
 #' may be slow.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate
@@ -600,7 +600,7 @@ predprecWB <- function(x, ahead = 1, each = 1) {
 #' @return Vector of length \code{length(ahead)} with log predictive
 #' likelihoods.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #'
 #' # Simulate a time series of length 1100:
@@ -677,7 +677,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
 #' @return Vector of length \code{length(ahead)} with log predictive
 #' likelihoods.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #'
 #' # Simulate a time series of length 1100:
@@ -813,7 +813,7 @@ predcondOLD <- function(x, ahead = 1, each = 1, ...) {
 #' zero.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 8, factors = 2) # simulate 
 #' res <- fsvsample(sim$y, factors = 2, signswitch = TRUE,
