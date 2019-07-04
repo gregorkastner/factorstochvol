@@ -2,9 +2,11 @@
 % Please edit documentation in R/plotting.R
 \name{paratraceplot}
 \alias{paratraceplot}
-\title{Trace plots of parameter draws}
+\alias{paratraceplot.fsvdraws}
+\title{Trace plots of parameter draws.}
 \usage{
-paratraceplot(x, fsvsimobj = NULL, thinning = NULL, maxrows = 3)
+\method{paratraceplot}{fsvdraws}(x, fsvsimobj = NULL, thinning = NULL,
+  maxrows = 3, ...)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -17,6 +19,8 @@ call to \code{\link{fsvsim}}).}
 \item{thinning}{Plot every \code{thinning}th draw.}
 
 \item{maxrows}{Indicates the maximum number of rows to be drawn per page.}
+
+\item{...}{Ignored.}
 }
 \value{
 Returns \code{x} invisibly.
@@ -29,13 +33,13 @@ about (certain) parameters is sought.
 \seealso{
 Other plotting: \code{\link{comtimeplot}},
   \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{cortimeplot}}, \code{\link{diagplot}},
-  \code{\link{facloadcredplot}},
+  \code{\link{cortimeplot}}, \code{\link{facloadcredplot}},
   \code{\link{facloaddensplot}},
   \code{\link{facloadpairplot}},
   \code{\link{facloadpointplot}},
   \code{\link{facloadtraceplot}},
   \code{\link{logvartimeplot}},
-  \code{\link{plot.fsvdraws}}, \code{\link{voltimeplot}}
+  \code{\link{plot.fsvdraws}}, \code{\link{plotalot}},
+  \code{\link{voltimeplot}}
 }
 \concept{plotting}

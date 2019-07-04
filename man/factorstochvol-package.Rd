@@ -40,15 +40,14 @@ typos, inconsistencies, or even bugs. Your comments and suggestions
 are warmly welcome!
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 
 # simulate data from a (small) factor SV model:
 sim <- fsvsim(series = 5, factors = 2)
 
 # estimate the model (CAVEAT: only few draws!)
-res <- fsvsample(sim$y, factors = 2, draws = 2000,
-                 burnin = 500, runningstore = 6)
+res <- fsvsample(sim$y, factors = 2, draws = 2000, burnin = 500)
 
 # plot implied volas overtime:
 voltimeplot(res)
@@ -91,8 +90,8 @@ Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Model
 \emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
 \url{https://doi.org/10.1080/10618600.2017.1322091}.
 
-Kastner, G. (2018). Sparse Bayesian Time-Varying Covariance Estimation
-in Many Dimensions. \emph{Journal of Econometrics}.
+Kastner, G. (2019). Sparse Bayesian Time-Varying Covariance Estimation
+in Many Dimensions. \emph{Journal of Econometrics}, \bold{210}(1), 98--115.
 \url{https://doi.org/10.1016/j.jeconom.2018.11.007}.
 
 Kastner, G. and Frühwirth-Schnatter, S. (2014). Ancillarity-Sufficiency

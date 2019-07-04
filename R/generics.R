@@ -14,8 +14,6 @@
 #'
 #' @family generics
 #'
-#' @seealso \code{\link{covmat.fsvdraws}} \code{\link{covmat.fsvsim}}
-#'
 #' @export
 
 covmat <- function(x, ...) {
@@ -23,28 +21,24 @@ covmat <- function(x, ...) {
 }
 
 
-#' Computes the log returns of a vector-valued time series
+#' Generic extraction of correlation matrix
+#' 
+#' Generic function for extracting model-implied correlation matrices, either
+#' from the MCMC output, or from the simulated model. Details about the
+#' function's behavior can be found in  \code{\link{cormat.fsvdraws}}
+#' (the function invoked when applied to MCMC output) or
+#' \code{\link{cormat.fsvsim}} (the function invoked when applied to a
+#' simulated model.
 #'
-#' \code{logret} computes the log returns of a multivariate time
-#' series, with optional de-meaning.
+#' @param x An object of class \code{fsvdraws} or \code{fsvsim}.
+#' @param ... Arguments to be passed to methods.
+#' 
+#' @return Structure containing the model-implied covariance matrix.
 #'
-#' @param dat The raw data, a matrix with \code{n}
-#'  (number of timepoints) rows and \code{m}
-#'  (number of component series) columns.
-#' @param demean Logical value indicating whether the data should
-#' be de-meaned.
-#' @param standardize Logical value indicating whether the data should
-#' be standardized (in the sense that each component series has an empirical
-#' variance equal to one).
-#' @param ... Ignored.
-#'
-#' @return Matrix containing the log returns of the (de-meaned)
-#' data.
-#'
-#' @seealso fsvsample logret.matrix logret.data.frame
+#' @family generics
 #'
 #' @export
 
-logret <- function(dat, demean = FALSE, standardize = FALSE, ...) {
- UseMethod("logret")
+cormat <- function(x, ...) {
+ UseMethod("cormat")
 }

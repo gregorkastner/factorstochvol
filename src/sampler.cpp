@@ -1051,23 +1051,23 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  }
  
  List retval = List::create(
-   Named("f") = f,
+   Named("facload") = facload,
+   Named("fac") = f,
+   Named("logvar") = h,
+   Named("logvar0") = h0,
    Named("para") = para,
    Named("mixprob") = mixprob,
    Named("mixind") = mixind,
-   Named("h0") = h0,
-   Named("h") = h,
-   Named("facload") = facload,
-   Named("y") = y,
    Named("lambda2") = lambda2,
    Named("tau2") = tau2,
+   Named("y") = y,
    Named("runningstore") = List::create(
-     Named("h") = List::create(
+     Named("logvar") = List::create(
        Named("mean") = hrunmean,
        Named("m2") = hrunm2,
        Named("m3") = hrunm3,
        Named("m4") = hrunm4),
-     Named("f") = List::create(
+     Named("fac") = List::create(
        Named("mean") = frunmean,
        Named("m2") = frunm2,
        Named("m3") = frunm3,

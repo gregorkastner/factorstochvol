@@ -1,7 +1,7 @@
 #' Bayesian Estimation of (Sparse) Latent Factor Stochastic
 #' Volatility Models through MCMC
 #'
-#'This packages provides a Markov chain Monte Carlo (MCMC) sampler
+#' This packages provides a Markov chain Monte Carlo (MCMC) sampler
 #' for fully Bayesian estimation of latent factor stochastic volatility
 #' models. Sparsity can be achieved through the usage of Normal-Gamma
 #' priors on the factor loadings matrix.
@@ -40,8 +40,8 @@
 #' \emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
 #' \url{https://doi.org/10.1080/10618600.2017.1322091}.
 #' 
-#' Kastner, G. (2018). Sparse Bayesian Time-Varying Covariance Estimation
-#' in Many Dimensions. \emph{Journal of Econometrics}.
+#' Kastner, G. (2019). Sparse Bayesian Time-Varying Covariance Estimation
+#' in Many Dimensions. \emph{Journal of Econometrics}, \bold{210}(1), 98--115.
 #' \url{https://doi.org/10.1016/j.jeconom.2018.11.007}.
 #' 
 #' Kastner, G. and Frühwirth-Schnatter, S. (2014). Ancillarity-Sufficiency
@@ -56,15 +56,14 @@
 #' @useDynLib factorstochvol, .registration = TRUE
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' 
 #' # simulate data from a (small) factor SV model:
 #' sim <- fsvsim(series = 5, factors = 2)
 #' 
 #' # estimate the model (CAVEAT: only few draws!)
-#' res <- fsvsample(sim$y, factors = 2, draws = 2000,
-#'                  burnin = 500, runningstore = 6)
+#' res <- fsvsample(sim$y, factors = 2, draws = 2000, burnin = 500)
 #' 
 #' # plot implied volas overtime:
 #' voltimeplot(res)

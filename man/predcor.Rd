@@ -30,7 +30,7 @@ Currently crudely implemented as a triple loop in pure R,
 may be slow.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 sim <- fsvsim(series = 3, factors = 1) # simulate 
 res <- fsvsample(sim$y, factors = 1) # estimate

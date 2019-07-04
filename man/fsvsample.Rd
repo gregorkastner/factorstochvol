@@ -5,7 +5,7 @@
 \title{Markov Chain Monte Carlo (MCMC) Sampling for the Factor Stochastic
 Volatility Model.}
 \usage{
-fsvsample(y, factors = 1, draws = 10000, thin = 1, burnin = 10000,
+fsvsample(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
   restrict = "none", priorfacloadtype = "rowwiseng",
   priorfacload = 0.1, priorng = c(1, 1), priormu = c(0, 10),
   priorphiidi = c(10, 3), priorphifac = c(10, 3), priorsigmaidi = 1,
@@ -14,8 +14,8 @@ fsvsample(y, factors = 1, draws = 10000, thin = 1, burnin = 10000,
   heteroskedastic = TRUE, priorhomoskedastic = NA, runningstore = 6,
   runningstorethin = 10, runningstoremoments = 2, signident = TRUE,
   signswitch = FALSE, interweaving = 4, quiet = FALSE,
-  samplefac = TRUE, startfac, startpara, startlatent, startlatent0,
-  startfacload, expert)
+  samplefac = TRUE, startfac, startpara, startlogvar, startlatent,
+  startlogvar0, startlatent0, startfacload, expert)
 }
 \arguments{
 \item{y}{Data matrix. Each of \code{m} columns is assumed to contain a single
@@ -71,29 +71,29 @@ and is explained there.}
 prior's hyperhyperparameters \code{c} and \code{d}.}
 
 \item{priormu}{Vector of length 2 denoting prior mean and standard deviation
-for unconditional levels of the idiosyncratic log-variance processes.}
+for unconditional levels of the idiosyncratic log variance processes.}
 
 \item{priorphiidi}{Vector of length 2, indicating the shape parameters for the
 Beta prior distributions of the transformed parameters \code{(phi+1)/2}, where
-\code{phi} denotes the persistence of the idiosyncratic log-variances.}
+\code{phi} denotes the persistence of the idiosyncratic log variances.}
 
 \item{priorphifac}{Vector of length 2, indicating the shape parameters for the
 Beta prior distributions of the transformed parameters \code{(phi+1)/2}, where
-\code{phi} denotes the persistence of the factor log-variances.}
+\code{phi} denotes the persistence of the factor log variances.}
 
 \item{priorsigmaidi}{Vector of length \code{m} containing the
-prior volatilities of log-variances. If \code{priorsigmaidi} has exactly
-one element, it will be recycled for all idiosyncratic log-variances.}
+prior volatilities of log variances. If \code{priorsigmaidi} has exactly
+one element, it will be recycled for all idiosyncratic log variances.}
 
 \item{priorsigmafac}{Vector of length \code{factors} containing the
-prior volatilities of log-variances. If \code{priorsigmafac} has exactly
-one element, it will be recycled for all factor log-variances.}
+prior volatilities of log variances. If \code{priorsigmafac} has exactly
+one element, it will be recycled for all factor log variances.}
 
 \item{priorh0idi}{Vector of length 1 or \code{m}, containing
 information about the Gaussian prior for the initial idiosyncratic
-log-variances.
+log variances.
 If an element of \code{priorh0idi} is a nonnegative number, the conditional
-prior of the corresponding initial log-variance h0 is assumed to be Gaussian
+prior of the corresponding initial log variance h0 is assumed to be Gaussian
 with mean 0 and standard deviation \code{priorh0idi} times $sigma$.
 If an element of
 \code{priorh0idi} is the string 'stationary', the prior of the corresponding
@@ -102,9 +102,9 @@ h0 is assumed to be Gaussian with mean 0 and variance $sigma^2/(1-phi^2)$.}
 
 \item{priorh0fac}{Vector of length 1 or \code{factors}, containing
 information about the Gaussian prior for the initial factor
-log-variances.
+log variances.
 If an element of \code{priorh0fac} is a nonnegative number, the conditional
-prior of the corresponding initial log-variance h0 is assumed to be Gaussian
+prior of the corresponding initial log variance h0 is assumed to be Gaussian
 with mean 0 and standard deviation \code{priorh0fac} times $sigma$.
 If an element of
 \code{priorh0fac} is the string 'stationary', the prior of the corresponding
@@ -114,12 +114,12 @@ h0 is assumed to be Gaussian with mean 0 and variance $sigma^2/(1-phi^2)$.}
 \item{keeptime}{Either a number coercible to a positive integer, or a string
 equal to "all" or "last". If a number different from 1 is provided, only every
 \code{keeptime}th latent log-volatility is being monitored. If, e.g.,
-\code{keeptime = 3}, draws for the latent log-variances
+\code{keeptime = 3}, draws for the latent log variances
 \code{h_1,h_4,h_7,...} will
 be kept. If \code{keeptime} is set to "all", this is equivalent to setting it
 to 1. If
 \code{keeptime} is set to "last" (the default), only draws for the very last
-latent log-variances h_n are kept.}
+latent log variances h_n are kept.}
 
 \item{heteroskedastic}{Vector of length 1, 2, or \code{m + factors},
 containing logical values indicating whether time-varying
@@ -144,7 +144,7 @@ ergodic moments of certain variables of interest. More specifically, mean,
 variance, skewness, etc. will be stored for certain variables
 if \code{runningstore} is set to a value...
 \itemize{
- \item{\code{>= 1}: }{Latent log-variances \code{h_1,h_2,...,h_(n+r)}.}
+ \item{\code{>= 1}: }{Latent log variances \code{h_1,h_2,...,h_(n+r)}.}
  \item{\code{>= 2}: }{Latent factors \code{f_1,...,f_r}.}
  \item{\code{>= 3}: }{Latent volatilities \code{sqrt(exp(h_1,h_2,...,h_(n+r)))}.}
  \item{\code{>= 4}: }{Conditional covariance matrix and the square roots of its
@@ -190,27 +190,42 @@ wants to include observed factors instead of latent ones.}
 
 \item{startfac}{\emph{optional} numeric matrix of dimension
 \code{c(factors, n)}, containing the starting values of the
-latent factors.}
+latent factors.
+In case of a single factor model, a numeric vector of length \code{n} is also accepted.}
 
-\item{startpara}{\emph{optional} named list, containing the starting values
-for the parameter draws. If supplied, \code{startpara} must contain three
-elements named \code{mu} (vector of length \code{m}), \code{phi} (vector
-of length \code{m+r}) and \code{sigma} (vector of length \code{m+r}).
-The elements of \code{mu} can be arbitrary numerical values, the
-\code{phi}s must be real numbers between \code{-1} and \code{1}, and
-the \code{sigma}s must be positive real numbers.}
+\item{startpara}{\emph{optional} numeric matrix of dimension
+\code{c(3, m + factors)}, containing the starting values
+for the parameter draws. The first \code{m} columns must contain 
+parameters values corresponding to the idiosyncratic volatilities,
+the subsequent \code{factor} columns must contain parameter values
+corresponding to the factor volatilities. The first row of \code{startpara}
+corresponds to \code{mu}, the level of the log variances (can be arbitrary
+numerical values), the second row corresponds to \code{phi}, the persistence
+parameters of the log variances (numeric values between \code{-1} and \code{1}),
+and the third row corresponds to \code{sigma} (positive numeric values).}
 
-\item{startlatent}{\emph{optional} numeric matrix of dimension
+\item{startlogvar}{\emph{optional} numeric matrix of dimension
 \code{c(n, m + factors)}, containing the starting values of the
-latent log-variances.}
+latent log variances.
+The first \code{m} rows correspond to the idiosyncratic log variances,
+the subsequent \code{factor} rows correspond to the factor log variances.
+Was previously called startlatent.}
 
-\item{startlatent0}{\emph{optional} numeric vector of length
+\item{startlatent}{\emph{Deprecated.} Please use \code{startlogvar} instead.}
+
+\item{startlogvar0}{\emph{optional} numeric vector of length
 \code{m + factors}, containing the starting values of the initial latent
-log-variances.}
+log variances.
+The first \code{m} elements correspond to the idiosyncratic log variances,
+the subsequent \code{factor} elements correspond to the factor log variances.
+Was previously called startlatent0.}
+
+\item{startlatent0}{\emph{Deprecated.} Please use \code{startlogvar0} instead.}
 
 \item{startfacload}{\emph{optional} numeric matrix of dimension
 \code{c(m, factors)}, containing the starting values of the
-factor loadings.}
+factor loadings.
+In case of a single factor model, a numeric vector of length \code{n} is also accepted.}
 
 \item{expert}{\emph{optional} named list of expert parameters for the
 univariate SV models (will be passed to the \code{stochvol} package). For most
@@ -250,12 +265,12 @@ referred to Kastner and Frühwirth-Schnatter (2014) and Kastner (2016). If
 \value{
 The value returned is a list object of class \code{fsvdraws} holding
  \itemize{
- \item{\code{f}: }{Array containing factor draws from the posterior distribution.}
- \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
- \item{\code{h0}: }{Array containing idiosyncratic and factor initial log-variance draws.}
- \item{\code{h}: }{Array containing idiosyncratic and factor log-variance draws.}
  \item{\code{facload}: }{Array containing draws from the posterior distribution of the
                 factor loadings matrix.}
+ \item{\code{fac}: }{Array containing factor draws from the posterior distribution.}
+ \item{\code{logvar}: }{Array containing idiosyncratic and factor initial log variance draws.}
+ \item{\code{logvar0}: }{Array containing idiosyncratic and factor log variance draws.}
+ \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
  \item{\code{y}: }{Matrix containing the data supplied.}
  \item{\code{runningstore}: }{List whose elements contain ergodic moments of certain
                      variables of interest. See argument
@@ -285,7 +300,7 @@ Kastner et al. (2017), details about the univariate SV estimation
 can be found in Kastner and Frühwirth-Schnatter (2014).
 }
 \examples{
-\dontrun{
+\donttest{
 # Load exchange rate data (ships with stochvol):
 data(exrates, package = "stochvol")
 exrates$date <- NULL

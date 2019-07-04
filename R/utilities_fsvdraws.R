@@ -43,10 +43,10 @@ print.fsvdraws <- function(x, ...) {
 #' @return Matrix containing the requested covariance matrix summary statistic.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
-#' res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
+#' res <- fsvsample(sim$y, factors = 1) # estimate
 #'
 #' cov100mean <- runningcovmat(res, 100) # extract mean at t = 100
 #' cov100sd <- runningcovmat(res, 100, statistic = "sd") # extract sd
@@ -118,7 +118,7 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 #' @return Matrix containing the requested correlation matrix summary statistic.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
@@ -128,7 +128,7 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 #' lower <- cor100mean - 2*cor100sd
 #' upper <- cor100mean + 2*cor100sd
 #'
-#' true <- cov2cor(covmat(sim, 100)[,,1]) # true value
+#' true <- cormat(sim, 100)[,,1] # true value
 #'
 #' # Visualize mean +/- 2sd and data generating values
 #' par(mfrow = c(3,3), mar = c(2, 2, 2, 2))
@@ -159,6 +159,9 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' 
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
+#' @param timepoints Vector indicating at which point(s) in time (of those that
+#' have been stored during sampling) the correlation matrices should be
+#' extracted. Can also be "all" or "last".
 #' @param ... Ignored.
 #' 
 #' @note Currently crudely implemented as a double loop in pure R,
@@ -169,55 +172,114 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' model-implied covariance matrix.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
-#' covs <- covmat(res) # extract
+#' covs <- covmat(res, "last") # extract
 #'
 #' # Trace plot of determinant of posterior covariance matrix
 #' # at time t = n = 500:
-#' detdraws <- apply(covs[,,,500], 3, det)
+#' detdraws <- apply(covs[,,,1], 3, det)
 #' ts.plot(detdraws)
 #' abline(h = mean(detdraws), col = 2)          # posterior mean
 #' abline(h = median(detdraws), col = 4)        # posterior median
-#' abline(h = det(covmat(sim)[,,500]), col = 3) # implied by DGP
+#' abline(h = det(covmat(sim, "last")[,,1]), col = 3) # implied by DGP
 #'
 #' # Trace plot of draws from posterior covariance of Sim1 and Sim2 at
 #' # time t = n = 500:
-#' ts.plot(covs[1,2,,500])
-#' abline(h = covmat(sim)[1,2,500], col = 3) # "true" value
+#' ts.plot(covs[1,2,,1])
+#' abline(h = covmat(sim, "last")[1,2,1], col = 3) # "true" value
 #' 
 #' # Smoothed kernel density estimate:
-#' plot(density(covs[1,2,,500], adjust = 2))
+#' plot(density(covs[1,2,,1], adjust = 2))
 #'
 #' # Summary statistics:
-#' summary(covs[1,2,,500])
+#' summary(covs[1,2,,1])
 #' }
 #'
 #' @family extractors
 #'
-#' @seealso covmat covmat.fsvsim
-#' 
 #' @export
 
-covmat.fsvdraws <- function(x, ...) {
+covmat.fsvdraws <- function(x, timepoints = "all", ...) {
  if (!is(x, "fsvdraws")) stop("Argument 'x' must be of class 'fsvdraws'.")
+ if (is.character(timepoints)) {
+   if (timepoints == "all") timepoints <- seq_len(ncol(x$fac)) else if (timepoints == "last") timepoints <- length(ncol(x$fac))
+ } else if (!is.numeric(timepoints) || max(timepoints) > ncol(x$fac) || min(timepoints) < 1L) {
+   stop("Illegal value for 'timepoints'.")
+ }
  m <- nrow(x$facload)
  r <- ncol(x$facload)
  draws <- dim(x$facload)[3]
- tpoints <- nrow(x$h)
- covmat <- array(NA_real_, dim = c(m, m, draws, tpoints))
- for (j in 1:tpoints) {
+ mycovmat <- array(NA_real_, dim = c(m, m, draws, length(timepoints)))
+ for (j in timepoints) {
   for (i in 1:draws) {
    facload <- matrix(x$facload[,,i], nrow = m)
-   facvar <- exp(x$h[j, m+(1:r),i])
-   idivar <- exp(x$h[j, 1:m,i])
-   covmat[,,i,j] <- tcrossprod(sweep(facload, 2, facvar, '*'), facload)
-   diag(covmat[,,i,j]) <- diag(covmat[,,i,j]) + idivar
+   facvar <- exp(x$logvar[j, m+(1:r),i])
+   idivar <- exp(x$logvar[j, 1:m,i])
+   mycovmat[,,i,j] <- tcrossprod(sweep(facload, 2, facvar, '*'), facload)
+   diag(mycovmat[,,i,j]) <- diag(mycovmat[,,i,j]) + idivar
   }
  }
- covmat
+ mycovmat
+}
+
+
+#' Extract posterior draws of the model-implied correlation matrix
+#'
+#' \code{cormat} extracts draws from the model-implied correlation matrix
+#' from an \code{fsvdraws} object for all points in time which have been
+#' stored.
+#' 
+#' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
+#' of \code{\link{fsvsample}}.
+#' @param timepoints Vector indicating at which point(s) in time (of those that
+#' have been stored during sampling) the correlation matrices should be extracted.
+#' Can also be "all" or "last".
+#' @param ... Ignored.
+#' 
+#' @note Currently crudely implemented as a double loop in pure R,
+#' may be slow.
+#' 
+#' @return Array of dimension \code{m} times \code{m} times \code{draws}
+#' times \code{timepoints} containing the posterior draws for the
+#' model-implied covariance matrix.
+#'
+#' @examples
+#' \donttest{
+#' set.seed(1)
+#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+#' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
+#' cors <- cormat(res, "last") # extract
+#'
+#' # Trace plot of determinant of posterior correlation matrix
+#' # at time t = n = 500:
+#' detdraws <- apply(cors[,,,1], 3, det)
+#' ts.plot(detdraws)
+#' abline(h = mean(detdraws), col = 2)          # posterior mean
+#' abline(h = median(detdraws), col = 4)        # posterior median
+#' abline(h = det(cormat(sim, "last")[,,1]), col = 3) # implied by DGP
+#'
+#' # Trace plot of draws from posterior correlation of Sim1 and Sim2 at
+#' # time t = n = 500:
+#' ts.plot(cors[1,2,,1])
+#' abline(h = cormat(sim, "last")[1,2,1], col = 3) # "true" value
+#' 
+#' # Smoothed kernel density estimate:
+#' plot(density(cors[1,2,,1], adjust = 2))
+#'
+#' # Summary statistics:
+#' summary(cors[1,2,,1])
+#' }
+#'
+#' @family extractors
+#'
+#' @export
+
+cormat.fsvdraws <- function(x, timepoints = "all", ...) {
+ mycovmat <- covmat.fsvdraws(x, timepoints, ...)
+ array(apply(mycovmat, 3:4, cov2cor), dim = dim(mycovmat))
 }
 
 
@@ -244,7 +306,7 @@ covmat.fsvdraws <- function(x, ...) {
 #' }
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate
@@ -277,12 +339,12 @@ predh <- function(x, ahead = 1, each = 1) {
  if (length(each) > 1 || each < 1) stop("Argument 'each' must be greater or equal to 1.")
 
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
 
  mus <- matrix(rep(x$para["mu",,], each), nrow = m + r)
  phis <- matrix(rep(x$para["phi",,], each), nrow = m + r)
  sigmas <- matrix(rep(x$para["sigma",,], each), nrow = m + r)
- hpredtmp <- matrix(rep(x$h[nrow(x$h),,], each), nrow = m + r)
+ hpredtmp <- matrix(rep(x$logvar[nrow(x$logvar),,], each), nrow = m + r)
 
  len <- ncol(sigmas)
  hpreds <- array(NA_real_, dim = c(m+r, len, length(ahead)))
@@ -325,7 +387,7 @@ predh <- function(x, ahead = 1, each = 1) {
 #' may be slow.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate
@@ -352,7 +414,7 @@ predh <- function(x, ahead = 1, each = 1) {
 predcov <- function(x, ahead = 1, each = 1) {
  pred <- predh(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  ret <- array(NA_real_, dim = c(m, m, dim(pred$idih)[2], length(ahead)))
  dimnames(ret) <- list(colnames(x$y), colnames(x$y), NULL, ahead)
  for (i in seq_along(ahead)) {
@@ -392,7 +454,7 @@ predcov <- function(x, ahead = 1, each = 1) {
 #' may be slow.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 3, factors = 1) # simulate 
 #' res <- fsvsample(sim$y, factors = 1) # estimate
@@ -419,7 +481,7 @@ predcov <- function(x, ahead = 1, each = 1) {
 predcor <- function(x, ahead = 1, each = 1) {
  pred <- predh(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  ret <- array(NA_real_, dim = c(m, m, dim(pred$idih)[2], length(ahead)))
  dimnames(ret) <- list(colnames(x$y), colnames(x$y), NULL, ahead)
  for (i in seq_along(ahead)) {
@@ -476,7 +538,7 @@ predcor <- function(x, ahead = 1, each = 1) {
 predprecWB <- function(x, ahead = 1, each = 1) {
  pred <- predh(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  ret <- array(NA_real_, dim = c(m, m, dim(pred$idih)[2], length(ahead)))
  logdet <- array(NA_real_, dim = c(dim(pred$idih)[2], length(ahead)))
  dimnames(ret) <- list(colnames(x$y), colnames(x$y), NULL, ahead)
@@ -538,7 +600,7 @@ predprecWB <- function(x, ahead = 1, each = 1) {
 #' @return Vector of length \code{length(ahead)} with log predictive
 #' likelihoods.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #'
 #' # Simulate a time series of length 1100:
@@ -573,7 +635,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
  predobj <- predcov(x, ahead, each)
  predobj <- predobj[indicator,indicator,,,drop=FALSE]
  m <- sum(indicator)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  n <- dim(predobj)[3]
  ret <- array(NA_real_, dim = c(n, length(ahead)))
  realret <- rep(NA_real_, length(ahead))
@@ -615,7 +677,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
 #' @return Vector of length \code{length(ahead)} with log predictive
 #' likelihoods.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #'
 #' # Simulate a time series of length 1100:
@@ -646,7 +708,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
 predloglikWB <- function(x, y, ahead = 1, each = 1, alldraws = FALSE) {
  covinvdet <- predprecWB(x, ahead, each)
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
  if (!is.numeric(y) || !is.matrix(y) || ncol(y) != m || nrow(y) != length(ahead))
   stop("Argument 'y' must be a matrix of dimension c(length(ahead), ncol(x$y)).")
  ret <- array(NA_real_, dim = c(dim(covinvdet$precisionlogdet)[1], length(ahead)))
@@ -686,12 +748,12 @@ predcondOLD <- function(x, ahead = 1, each = 1, ...) {
  if (length(each) > 1 || each < 1) stop("Argument 'each' must be greater or equal to 1.")
 
  m <- ncol(x$y)
- r <- nrow(x$f)
+ r <- nrow(x$fac)
 
  mus <- matrix(rep(x$para["mu",,], each), nrow = m + r)
  phis <- matrix(rep(x$para["phi",,], each), nrow = m + r)
  sigmas <- matrix(rep(x$para["sigma",,], each), nrow = m + r)
- hpredtmp <- matrix(rep(x$h[nrow(x$h),,], each), nrow = m + r)
+ hpredtmp <- matrix(rep(x$logvar[nrow(x$logvar),,], each), nrow = m + r)
 
  len <- ncol(sigmas)
  hpreds <- array(NA_real_, dim = c(m+r, len, length(ahead)))
@@ -751,7 +813,7 @@ predcondOLD <- function(x, ahead = 1, each = 1, ...) {
 #' zero.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(1)
 #' sim <- fsvsim(series = 8, factors = 2) # simulate 
 #' res <- fsvsample(sim$y, factors = 2, signswitch = TRUE,
@@ -776,7 +838,7 @@ signident <- function(x, method = "maximin", implementation = 3) {
  if (method != "diagonal" & method != "maximin")
   stop("Argument 'method' must either be 'diagonal' or 'maximin'.")
  r <- dim(x$facload)[2]
- ftpoints <- dim(x$f)[2]
+ ftpoints <- dim(x$fac)[2]
 
  if (r == 0) {
   x$identifier <- matrix(NA_real_, nrow = 0, ncol = 2)
@@ -795,14 +857,14 @@ signident <- function(x, method = "maximin", implementation = 3) {
    mysig <- sign(faccol[identifier[i],])
    x$facload[,i,] <- t(t(faccol) * mysig)
    if (implementation == 1) {
-    x$f[i,,] <- x$f[i,,] * rep(mysig, each = ftpoints)
+    x$fac[i,,] <- x$fac[i,,] * rep(mysig, each = ftpoints)
    } else if (implementation == 2) {
     for (j in seq(along = mysig)) {
-     x$f[i,,j] <- x$f[i,,j] * mysig[j]
+     x$fac[i,,j] <- x$fac[i,,j] * mysig[j]
     }
    } else if (implementation == 3) {
     for (j in 1:ftpoints) {
-     x$f[i,j,] <- x$f[i,j,] * mysig
+     x$fac[i,j,] <- x$fac[i,j,] * mysig
     }
    } else stop("Err0r.")
   }
@@ -888,12 +950,12 @@ orderident <- function(x, method = "summed") {
  m <- nrow(x$facload)
  r <- ncol(x$facload)
  x$facload <- x$facload[,myorder,,drop=FALSE]
- x$f <- x$f[myorder,,,drop=FALSE]
+ x$fac <- x$fac[myorder,,,drop=FALSE]
  x$para[,m+(1:r),] <- x$para[,m+myorder,,drop=FALSE]
- x$h[,m+(1:r),] <- x$h[,m+myorder,,drop=FALSE]
+ x$logvar[,m+(1:r),] <- x$logvar[,m+myorder,,drop=FALSE]
  if (exists("runningstore", x)) {
- if (exists("h", x$runningstore)) x$runningstore$h[,m+(1:r),] <- x$runningstore$h[,m+myorder,,drop=FALSE]
- if (exists("f", x$runningstore)) x$runningstore$f <- x$runningstore$f[myorder,,,drop=FALSE]
+ if (exists("h", x$runningstore)) x$runningstore$logvar[,m+(1:r),] <- x$runningstore$logvar[,m+myorder,,drop=FALSE]
+ if (exists("f", x$runningstore)) x$runningstore$fac <- x$runningstore$fac[myorder,,,drop=FALSE]
  if (exists("sd", x$runningstore)) x$runningstore$sd[,m+(1:r),] <- x$runningstore$sd[,m+myorder,,drop=FALSE]
  if (exists("identifier", x)) x$identifier <- x$identifier[myorder,]
  }

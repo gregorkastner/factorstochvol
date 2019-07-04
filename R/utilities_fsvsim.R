@@ -5,41 +5,69 @@
 #'
 #' @param x Object of class \code{'fsvsim'}, usually resulting from a call
 #' of the function \code{\link{fsvsim}}.
-#' @param these Vector indicating which points in time should be extracted,
-#' defaults to all.
+#' @param timepoints Vector indicating at which point(s) in time the
+#' correlation matrices should be extracted. Can also be "all" or "last".
 #' @param ... Ignored.
 #'
 #' @note Currently crudely implemented as an R loop over all time points,
 #' may be slow.
 #'
 #' @return Array of dimension \code{m} times \code{m} times
-#' \code{length(these)}, containing the model-implied covariance matrix.
+#' \code{length(timepoints)}, containing the model-implied covariance matrix.
 #'
 #' @family simulation
 #'
-#' @seealso covmat covmat.fsvdraws
-#'
 #' @export
 
-covmat.fsvsim <- function(x, these = seq_len(nrow(x$y)), ...) {
+covmat.fsvsim <- function(x, timepoints = "all", ...) {
  if (!is(x, "fsvsim")) stop("Argument 'x' must be of class 'fsvsim'.")
  
- if (!is.numeric(these) || min(these) < 1 || max(these) > nrow(x$y))
-  stop("Illegal argument value 'these'.")
- 
+ if (is.character(timepoints)) {
+   if (timepoints == "all") timepoints <- seq_len(ncol(x$fac)) else if (timepoints == "last") timepoints <- length(ncol(x$fac))
+ } else if (!is.numeric(timepoints) || max(timepoints) > ncol(x$fac) || min(timepoints) < 1L) {
+   stop("Illegal value for 'timepoints'.")
+ }
+
  m <- nrow(x$facload)
  r <- ncol(x$facload)
- covmat <- array(NA_real_, dim = c(m, m, length(these)))
+ covmat <- array(NA_real_, dim = c(m, m, length(timepoints)))
  facload <- x$facload
  
- for (j in seq_along(these)) {
-  facvar <- exp(x$facvol[these[j],])
-  idivar <- exp(x$idivol[these[j],])
+ for (j in seq_along(timepoints)) {
+  facvar <- exp(x$facvol[timepoints[j],])
+  idivar <- exp(x$idivol[timepoints[j],])
   covmat[,,j] <- tcrossprod(sweep(facload, 2, facvar, '*'), facload)
   diag(covmat[,,j]) <- diag(covmat[,,j]) + idivar
  }
 
  covmat
+}
+
+
+#' Extract "true" model-implied correlation matrix for several points in time
+#'
+#' \code{cormat} extracts the model-implied (time-varying) covariance matrix
+#' from an \code{fsvsim} object.
+#'
+#' @param x Object of class \code{'fsvsim'}, usually resulting from a call
+#' of the function \code{\link{fsvsim}}.
+#' @param timepoints Vector indicating at which point(s) in time the
+#' correlation matrices should be extracted. Can also be "all" or "last".
+#' @param ... Ignored.
+#'
+#' @note Currently crudely implemented as an R loop over all time points,
+#' may be slow.
+#'
+#' @return Array of dimension \code{m} times \code{m} times
+#' \code{length(timepoints)}, containing the model-implied correlation matrix.
+#'
+#' @family simulation
+#'
+#' @export
+
+cormat.fsvsim <- function(x, timepoints = "all", ...) {
+ mycovmat <- covmat.fsvsim(x, timepoints, ...)
+ array(apply(mycovmat, 3, cov2cor), dim = dim(mycovmat))
 }
 
 

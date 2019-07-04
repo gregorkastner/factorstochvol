@@ -28,7 +28,7 @@ correlation matrix
 from an \code{fsvdraws} object for one point in time.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
 res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
@@ -38,7 +38,7 @@ cor100sd <- runningcormat(res, 100, statistic = "sd") # extract sd
 lower <- cor100mean - 2*cor100sd
 upper <- cor100mean + 2*cor100sd
 
-true <- cov2cor(covmat(sim, 100)[,,1]) # true value
+true <- cormat(sim, 100)[,,1] # true value
 
 # Visualize mean +/- 2sd and data generating values
 par(mfrow = c(3,3), mar = c(2, 2, 2, 2))
@@ -54,7 +54,8 @@ for (i in 1:3) {
 
 }
 \seealso{
-Other extractors: \code{\link{covmat.fsvdraws}},
+Other extractors: \code{\link{cormat.fsvdraws}},
+  \code{\link{covmat.fsvdraws}},
   \code{\link{runningcovmat}}
 }
 \concept{extractors}

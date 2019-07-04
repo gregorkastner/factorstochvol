@@ -30,13 +30,13 @@ Displays the correlation matrix at the last sampling point in time.
 \seealso{
 Other plotting: \code{\link{comtimeplot}},
   \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{cortimeplot}}, \code{\link{diagplot}},
-  \code{\link{facloadcredplot}},
+  \code{\link{cortimeplot}}, \code{\link{facloadcredplot}},
   \code{\link{facloaddensplot}},
   \code{\link{facloadpairplot}},
   \code{\link{facloadpointplot}},
   \code{\link{facloadtraceplot}},
   \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{voltimeplot}}
+  \code{\link{paratraceplot}}, \code{\link{plotalot}},
+  \code{\link{voltimeplot}}
 }
 \concept{plotting}

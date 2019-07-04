@@ -46,7 +46,7 @@ rvolonly <- function(para, n) {
 #'  \itemize{
 #'  \item{y}{The simulated data, stored in a \code{n} times \code{m} matrix with
 #'  colnames 'Sim1', 'Sim2', etc.}
-#'  \item{f}{The simulated factors, stored in a \code{r} times \code{r} matrix.}
+#'  \item{fac}{The simulated factors, stored in a \code{r} times \code{r} matrix.}
 #'  \item{facload}{Factor loadings matrix.}
 #'  \item{facvol}{Latent factor log-variances for times 1 to \code{n}.}
 #'  \item{facvol0}{Initial factor log-variances for time 0.}
@@ -152,7 +152,7 @@ fsvsim <- function(n = 1000, series = 10, factors = 1, facload = "dense", idipar
 
  colnames(y) <- paste0("Sim", 1:nrow(facload))
 
- ret <- list(y = y, f = f, facload = facload, facvol = facvol[-1,,drop=FALSE],
+ ret <- list(y = y, fac = f, facload = facload, facvol = facvol[-1,,drop=FALSE],
              facvol0 = facvol0, facpara = facpara, idivol = idivol[-1,,drop=FALSE],
              idivol0 = idivol[1,,drop=FALSE], idipara = idipara)
 

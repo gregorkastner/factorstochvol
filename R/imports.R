@@ -1,4 +1,4 @@
-#' @importFrom grDevices colorRampPalette rainbow rgb
+#' @importFrom grDevices colorRampPalette rainbow rgb col2rgb palette
 #'
 #' @importFrom graphics abline axis barplot image layout legend lines
 #'             mtext par plot plot.new points symbols text title
@@ -11,6 +11,8 @@
 #' @importFrom corrplot corrplot corrMatOrder
 #'
 #' @importFrom Rcpp evalCpp
+#'
+#' @importFrom stochvol logret paratraceplot
 #'
 #  calls update_sv:
 #' @importFrom stochvol svsample

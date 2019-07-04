@@ -35,7 +35,7 @@ zero.
 the factor loadings after running the MCMC sampler
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 sim <- fsvsim(series = 8, factors = 2) # simulate 
 res <- fsvsample(sim$y, factors = 2, signswitch = TRUE,

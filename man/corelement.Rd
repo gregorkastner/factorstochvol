@@ -24,7 +24,7 @@ Vector with the requested correlations.
 (exactly) two component series.
 }
 \seealso{
-Other simulation: \code{\link{covelement}},
-  \code{\link{covmat.fsvsim}}
+Other simulation: \code{\link{cormat.fsvsim}},
+  \code{\link{covelement}}, \code{\link{covmat.fsvsim}}
 }
 \concept{simulation}

@@ -28,10 +28,10 @@ covariance matrix
 from an \code{fsvdraws} object for one point in time.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
-res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
+res <- fsvsample(sim$y, factors = 1) # estimate
 
 cov100mean <- runningcovmat(res, 100) # extract mean at t = 100
 cov100sd <- runningcovmat(res, 100, statistic = "sd") # extract sd
@@ -54,7 +54,8 @@ for (i in 1:3) {
 
 }
 \seealso{
-Other extractors: \code{\link{covmat.fsvdraws}},
+Other extractors: \code{\link{cormat.fsvdraws}},
+  \code{\link{covmat.fsvdraws}},
   \code{\link{runningcormat}}
 }
 \concept{extractors}

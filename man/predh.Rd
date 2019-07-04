@@ -32,7 +32,7 @@ of the latent log-variances h, both for factors as well as for
 idiosyncratic series.
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(1)
 sim <- fsvsim(series = 3, factors = 1) # simulate 
 res <- fsvsample(sim$y, factors = 1) # estimate

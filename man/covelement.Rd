@@ -26,6 +26,6 @@ Vector with the requested covariances.
 }
 \seealso{
 Other simulation: \code{\link{corelement}},
-  \code{\link{covmat.fsvsim}}
+  \code{\link{cormat.fsvsim}}, \code{\link{covmat.fsvsim}}
 }
 \concept{simulation}
