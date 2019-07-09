@@ -1,3 +1,3 @@
 [submodule "vignettes"]
 	path = vignettes/doc
-	url = git@github.com:hdarjus/jss-paper.git
+	url = git@github.com:hdarjus/factor-stochvol-vignette.git
