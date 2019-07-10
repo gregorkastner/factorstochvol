@@ -216,7 +216,7 @@ covmat.fsvdraws <- function(x, timepoints = "all", ...) {
  for (j in timepoints) {
   for (i in 1:draws) {
    facload <- matrix(x$facload[,,i], nrow = m)
-   facvar <- exp(x$logvar[j, m+(1:r),i])
+   facvar <- exp(x$logvar[j, m+seq_len(r),i])
    idivar <- exp(x$logvar[j, 1:m,i])
    mycovmat[,,i,j] <- tcrossprod(sweep(facload, 2, facvar, '*'), facload)
    diag(mycovmat[,,i,j]) <- diag(mycovmat[,,i,j]) + idivar
