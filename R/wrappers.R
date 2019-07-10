@@ -165,7 +165,7 @@
 #'
 #' @param priorhomoskedastic Only used if at least one element of
 #' \code{heteroskedastic} is set to \code{FALSE}. In that case,
-#' \code{priorhomoskedastic} must be must be a matrix with positive entries
+#' \code{priorhomoskedastic} must be a matrix with positive entries
 #' and dimension c(factors + m, 2). Values in column 1 will be interpreted as
 #' shape and values in column 2 will be interpreted as the rate parameter
 #' of the corresponding inverse gamma prior distribution.
