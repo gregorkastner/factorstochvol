@@ -11,7 +11,7 @@ test_that("fsvsample works", {
                                    factors = fs, thin = th, priorfacloadtype = pflt,
                                    restrict = "none",
                                    heteroskedastic = hsk,
-                                   priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic[seq_len(NCOL(y)+fs), ] else NA,
+                                   priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic[seq_len(NCOL(y)), ] else NA,
                                    interweaving = if (!isTRUE(hsk)) 0 else 4,
                                    runningstore = if (fs == 0) 1 else 6), NA) %>%
             expect_is("fsvdraws")
@@ -20,7 +20,7 @@ test_that("fsvsample works", {
               expect_warning(fsvsample(y, draws = draws, burnin = burnin, quiet = TRUE,
                                        factors = fs, thin = th, priorfacloadtype = pflt,
                                        heteroskedastic = hsk,
-                                       priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic[seq_len(NCOL(y)+fs), ] else NA,
+                                       priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic[seq_len(NCOL(y)), ] else NA,
                                        interweaving = if (!isTRUE(hsk)) 0 else 4,
                                        restrict = rst), NA) %>%
                 expect_is("fsvdraws")

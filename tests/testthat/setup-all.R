@@ -10,7 +10,7 @@ restrict_mat <- matrix(FALSE, nrow = NCOL(y), ncol = max(factors_values))
 restrict_mat[1, 1] <- TRUE  # restrict the upper left element to zero
 restrict_values <- list("upper", "auto", restrict_mat)
 priorfacloadtype_values <- c("normal", "rowwiseng", "colwiseng", "dl")
-priorhomoskedastic <- matrix(c(1.1, 1.1), nrow = NCOL(y)+max(factors_values),
+priorhomoskedastic <- matrix(c(1.1, 1.1), nrow = NCOL(y),
                              ncol = 2, byrow = TRUE)
 heteroskedastic_values <- list(TRUE, c(FALSE, FALSE))
 
@@ -23,7 +23,7 @@ for (th in thin_values) {
                                      factors = fs, thin = th, priorfacloadtype = pflt,
                                      restrict = "none",
                                      heteroskedastic = hsk,
-                                     priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic[seq_len(NCOL(y)+fs), ] else NA,
+                                     priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic else NA,
                                      interweaving = if (!isTRUE(hsk)) 0 else 4,
                                      runningstore = if (fs == 0) 1 else 6)))
         if (fs > 1) {
@@ -31,7 +31,7 @@ for (th in thin_values) {
             res <- c(res, list(fsvsample(y, draws = draws, burnin = burnin, quiet = TRUE,
                                          factors = fs, thin = th, priorfacloadtype = pflt,
                                          heteroskedastic = hsk,
-                                         priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic[seq_len(NCOL(y)+fs), ] else NA,
+                                         priorhomoskedastic = if (!isTRUE(hsk)) priorhomoskedastic else NA,
                                          interweaving = if (!isTRUE(hsk)) 0 else 4,
                                          restrict = rst)))
           }
