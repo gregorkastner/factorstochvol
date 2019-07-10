@@ -81,7 +81,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  bool dlprior = false;
  if (r > 0 && pfl == 4) dlprior = true;
  NumericVector sv(heteroskedastic_in);
- NumericVector priorhomoskedastic(priorhomoskedastic_in);
+ NumericMatrix priorhomoskedastic(priorhomoskedastic_in);
  NumericVector priorh0(priorh0_in);
  IntegerMatrix restr(restriction_in);
  arma::imat armarestr(restr.begin(), restr.nrow(), restr.ncol(), false);
@@ -615,9 +615,14 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
            truncnormal, MHcontrol, MHsteps, parameterization, false, priorh0(j));
      curh0(j) = curh0j;
    } else {
-    double tmp = sum(square(armay.row(j) - armafacload.row(j)*armaf));
-    tmp = 1/as<double>(rgamma(1, priorhomoskedastic(0) + .5*T, 1/(priorhomoskedastic(1) + .5*tmp)));
-    armah.col(j).fill(log(tmp));
+     double rss = -1e50;
+     if (r > 0) {
+       rss = sum(square(armay.row(j) - armafacload.row(j)*armaf));
+     } else {
+       rss = sum(square(armay.row(j)));
+     }
+     const double sigma = 1/R::rgamma(priorhomoskedastic(j, 0) + .5*T, 1/(priorhomoskedastic(j, 1) + .5*rss));
+     armah.col(j).fill(log(sigma));
    }
   }
 
