@@ -1,3 +1,7 @@
+Changes in version 0.9.3
+  - Unit tests added
+  - Small bug fixes (mainly for rarely used features)
+
 Changes in version 0.9.2
   - Check out the brand new vignette!
   - Slight change in the "front-end" function fsvsample: the argument
