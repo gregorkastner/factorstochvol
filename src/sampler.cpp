@@ -615,7 +615,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
            truncnormal, MHcontrol, MHsteps, parameterization, false, priorh0(j));
      curh0(j) = curh0j;
    } else {
-     double rss = -1e50;
+     double rss;
      if (r > 0) {
        rss = sum(square(armay.row(j) - armafacload.row(j)*armaf));
      } else {
