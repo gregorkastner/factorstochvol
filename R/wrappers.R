@@ -476,6 +476,7 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
    stop("Argument 'priorhomoskedastic' must be a matrix with positive entries and dimension c(factors + m, 2).")
   }
  }
+ priorhomoskedastic <- as.matrix(priorhomoskedastic)
  
  # Some error checking for the prior parameters 
  if (!is.numeric(priormu) | length(priormu) != 2) {
