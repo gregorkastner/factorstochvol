@@ -910,7 +910,7 @@ signident <- function(x, method = "maximin", implementation = 3) {
 orderident <- function(x, method = "summed") {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  possiblemethods <- c("summean", "summeaninv", "summeanabs", "summedabs", "summed",
-		      "summedinv", "maxmed", "maxmedinv", "maxmedrel", "maxmedrelabs")
+		      "summedinv", "maxmed", "maxmedinv", "maxmedrel", "maxmedabsrel")
  if (is.numeric(method)) {
   if (length(method) != ncol(x$facload))
    stop(paste("Argument 'method' must be numeric of length 'number of factors' or one of:",
@@ -943,6 +943,7 @@ orderident <- function(x, method = "summed") {
     maxmedinv = apply(apply(x$facload, 1:2, median), 2, max),
     maxmedrel = apply(apply(x$facload, 1:2, median), 2, max) / colSums(apply(x$facload, 1:2, median)),
     maxmedabsrel = apply(apply(abs(x$facload), 1:2, median), 2, max) / colSums(apply(abs(x$facload), 1:2, median)),
+    stop("Invalid method.")
   )
   myorder <- order(orderstats, decreasing = TRUE)
   if (method %in% possiblemethods[grep("inv", possiblemethods)]) myorder <- rev(myorder)
