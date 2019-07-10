@@ -828,6 +828,10 @@ if (is.character(restrict)) {
  if (restrict == "auto") restr <- findrestrict(y, factors = factors)
 }
 
+if (interweaving %in% c(1, 2) && any(diag(restr) == TRUE)) {
+  stop("Setting 'interweaving' to either 1 or 2 and restricting the diagonal elements of the factor loading matrix are not allowed at the same time.")
+}
+
 if (length(samplefac) != 1L || !is.logical(samplefac)) {
   stop("Argument 'samplefac' must be logical and of length one.")
 }
