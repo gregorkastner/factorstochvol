@@ -166,9 +166,10 @@
 #' @param priorhomoskedastic Only used if at least one element of
 #' \code{heteroskedastic} is set to \code{FALSE}. In that case,
 #' \code{priorhomoskedastic} must be a matrix with positive entries
-#' and dimension c(factors + m, 2). Values in column 1 will be interpreted as
+#' and dimension c(m, 2). Values in column 1 will be interpreted as the
 #' shape and values in column 2 will be interpreted as the rate parameter
-#' of the corresponding inverse gamma prior distribution.
+#' of the corresponding inverse gamma prior distribution of the idisyncratic
+#' variances.
 #'
 #' @param expert \emph{optional} named list of expert parameters for the
 #' univariate SV models (will be passed to the \code{stochvol} package). For most
@@ -464,16 +465,17 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
    interweaving <- 1L
   }
  }
+
  if (!all(heteroskedastic)) {
   if (any(is.na(priorhomoskedastic))) {
-   priorhomoskedastic <- matrix(c(1.1, 0.055), byrow = TRUE, nrow = factors + m, ncol = 2)
-   warning(paste0("Argument 'priorhomoskedastic' must be a matrix with dimension c(factors + m, 2)
+   priorhomoskedastic <- matrix(c(1.1, 0.055), byrow = TRUE, nrow = m, ncol = 2)
+   warning(paste0("Argument 'priorhomoskedastic' must be a matrix with dimension c(m, 2)
 		  if some of the elements of 'heteroskedastic' are FALSE. Setting priorhomoskedastic
 		  to c(", priorhomoskedastic[1], ", ", priorhomoskedastic[2], ")."))
   }
-  if (!is.matrix(priorhomoskedastic) || nrow(priorhomoskedastic) != (factors + m) ||
+  if (!is.matrix(priorhomoskedastic) || nrow(priorhomoskedastic) != m ||
       ncol(priorhomoskedastic) != 2 || any(priorhomoskedastic <= 0)) {
-   stop("Argument 'priorhomoskedastic' must be a matrix with positive entries and dimension c(factors + m, 2).")
+   stop("Argument 'priorhomoskedastic' must be a matrix with positive entries and dimension c(m, 2).")
   }
  }
  priorhomoskedastic <- as.matrix(priorhomoskedastic)
