@@ -1,9 +1,28 @@
-## citHeader("To cite package factorstochvol in publications use:")
-
 ## R >= 2.8.0 passes package metadata to citation().
 if(!exists("meta") || is.null(meta)) meta <- packageDescription("factorstochvol")
 year <- sub("-.*", "", meta$Packaged)
 note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Article",
+  title        = "Modeling Univariate and Multivariate Stochastic Volatility in {R} with {stochvol} and {factorstochvol}",
+  author       = personList(
+                   person(given = "Darjus",
+                          family = "Hosszejni",
+                          email = "darjus.hosszejni@wu.ac.at"),
+                   person(given = "Gregor",
+                          family = "Kastner",
+                          email = "gregor.kastner@wu.ac.at")),
+  journal      = "R package vignette",
+  year         = "2019",
+  url          = "https://CRAN.R-project.org/package=factorstochvol/vignettes/paper.pdf",
+
+  header       = "To cite factorstochvol in publications use:",
+  textVersion  =
+  paste("Hosszejni, Darjus and Gregor Kastner (2019).",
+        "Modeling Univariate and Multivariate Stochastic Volatility in R with stochvol and factorstochvol.",
+        "R package vignette.",
+        "URL: https://CRAN.R-project.org/package=factorstochvol/vignettes/paper.pdf")
+)
 
 citEntry(header = "To cite the current version of the package you could use:",
          entry = "manual",
@@ -13,7 +32,7 @@ citEntry(header = "To cite the current version of the package you could use:",
          note = note,
          url = "https://cran.r-project.org/package=factorstochvol",
          textVersion =
-         paste("Kastner, G.",
+         paste("Kastner, Gregor",
    	       sprintf("(%s).", year),	 
                "factorstochvol: Bayesian Estimation of (Sparse) Latent Factor Stochastic Volatility Models.",
 	       paste(note, ".", sep = ""),
@@ -32,10 +51,10 @@ citEntry(header = "To refer to the interweaving (ASIS) methodology used in facto
          number = "4",
          pages = "905--917",
          doi = "10.1080/10618600.2017.1322091",
-         textVersion = "Kastner, G., S. Frühwirth-Schnatter, H. F. Lopes (2017). Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models. Journal of Computational and Graphical Statistics, 26(4), 905-917. https://doi.org/10.1080/10618600.2017.1322091."
+         textVersion = "Kastner, Gregor, Sylvia Frühwirth-Schnatter and Hedibert Freitas Lopes (2017). Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models. Journal of Computational and Graphical Statistics, 26(4), 905-917. URL: https://doi.org/10.1080/10618600.2017.1322091"
 )
 
-citEntry(header = "To refer to the shrinkage methodology used in factorstochvol please cite:",
+citEntry(header = "To refer to the shrinkage methodology used in factorstochvol (NG priors) please cite:",
          entry = "article",
          title = "Sparse {B}ayesian Time-Varying Covariance Estimation in Many Dimensions",
          author = personList(as.person("Gregor Kastner")),
@@ -45,7 +64,7 @@ citEntry(header = "To refer to the shrinkage methodology used in factorstochvol 
 	 number = "1",
 	 pages = "98--115",
          doi = "10.1016/j.jeconom.2018.11.007",
-         textVersion = "Kastner, G. (2019). Sparse Bayesian Time-Varying Covariance Estimation in Many Dimensions. Journal of Econometrics, 210(1), 98-115. https://doi.org/10.1016/j.jeconom.2018.11.007"
+         textVersion = "Kastner, Gregor (2019). Sparse Bayesian Time-Varying Covariance Estimation in Many Dimensions. Journal of Econometrics, 210(1), 98-115. URL: https://doi.org/10.1016/j.jeconom.2018.11.007"
 )
 
 citFooter("BibTeX entries of the above can be obtained by", sQuote('toBibtex(citation("factorstochvol"))'))
