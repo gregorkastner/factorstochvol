@@ -1,6 +1,7 @@
 Changes in version 0.9.3
   - Unit tests added
   - Small bug fixes (mainly for rarely used features)
+  - TODO: tau2 and lambda store and reuse
 
 Changes in version 0.9.2
   - Check out the brand new vignette!
