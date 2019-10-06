@@ -230,7 +230,7 @@ In case of a single factor model, a numeric vector of length \code{n} is also ac
 
 \item{startfacloadvar}{\emph{optional} numeric matrix of dimension
 \code{c(m, factors)}, containing the starting values of the
-factor loadings variances $\tau_{ij}^2$. Used only when the normal-gamma
+factor loadings variances \eqn{\tau_{ij}^2}. Used only when the normal-gamma
 prior is employed (priorfacloadtype != "normal") while ignored when static
 loadings variances are used (priorfacloadtype == "normal").}
 
