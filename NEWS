@@ -1,7 +1,12 @@
 Changes in version 0.9.3
   - Unit tests added
+  - New argument startfacloadvar. Can be used to pass the starting values for
+    the factor loadings variances (called tau_{ij}^2 in Kastner, 2019, JoE).
+    May come in handy when fsvsample with the normal gamma prior is used as a
+    subroutine within other samplers. Thanks to Maximilian Boeck and Gregor Zens
+    for pointing this out. The latest draws of these values are now returned
+    by fsvsample() in the new list element 'latestauxiliary'. 
   - Small bug fixes (mainly for rarely used features)
-  - TODO: tau2 and lambda store and reuse
 
 Changes in version 0.9.2
   - Check out the brand new vignette!

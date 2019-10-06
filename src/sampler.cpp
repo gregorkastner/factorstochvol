@@ -1065,6 +1065,11 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
    Named("mixind") = mixind,
    Named("lambda2") = lambda2,
    Named("tau2") = tau2,
+   Named("latestauxiliary") = List::create(
+//     Named("mixprob") = curmixprob,
+//     Named("mixind") = curmixind,
+     Named("lambda2") = curlambda2,
+     Named("facloadvar") = curtau2),
    Named("y") = y,
    Named("runningstore") = List::create(
      Named("logvar") = List::create(

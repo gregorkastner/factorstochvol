@@ -245,6 +245,12 @@
 #' latent factors.
 #' In case of a single factor model, a numeric vector of length \code{n} is also accepted.
 #'
+#' @param startfacloadvar \emph{optional} numeric matrix of dimension
+#' \code{c(m, factors)}, containing the starting values of the
+#' factor loadings variances $\tau_{ij}^2$. Used only when the normal-gamma
+#' prior is employed (priorfacloadtype != "normal") while ignored when static
+#' loadings variances are used (priorfacloadtype == "normal").
+#'
 #' @param samplefac If set to \code{FALSE}, the factors are not sampled (but 
 #' remain at their starting values forever). This might be useful if one
 #' wants to include observed factors instead of latent ones.
@@ -265,6 +271,8 @@
 #'  \item{\code{logvar0}: }{Array containing idiosyncratic and factor log variance draws.}
 #'  \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
 #'  \item{\code{y}: }{Matrix containing the data supplied.}
+#'  \item{\code{latestauxiliary}: }{List containing the latest draws of auxiliary quantities used for
+#'                      sampling the factor loadings matrix.}
 #'  \item{\code{runningstore}: }{List whose elements contain ergodic moments of certain
 #'                      variables of interest. See argument
 #'                      \code{runningstore} for details about what
@@ -364,6 +372,7 @@ fsvsample <- function(y,
 		      startlogvar0,
 		      startlatent0,
 		      startfacload,
+		      startfacloadvar,
 		      expert
 		      ) {
  
@@ -536,33 +545,44 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
        'colwiseng', 'dl'.")
  }
 
+ if (!missing(startfacloadvar)) {
+  if (!is.numeric(startfacloadvar) || !is.matrix(startfacloadvar) || nrow(startfacloadvar) != m ||
+     ncol(startfacloadvar) != factors || any(startfacloadvar <= 0)) 
+   stop("If argument 'startfacloadvar' is provided, it must be a matrix of appropriate dimensions with positive real entries.")
+  if (priorfacloadtype == "normal")
+    warning("Because priorfacloadtype is 'normal', the values passed via 'startfacloadvar' are being ignored.")
+  startfacloadvarUsed <- startfacloadvar
+ } else {
+  startfacloadvarUsed <- matrix(1, nrow = m, ncol = factors)
+ }
+
  if(is.matrix(priorfacload)) {
   if(nrow(priorfacload) != m || ncol(priorfacload) != factors) {
    stop("If argument 'priorfacload' is a matrix, it must be of appropriate dimensions.")
   }
   if (priorfacloadtype == "normal") {
    pfl <- 1L
-  starttau2 <- priorfacload^2
-  aShrink <- NA
-  cShrink <- NA
-  dShrink <- NA
+   starttau2 <- priorfacload^2
+   aShrink <- NA
+   cShrink <- NA
+   dShrink <- NA
   } else if (priorfacloadtype == "rowwiseng") {
    pfl <- 2L
-   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   starttau2 <- startfacloadvarUsed
    aShrink <- priorfacload[,1]
    warning("Only first column of 'priorfacload' is used.'")
    cShrink <- rep(cShrink, m)
    dShrink <- rep(dShrink, m)
   } else if (priorfacloadtype == "colwiseng") {
    pfl <- 3L
-   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   starttau2 <- startfacloadvarUsed
    aShrink <- priorfacload[1,]
    warning("Only first row of 'priorfacload' is used.'")
    cShrink <- rep(cShrink, factors)
    dShrink <- rep(dShrink, factors)
   } else if (priorfacloadtype == "dl") {
    pfl <- 4L
-   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   starttau2 <- startfacloadvarUsed
    aShrink <- priorfacload[1,1]
    warning("Only first element of 'priorfacload' is used.'")
    cShrink <- NA
@@ -580,19 +600,19 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
    dShrink <- NA
   } else if (priorfacloadtype == "rowwiseng") {
    pfl <- 2L
-   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   starttau2 <- startfacloadvarUsed
    aShrink <- rep(priorfacload, m)
    cShrink <- rep(cShrink, m)
    dShrink <- rep(dShrink, m)
   } else if (priorfacloadtype == "colwiseng") {
    pfl <- 3L
-   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   starttau2 <- startfacloadvarUsed
    aShrink <- rep(priorfacload, factors)
     cShrink <- rep(cShrink, factors)
     dShrink <- rep(dShrink, factors)
   } else if (priorfacloadtype == "dl") {
    pfl <- 4L
-   starttau2 <- matrix(1, nrow = m, ncol = factors)
+   starttau2 <- startfacloadvarUsed
    aShrink <- priorfacload
    cShrink <- NA
    dShrink <- NA
@@ -896,6 +916,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    startlogvar0 = startlogvar0,
 		    startfacload = startfacload,
 		    startfac = startfac,
+		    startfacloadvar = starttau2,
                     samplefac = samplefac)
  res$priors <- list(priormu = priormu,
 		    priorphiidi = priorphiidi,
