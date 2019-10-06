@@ -836,7 +836,7 @@ if (!is.numeric(runningstoremoments) || length(runningstoremoments) != 1 || runn
 
 
 if (is.matrix(restrict)) {
- if (any(dim(restrict) != c(m, factors)) || any(is.na(restrict) || !is.logical(restrict)))
+ if (any(dim(restrict) != c(m, factors)) || any(is.na(restrict)) || !is.logical(restrict))
      stop("Argument 'restrict' must be an appropriate logical matrix or \"none\"/\"upper\"/\"auto\".")
  if (any(rowSums(restrict) == factors))
      stop("Argument 'restrict' can't have rows where all elements are TRUE.")
