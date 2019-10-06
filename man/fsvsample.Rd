@@ -15,7 +15,7 @@ fsvsample(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
   runningstorethin = 10, runningstoremoments = 2, signident = TRUE,
   signswitch = FALSE, interweaving = 4, quiet = FALSE,
   samplefac = TRUE, startfac, startpara, startlogvar, startlatent,
-  startlogvar0, startlatent0, startfacload, expert)
+  startlogvar0, startlatent0, startfacload, startfacloadvar, expert)
 }
 \arguments{
 \item{y}{Data matrix. Each of \code{m} columns is assumed to contain a single
@@ -131,10 +131,11 @@ the second element is used for all factor variances.}
 
 \item{priorhomoskedastic}{Only used if at least one element of
 \code{heteroskedastic} is set to \code{FALSE}. In that case,
-\code{priorhomoskedastic} must be must be a matrix with positive entries
-and dimension c(factors + m, 2). Values in column 1 will be interpreted as
+\code{priorhomoskedastic} must be a matrix with positive entries
+and dimension c(m, 2). Values in column 1 will be interpreted as the
 shape and values in column 2 will be interpreted as the rate parameter
-of the corresponding inverse gamma prior distribution.}
+of the corresponding inverse gamma prior distribution of the idisyncratic
+variances.}
 
 \item{runningstore}{Because most machines these days do not have enough memory
 to store all draws for all points in time, setting \code{runningstore} to an
@@ -227,6 +228,12 @@ Was previously called startlatent0.}
 factor loadings.
 In case of a single factor model, a numeric vector of length \code{n} is also accepted.}
 
+\item{startfacloadvar}{\emph{optional} numeric matrix of dimension
+\code{c(m, factors)}, containing the starting values of the
+factor loadings variances $\tau_{ij}^2$. Used only when the normal-gamma
+prior is employed (priorfacloadtype != "normal") while ignored when static
+loadings variances are used (priorfacloadtype == "normal").}
+
 \item{expert}{\emph{optional} named list of expert parameters for the
 univariate SV models (will be passed to the \code{stochvol} package). For most
 applications, the default values probably work best. Interested users are
@@ -272,6 +279,8 @@ The value returned is a list object of class \code{fsvdraws} holding
  \item{\code{logvar0}: }{Array containing idiosyncratic and factor log variance draws.}
  \item{\code{para}: }{Array containing parameter draws form the posterior distribution.}
  \item{\code{y}: }{Matrix containing the data supplied.}
+ \item{\code{latestauxiliary}: }{List containing the latest draws of auxiliary quantities used for
+                     sampling the factor loadings matrix.}
  \item{\code{runningstore}: }{List whose elements contain ergodic moments of certain
                      variables of interest. See argument
                      \code{runningstore} for details about what
