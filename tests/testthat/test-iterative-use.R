@@ -11,7 +11,8 @@ sim <- fsvsim(factors = factors, series = 3)
 cat("Drawing in one call to fsvsample...\n")
 set.seed(1)
 tim <- system.time({
-  res <- fsvsample(sim$y, factors = factors, draws = iterations, burnin = 0, keeptime = "all", quiet = TRUE)
+  res <- fsvsample(sim$y, factors = factors, draws = iterations, burnin = 0,
+		   keeptime = "all", quiet = TRUE, signident = FALSE)
 })
 print(tim)
 
@@ -22,11 +23,11 @@ cat("Drawing in many calls to fsvsample...\n")
 set.seed(1)
 tim2 <- system.time({
   res2 <- fsvsample(sim$y, factors = factors, draws = 1, burnin = 0,
-		    keeptime = "all", quiet = TRUE)
+		    keeptime = "all", quiet = TRUE, signident = FALSE)
 
   for (i in seq_len(iterations - 1)) {
     res2 <- fsvsample(sim$y, factors = factors, draws = 1, burnin = 0,
-		      keeptime = "all", quiet = TRUE,
+		      keeptime = "all", quiet = TRUE, signident = FALSE,
 		      startfacloadvar = res2$latestauxiliary$facloadvar,
 		      startfacload = res2$facload[,,1],
 		      startfac = res2$fac[,,1],
