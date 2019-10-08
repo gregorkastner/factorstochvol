@@ -24,21 +24,6 @@ bibentry(bibtype = "Article",
         "URL: https://CRAN.R-project.org/package=factorstochvol/vignettes/paper.pdf")
 )
 
-citEntry(header = "To cite the current version of the package you could use:",
-         entry = "manual",
-         title = "{factorstochvol}: {B}ayesian Estimation of (Sparse) Latent Factor Stochastic Volatility Models",
-         author = personList(as.person("Gregor Kastner")),                              
-         year = year,
-         note = note,
-         url = "https://cran.r-project.org/package=factorstochvol",
-         textVersion =
-         paste("Kastner, Gregor",
-   	       sprintf("(%s).", year),	 
-               "factorstochvol: Bayesian Estimation of (Sparse) Latent Factor Stochastic Volatility Models.",
-	       paste(note, ".", sep = ""),
-               "URL: https://cran.r-project.org/package=factorstochvol")
-)
-
 citEntry(header = "To refer to the interweaving (ASIS) methodology used in factorstochvol please cite:",
          entry = "article",
          title = "Efficient {B}ayesian Inference for Multivariate Factor Stochastic Volatility Models",
