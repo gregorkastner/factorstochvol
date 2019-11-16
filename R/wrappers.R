@@ -470,17 +470,17 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
  if (is.null(heteroskedastic)) heteroskedastic <- rep(TRUE, m + factors)
  if (!all(heteroskedastic[m+seq_len(factors)])) {
   if (interweaving == 2L || interweaving == 4L) {
-   warning("Cannot do deep interweaving if (some) factors are homoskedastic. Setting 'interweaving' to 1.")
-   interweaving <- 1L
+   warning("Cannot do deep interweaving if (some) factors are homoskedastic. Setting 'interweaving' to 3.")
+   interweaving <- 3L
   }
  }
 
  if (!all(heteroskedastic)) {
   if (any(is.na(priorhomoskedastic))) {
    priorhomoskedastic <- matrix(c(1.1, 0.055), byrow = TRUE, nrow = m, ncol = 2)
-   warning(paste0("Argument 'priorhomoskedastic' must be a matrix with dimension c(m, 2)
-		  if some of the elements of 'heteroskedastic' are FALSE. Setting priorhomoskedastic
-		  to c(", priorhomoskedastic[1], ", ", priorhomoskedastic[2], ")."))
+   warning(paste0("Argument 'priorhomoskedastic' must be a matrix with dimension c(m, 2) if some of the
+		  elements of 'heteroskedastic' are FALSE. Setting priorhomoskedastic to a matrix with
+		  all rows equal to c(", priorhomoskedastic[1], ", ", priorhomoskedastic[2], ")."))
   }
   if (!is.matrix(priorhomoskedastic) || nrow(priorhomoskedastic) != m ||
       ncol(priorhomoskedastic) != 2 || any(priorhomoskedastic <= 0)) {
