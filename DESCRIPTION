@@ -13,7 +13,7 @@ Description: Markov chain Monte Carlo (MCMC) sampler for fully Bayesian
              on the factor loading matrix <doi:10.1016/j.jeconom.2018.11.007>.
 License: GPL (>= 2)
 Depends: R (>= 3.0.2)
-Imports: stochvol (>= 2.0.3), GIGrvg (>= 0.4), Rcpp (>= 1.0.0),
+Imports: stochvol (>= 2.1.0), GIGrvg (>= 0.4), Rcpp (>= 1.0.0),
         corrplot, methods, grDevices, graphics, stats, utils
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7.500.0.0), stochvol
 RoxygenNote: 6.1.1

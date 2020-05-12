@@ -1,4 +1,6 @@
 #include "sampler.h"
+#include <stochvol.h>
+#include <vector>
 
 using namespace Rcpp;
 
@@ -41,7 +43,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     const SEXP runningstoreevery_in, const SEXP runningstoremoments_in,
     const SEXP columnwise_in, const SEXP heteroskedastic_in,
     const SEXP priorhomoskedastic_in, const SEXP priorh0_in,
-    const SEXP svlcontrol_in) {
+    const SEXP use_svl_in) {
 
   // note: SEXP to Rcpp conversion REUSES memory unless "clone"d
   // Rcpp to Armadillo conversion allocates NEW memory unless deact'd
@@ -62,7 +64,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   const bool signswitch   = as<bool>(signswitch_in);
   const int runningstore  = as<int>(runningstore_in);
   const bool columnwise   = as<bool>(columnwise_in);
-  const double svlcontrol = as<double>(svlcontrol_in);
+  const bool use_svl = as<double>(use_svl_in);
 
   NumericVector sv(heteroskedastic_in);
   NumericVector priorhomoskedastic(priorhomoskedastic_in);
@@ -92,6 +94,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   //convention: "arma"-prefixed variables denote Armadillo proxy objects
   const arma::mat armay(y.begin(), m, T, false);
   arma::mat armayleft(armay);
+  arma::imat armaysign(arma::size(armay));
   arma::mat armafacload(curfacload.begin(), m, r, false);
   arma::mat armafacloadt = arma::trans(armafacload);
 
@@ -570,6 +573,15 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   arma::mat curh_arma(curh.begin(), curh.nrow(), curh.ncol(), false);
   arma::mat curmixprob_arma(curmixprob.begin(), 10*T, mpr, false);
   arma::imat curmixind_arma(curmixind.begin(), curmixind.nrow(), curmixind.ncol(), false);
+  // adaptive Metropolis-Hastings in SVL
+  std::vector<stochvol::Adaptation> adaptation;
+  if (use_svl) {
+    adaptation.reserve(m);
+    for (int j = 0; j < m; j++) {
+      adaptation.push_back(stochvol::Adaptation(3, draws+burnin, 100, 0.574, 0.05, 0.001));
+    }
+  }
+  const bool any_sv = Rcpp::any(sv.cbegin(), sv.cend(), true);
 
   for (int i = 0; i < N; i++, effi++) {  // BEGIN main MCMC loop
 
@@ -583,6 +595,13 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     if (r > 0) {
       armayleft = armay - armafacload * armaf;
       armaynorm = log(square(armayleft));
+      if (any_sv) {
+        for (int i1 = 0; i1 < armaysign.n_rows; i1++) {
+          for (int i2 = 0; i2 < armaysign.n_cols; i2++) {
+            armaysign(i1, i2) = -1 + 2 * armayleft(i1, i2);
+          }
+        }
+      }
     } else {
       armaynorm = log(square(armay) + offset);
     }
@@ -603,7 +622,6 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
         //arma::vec curpara_j = curpara_arma.unsafe_col(j);
         arma::vec curh_j = armah.unsafe_col(j);
         //arma::vec curmixprob_j = curmixprob_arma.unsafe_col(j);
-        arma::ivec curmixind_j = curmixind_arma.unsafe_col(j);
         //stochvol::update_sv(armaynorm.row(j).t(), curpara_j, curh_j, curh0j, curmixprob_j, curmixind_j,
         //      centered_baseline, C0(j), cT, Bsigma(j), a0idi, b0idi, bmu, Bmu, B011inv, B022inv, Gammaprior,
         //      truncnormal, MHcontrol, MHsteps, parameterization, false, priorh0(j));
@@ -612,11 +630,10 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
                sigma2 = pow(curpara_arma(2, j), 2),
                rho = curpara_arma(3, j);
         arma::vec curht_j = armaht.unsafe_col(j);
-        const arma::mat proposal_chol = svlcontrol*arma::eye(4, 4);
-        const arma::mat proposal_chol_inv = (1.0/svlcontrol)*arma::eye(4, 4);
-        stochvol::update_svl(armayleft.row(j).t(), armaynorm.row(j).t(), curmixind_j,
-            phi, rho, sigma2, mu, curh_j, curht_j, priorphi_idi, {4, 4}, {.5, .5/Bsigma(j)}, priormu,
-            proposal_chol, proposal_chol_inv, true, true, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1}, false);
+        stochvol::update_svl(armayleft.row(j).t(), armaynorm.row(j).t(), armaysign.row(j).t(),
+            phi, rho, sigma2, mu, curh_j, curht_j, adaptation[j],
+            priorphi_idi, {4, 4}, {.5, .5/Bsigma(j)}, priormu,
+            true, true, true, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1}, true);
         curpara_arma(0, j) = mu;
         curpara_arma(1, j) = phi;
         curpara_arma(2, j) = sqrt(sigma2);
