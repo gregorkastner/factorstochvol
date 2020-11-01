@@ -4,8 +4,13 @@
 \alias{facloadtraceplot}
 \title{Trace plots of factor loadings draws}
 \usage{
-facloadtraceplot(x, fsvsimobj = NULL, thinning = NULL, maxrows = 10,
-  ylim = NULL)
+facloadtraceplot(
+  x,
+  fsvsimobj = NULL,
+  thinning = NULL,
+  maxrows = 10,
+  ylim = NULL
+)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -31,14 +36,19 @@ an important tool to check MCMC convergence if inference about (certain)
 factor loadings sought.
 }
 \seealso{
-Other plotting: \code{\link{comtimeplot}},
-  \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{cortimeplot}}, \code{\link{facloadcredplot}},
-  \code{\link{facloaddensplot}},
-  \code{\link{facloadpairplot}},
-  \code{\link{facloadpointplot}},
-  \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
-  \code{\link{plotalot}}, \code{\link{voltimeplot}}
+Other plotting: 
+\code{\link{comtimeplot}()},
+\code{\link{corimageplot}()},
+\code{\link{corplot}()},
+\code{\link{cortimeplot}()},
+\code{\link{facloadcredplot}()},
+\code{\link{facloaddensplot}()},
+\code{\link{facloadpairplot}()},
+\code{\link{facloadpointplot}()},
+\code{\link{logvartimeplot}()},
+\code{\link{paratraceplot}()},
+\code{\link{plot.fsvdraws}()},
+\code{\link{plotalot}()},
+\code{\link{voltimeplot}()}
 }
 \concept{plotting}

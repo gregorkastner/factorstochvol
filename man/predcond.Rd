@@ -53,9 +53,12 @@ pairs(t(preddraws), col = rgb(0,0,0,.1), pch = 16)
 
 }
 \seealso{
-Other predictors: \code{\link{predcor}},
-  \code{\link{predcov}}, \code{\link{predh}},
-  \code{\link{predloglikWB}}, \code{\link{predloglik}},
-  \code{\link{predprecWB}}
+Other predictors: 
+\code{\link{predcor}()},
+\code{\link{predcov}()},
+\code{\link{predh}()},
+\code{\link{predloglikWB}()},
+\code{\link{predloglik}()},
+\code{\link{predprecWB}()}
 }
 \concept{predictors}

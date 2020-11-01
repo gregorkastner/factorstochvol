@@ -4,8 +4,15 @@
 \alias{facloadpointplot}
 \title{Displays point estimates of the factor loadings posterior.}
 \usage{
-facloadpointplot(x, fsvsimobj = NULL, statistic = "median",
-  cex = 6.5, alpha = 0.2, allpairs = FALSE, col = NULL)
+facloadpointplot(
+  x,
+  fsvsimobj = NULL,
+  statistic = "median",
+  cex = 6.5,
+  alpha = 0.2,
+  allpairs = FALSE,
+  col = NULL
+)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -38,14 +45,19 @@ factors to plot.
 of the estimated factor loadings matrix.
 }
 \seealso{
-Other plotting: \code{\link{comtimeplot}},
-  \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{cortimeplot}}, \code{\link{facloadcredplot}},
-  \code{\link{facloaddensplot}},
-  \code{\link{facloadpairplot}},
-  \code{\link{facloadtraceplot}},
-  \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
-  \code{\link{plotalot}}, \code{\link{voltimeplot}}
+Other plotting: 
+\code{\link{comtimeplot}()},
+\code{\link{corimageplot}()},
+\code{\link{corplot}()},
+\code{\link{cortimeplot}()},
+\code{\link{facloadcredplot}()},
+\code{\link{facloaddensplot}()},
+\code{\link{facloadpairplot}()},
+\code{\link{facloadtraceplot}()},
+\code{\link{logvartimeplot}()},
+\code{\link{paratraceplot}()},
+\code{\link{plot.fsvdraws}()},
+\code{\link{plotalot}()},
+\code{\link{voltimeplot}()}
 }
 \concept{plotting}

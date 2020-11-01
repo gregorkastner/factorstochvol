@@ -28,7 +28,9 @@ Currently crudely implemented as an R loop over all time points,
 may be slow.
 }
 \seealso{
-Other simulation: \code{\link{corelement}},
-  \code{\link{cormat.fsvsim}}, \code{\link{covelement}}
+Other simulation: 
+\code{\link{corelement}()},
+\code{\link{cormat.fsvsim}()},
+\code{\link{covelement}()}
 }
 \concept{simulation}

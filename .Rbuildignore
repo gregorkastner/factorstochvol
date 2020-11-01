@@ -1,7 +1,6 @@
 .undodir
 .ycm_extra_conf.py
 ^.*.RData
-^.*.RDS
 Session.vim
 jss.bst
 jss.cls
@@ -10,6 +9,8 @@ vignettes/doc/.git
 vignettes/doc/figure
 vignettes/doc/cache
 README.md
+
+sp500_perclogret_2000d.RDS
 
 ^.*\.Rproj$
 ^\.Rproj\.user$

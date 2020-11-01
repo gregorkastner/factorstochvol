@@ -4,8 +4,7 @@
 \alias{plot.fsvdraws}
 \title{Default factor SV plot}
 \usage{
-\method{plot}{fsvdraws}(x, quantiles = c(0.05, 0.5, 0.95), col = NULL,
-  fsvsimobj = NULL, ...)
+\method{plot}{fsvdraws}(x, quantiles = c(0.05, 0.5, 0.95), col = NULL, fsvsimobj = NULL, ...)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -28,15 +27,19 @@ Returns \code{x} invisibly.
 Displays the correlation matrix at the last sampling point in time.
 }
 \seealso{
-Other plotting: \code{\link{comtimeplot}},
-  \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{cortimeplot}}, \code{\link{facloadcredplot}},
-  \code{\link{facloaddensplot}},
-  \code{\link{facloadpairplot}},
-  \code{\link{facloadpointplot}},
-  \code{\link{facloadtraceplot}},
-  \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{plotalot}},
-  \code{\link{voltimeplot}}
+Other plotting: 
+\code{\link{comtimeplot}()},
+\code{\link{corimageplot}()},
+\code{\link{corplot}()},
+\code{\link{cortimeplot}()},
+\code{\link{facloadcredplot}()},
+\code{\link{facloaddensplot}()},
+\code{\link{facloadpairplot}()},
+\code{\link{facloadpointplot}()},
+\code{\link{facloadtraceplot}()},
+\code{\link{logvartimeplot}()},
+\code{\link{paratraceplot}()},
+\code{\link{plotalot}()},
+\code{\link{voltimeplot}()}
 }
 \concept{plotting}

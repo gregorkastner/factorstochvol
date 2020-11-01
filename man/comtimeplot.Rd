@@ -4,8 +4,7 @@
 \alias{comtimeplot}
 \title{Plot comunalities over time.}
 \usage{
-comtimeplot(x, fsvsimobj = NULL, show = "series", maxrows = 5,
-  ylim = c(0, 1))
+comtimeplot(x, fsvsimobj = NULL, show = "series", maxrows = 5, ylim = c(0, 1))
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -36,15 +35,19 @@ series-specific communalities. If communalities haven't been stored during
 sampling, \code{comtimeplot} produces an error.
 }
 \seealso{
-Other plotting: \code{\link{corimageplot}},
-  \code{\link{corplot}}, \code{\link{cortimeplot}},
-  \code{\link{facloadcredplot}},
-  \code{\link{facloaddensplot}},
-  \code{\link{facloadpairplot}},
-  \code{\link{facloadpointplot}},
-  \code{\link{facloadtraceplot}},
-  \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
-  \code{\link{plotalot}}, \code{\link{voltimeplot}}
+Other plotting: 
+\code{\link{corimageplot}()},
+\code{\link{corplot}()},
+\code{\link{cortimeplot}()},
+\code{\link{facloadcredplot}()},
+\code{\link{facloaddensplot}()},
+\code{\link{facloadpairplot}()},
+\code{\link{facloadpointplot}()},
+\code{\link{facloadtraceplot}()},
+\code{\link{logvartimeplot}()},
+\code{\link{paratraceplot}()},
+\code{\link{plot.fsvdraws}()},
+\code{\link{plotalot}()},
+\code{\link{voltimeplot}()}
 }
 \concept{plotting}

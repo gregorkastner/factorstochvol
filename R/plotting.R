@@ -25,7 +25,6 @@
 #' @import methods
 #'
 #' @export
-
 comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
 			maxrows = 5, ylim = c(0,1)) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
@@ -97,7 +96,6 @@ comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
 #' @family plotting
 #'
 #' @export
-
 voltimeplot <- function(x, these = seq_len(nrow(x$y)), legend = "topright", ...) {
 if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (!exists("runningstore", x) || !exists("vol", x$runningstore)) {
@@ -173,7 +171,6 @@ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
 #' @family plotting
 #'
 #' @export
-
 corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
 			 these4order = these,
 			 plotdatedist = 0, plotCI = 'n', date.cex = 1.5, col = NULL,
@@ -270,8 +267,6 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
 #' @family plotting
 #'
 #' @export
-
-
 cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 			type = "cor", statistic = "mean") {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
@@ -331,7 +326,6 @@ cortimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 
 #' @rdname cortimeplot
 #' @export
-
 covtimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 			type = "cov", statistic = "mean") {
  cortimeplot(x = x, series = series, these = these, type = type,
@@ -358,7 +352,6 @@ covtimeplot <- function(x, series, these = seq_len(nrow(x$y)),
 #' @family plotting
 #'
 #' @export
-
 facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (any(dim(x$facload) < 2)) stop("Currently implemented for two or more factors.")
@@ -412,7 +405,6 @@ facloadpairplot <- function(x, maxpoints = 500, alpha = 20/maxpoints, cex = 3) {
 #' @family plotting
 #'
 #' @export
-
 facloadcredplot <- function(x, quants = c(.01, .99)) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (any(dim(x$facload) < 2)) stop("Currently implemented for two or more factors.")
@@ -477,7 +469,6 @@ facloadcredplot <- function(x, quants = c(.01, .99)) {
 #' @family plotting
 #'
 #' @export
-
 facloadpointplot <- function(x, fsvsimobj = NULL, statistic = "median",
 			     cex = 6.5, alpha = 0.2, allpairs = FALSE, col = NULL) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
@@ -624,8 +615,6 @@ facloadpointplot <- function(x, fsvsimobj = NULL, statistic = "median",
 #' @family plotting
 #'
 #' @export
-
-
 logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (!exists("runningstore", x)) stop("Cannot plot time-varying volatilities because
@@ -695,17 +684,11 @@ logvartimeplot <- function(x, fsvsimobj = NULL, show = "both", maxrows = 5) {
 #' @param thinning Plot every \code{thinning}th draw.
 #' @param maxrows Indicates the maximum number of rows to be drawn per page.
 #' @param ... Ignored.
-#' 
 #' @return Returns \code{x} invisibly.
-#' 
 #' @family plotting
-#'
 #' @rdname paratraceplot
-#'
 #' @name paratraceplot
-#'
 #' @export
-
 paratraceplot.fsvdraws <- function(x, fsvsimobj = NULL, thinning = NULL, maxrows = 3, ...) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  m <- ncol(x$y)
@@ -833,8 +816,6 @@ paratraceplot.fsvdraws <- function(x, fsvsimobj = NULL, thinning = NULL, maxrows
 #' @family plotting
 #'
 #' @export
-
-
 facloadtraceplot <- function(x, fsvsimobj = NULL, thinning = NULL, maxrows = 10, ylim = NULL) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (any(dim(x$facload) == 0)) {
@@ -907,7 +888,6 @@ facloadtraceplot <- function(x, fsvsimobj = NULL, thinning = NULL, maxrows = 10,
 #' @family plotting
 #'
 #' @export
-
 facloaddensplot <- function(x, fsvsimobj = NULL, rows = 5, thesecols = NULL, xlim = NULL) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (any(dim(x$facload) == 0)) stop("There aren't any factor loadings to plot.")
@@ -978,7 +958,6 @@ facloaddensplot <- function(x, fsvsimobj = NULL, rows = 5, thesecols = NULL, xli
 #' @family plotting
 #'
 #' @export
-
 plotalot <- function(x, fsvsimobj = NULL, ...) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  r <- ncol(x$facload)
@@ -1008,7 +987,6 @@ plotalot <- function(x, fsvsimobj = NULL, ...) {
 #' @family plotting
 #'
 #' @export
-
 plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj = NULL, ...) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (!is.null(fsvsimobj)) {
@@ -1073,7 +1051,6 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
 #' @family plotting
 #'
 #' @export
-
 corplot <- function(x, fsvsimobj = NULL, these = 1:(ncol(x$y)*(ncol(x$y)-1)/2), start = 1,
 		    end = nrow(x$y), maxrows = 10, ...) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")

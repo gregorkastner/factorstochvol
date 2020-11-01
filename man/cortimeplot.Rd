@@ -5,11 +5,21 @@
 \alias{covtimeplot}
 \title{Plot correlations over time.}
 \usage{
-cortimeplot(x, series, these = seq_len(nrow(x$y)), type = "cor",
-  statistic = "mean")
+cortimeplot(
+  x,
+  series,
+  these = seq_len(nrow(x$y)),
+  type = "cor",
+  statistic = "mean"
+)
 
-covtimeplot(x, series, these = seq_len(nrow(x$y)), type = "cov",
-  statistic = "mean")
+covtimeplot(
+  x,
+  series,
+  these = seq_len(nrow(x$y)),
+  type = "cov",
+  statistic = "mean"
+)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -37,15 +47,19 @@ the other components series. Throws an error if correlations haven't been
 stored during sampling.
 }
 \seealso{
-Other plotting: \code{\link{comtimeplot}},
-  \code{\link{corimageplot}}, \code{\link{corplot}},
-  \code{\link{facloadcredplot}},
-  \code{\link{facloaddensplot}},
-  \code{\link{facloadpairplot}},
-  \code{\link{facloadpointplot}},
-  \code{\link{facloadtraceplot}},
-  \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
-  \code{\link{plotalot}}, \code{\link{voltimeplot}}
+Other plotting: 
+\code{\link{comtimeplot}()},
+\code{\link{corimageplot}()},
+\code{\link{corplot}()},
+\code{\link{facloadcredplot}()},
+\code{\link{facloaddensplot}()},
+\code{\link{facloadpairplot}()},
+\code{\link{facloadpointplot}()},
+\code{\link{facloadtraceplot}()},
+\code{\link{logvartimeplot}()},
+\code{\link{paratraceplot}()},
+\code{\link{plot.fsvdraws}()},
+\code{\link{plotalot}()},
+\code{\link{voltimeplot}()}
 }
 \concept{plotting}

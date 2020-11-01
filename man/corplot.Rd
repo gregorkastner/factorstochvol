@@ -4,8 +4,15 @@
 \alias{corplot}
 \title{Plots pairwise correlations over time}
 \usage{
-corplot(x, fsvsimobj = NULL, these = 1:(ncol(x$y) * (ncol(x$y) - 1)/2),
-  start = 1, end = nrow(x$y), maxrows = 10, ...)
+corplot(
+  x,
+  fsvsimobj = NULL,
+  these = 1:(ncol(x$y) * (ncol(x$y) - 1)/2),
+  start = 1,
+  end = nrow(x$y),
+  maxrows = 10,
+  ...
+)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -33,15 +40,19 @@ Returns \code{x} invisibly.
 Throws a warning if these haven't been stored during sampling.
 }
 \seealso{
-Other plotting: \code{\link{comtimeplot}},
-  \code{\link{corimageplot}}, \code{\link{cortimeplot}},
-  \code{\link{facloadcredplot}},
-  \code{\link{facloaddensplot}},
-  \code{\link{facloadpairplot}},
-  \code{\link{facloadpointplot}},
-  \code{\link{facloadtraceplot}},
-  \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
-  \code{\link{plotalot}}, \code{\link{voltimeplot}}
+Other plotting: 
+\code{\link{comtimeplot}()},
+\code{\link{corimageplot}()},
+\code{\link{cortimeplot}()},
+\code{\link{facloadcredplot}()},
+\code{\link{facloaddensplot}()},
+\code{\link{facloadpairplot}()},
+\code{\link{facloadpointplot}()},
+\code{\link{facloadtraceplot}()},
+\code{\link{logvartimeplot}()},
+\code{\link{paratraceplot}()},
+\code{\link{plot.fsvdraws}()},
+\code{\link{plotalot}()},
+\code{\link{voltimeplot}()}
 }
 \concept{plotting}

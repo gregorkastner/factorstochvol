@@ -5,17 +5,44 @@
 \title{Markov Chain Monte Carlo (MCMC) Sampling for the Factor Stochastic
 Volatility Model.}
 \usage{
-fsvsample(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
-  restrict = "none", priorfacloadtype = "rowwiseng",
-  priorfacload = 0.1, priorng = c(1, 1), priormu = c(0, 10),
-  priorphiidi = c(10, 3), priorphifac = c(10, 3), priorsigmaidi = 1,
-  priorsigmafac = 1, priorh0idi = "stationary",
-  priorh0fac = "stationary", keeptime = "last",
-  heteroskedastic = TRUE, priorhomoskedastic = NA, runningstore = 6,
-  runningstorethin = 10, runningstoremoments = 2, signident = TRUE,
-  signswitch = FALSE, interweaving = 4, quiet = FALSE,
-  samplefac = TRUE, startfac, startpara, startlogvar, startlatent,
-  startlogvar0, startlatent0, startfacload, startfacloadvar, expert)
+fsvsample(
+  y,
+  factors = 1,
+  draws = 1000,
+  thin = 1,
+  burnin = 1000,
+  restrict = "none",
+  priorfacloadtype = "rowwiseng",
+  priorfacload = 0.1,
+  priorng = c(1, 1),
+  priormu = c(0, 10),
+  priorphiidi = c(10, 3),
+  priorphifac = c(10, 3),
+  priorsigmaidi = 1,
+  priorsigmafac = 1,
+  priorh0idi = "stationary",
+  priorh0fac = "stationary",
+  keeptime = "last",
+  heteroskedastic = TRUE,
+  priorhomoskedastic = NA,
+  runningstore = 6,
+  runningstorethin = 10,
+  runningstoremoments = 2,
+  signident = TRUE,
+  signswitch = FALSE,
+  interweaving = 4,
+  quiet = FALSE,
+  samplefac = TRUE,
+  startfac,
+  startpara,
+  startlogvar,
+  startlatent,
+  startlogvar0,
+  startlatent0,
+  startfacload,
+  startfacloadvar,
+  expert
+)
 }
 \arguments{
 \item{y}{Data matrix. Each of \code{m} columns is assumed to contain a single
@@ -235,9 +262,9 @@ prior is employed (priorfacloadtype != "normal") while ignored when static
 loadings variances are used (priorfacloadtype == "normal").}
 
 \item{expert}{\emph{optional} named list of expert parameters for the
-univariate SV models (will be passed to the \code{stochvol} package). For most
+univariate SV models (will be transformed and passed to the \code{stochvol} package). For most
 applications, the default values probably work best. Interested users are
-referred to Kastner and Frühwirth-Schnatter (2014) and Kastner (2016). If
+referred to Kastner and Frühwirth-Schnatter (2014), the package vignette, and Kastner (2016). If
 \code{expert} is provided, it may contain the following named elements:
 \itemize{
  \item{\code{parameterization}: }{Character string equal to \code{"centered"},

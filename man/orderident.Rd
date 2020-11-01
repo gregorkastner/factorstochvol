@@ -35,6 +35,7 @@ sampler by
 ordering according to the argument \code{method}.
 }
 \seealso{
-Other postprocessing: \code{\link{signident}}
+Other postprocessing: 
+\code{\link{signident}()}
 }
 \concept{postprocessing}

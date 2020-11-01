@@ -54,8 +54,9 @@ for (i in 1:3) {
 
 }
 \seealso{
-Other extractors: \code{\link{cormat.fsvdraws}},
-  \code{\link{covmat.fsvdraws}},
-  \code{\link{runningcovmat}}
+Other extractors: 
+\code{\link{cormat.fsvdraws}()},
+\code{\link{covmat.fsvdraws}()},
+\code{\link{runningcovmat}()}
 }
 \concept{extractors}

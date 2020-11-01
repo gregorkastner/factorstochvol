@@ -4,8 +4,12 @@
 \alias{preorder}
 \title{Ad-hoc methods for determining the order of variables}
 \usage{
-preorder(dat, factors = ledermann(ncol(dat)), type = "fixed",
-  transload = identity)
+preorder(
+  dat,
+  factors = ledermann(ncol(dat)),
+  type = "fixed",
+  transload = identity
+)
 }
 \arguments{
 \item{dat}{Matrix containing the data, with \code{n} rows

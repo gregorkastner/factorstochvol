@@ -19,7 +19,6 @@
 #' @rdname logret
 #' @name logret
 #' @export
-
 logret.matrix <- function(dat, demean = FALSE, standardize = FALSE, ...) {
  tmp <- dat[,colSums(is.na(dat)) <= 0.5]
  tmp <- diff(log(as.matrix(tmp)))
@@ -32,11 +31,18 @@ logret.matrix <- function(dat, demean = FALSE, standardize = FALSE, ...) {
 #' @rdname logret
 #' @name logret
 #' @export
-
 logret.data.frame <- function(dat, demean = FALSE, standardize = FALSE, ...) {
  dat <- data.matrix(dat)
  logret(dat, demean, standardize, ...)
 }
+
+#' @rdname logret
+#' @name logret
+#' @export
+logret <- function(dat, demean = FALSE, standardize = FALSE, ...) {
+ UseMethod("logret")
+}
+
 
 
 #' Ledermann bound for the number of factors
@@ -53,7 +59,6 @@ logret.data.frame <- function(dat, demean = FALSE, standardize = FALSE, ...) {
 #' @seealso preorder
 #'
 #' @export
-
 ledermann <- function(m) {
  as.integer(floor((2*m+1)/2 - sqrt((2*m+1)^2/4 - m^2 + m)))
 }
@@ -92,7 +97,6 @@ ledermann <- function(m) {
 #' @seealso ledermann 
 #'
 #' @export
-
 preorder <- function(dat, factors = ledermann(ncol(dat)), type = "fixed", transload = identity) {
  m <- ncol(dat)
  control <- list(opt = list(maxit = 100000)) 
@@ -151,7 +155,6 @@ preorder <- function(dat, factors = ledermann(ncol(dat)), type = "fixed", transl
 #' @seealso ledermann 
 #'
 #' @export
-
 findrestrict <- function(dat, factors, transload = abs, relto = 'all') {
  m <- ncol(dat)
  control <- list(opt = list(maxit = 100000)) 
@@ -193,7 +196,6 @@ findrestrict <- function(dat, factors, transload = abs, relto = 'all') {
 #' @return A \code{m} times \code{m} covariance matrix estimate.
 #'
 #' @export
-
 expweightcov <- function(dat, alpha = 4/126, hist = 180) {
  n <- nrow(dat)
  mycov <- tcrossprod(dat[n - hist + 1,])

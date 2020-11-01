@@ -23,6 +23,7 @@ function's behavior can be found in  \code{\link{covmat.fsvdraws}}
 simulated model.
 }
 \seealso{
-Other generics: \code{\link{cormat}}
+Other generics: 
+\code{\link{cormat}()}
 }
 \concept{generics}

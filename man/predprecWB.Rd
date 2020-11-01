@@ -40,9 +40,12 @@ Usually used for evaluating the predictive likelihood when many
 series but few factors are used, see
 \code{\link{predloglik}} and \code{\link{predloglikWB}}.
 
-Other predictors: \code{\link{predcond}},
-  \code{\link{predcor}}, \code{\link{predcov}},
-  \code{\link{predh}}, \code{\link{predloglikWB}},
-  \code{\link{predloglik}}
+Other predictors: 
+\code{\link{predcond}()},
+\code{\link{predcor}()},
+\code{\link{predcov}()},
+\code{\link{predh}()},
+\code{\link{predloglikWB}()},
+\code{\link{predloglik}()}
 }
 \concept{predictors}

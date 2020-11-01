@@ -4,10 +4,19 @@
 \alias{corimageplot}
 \title{Plot correlation matrices for certain points in time}
 \usage{
-corimageplot(x, these = seq_len(nrow(x$y)), order = "original",
-  these4order = these, plotdatedist = 0, plotCI = "n",
-  date.cex = 1.5, col = NULL, fsvsimobj = NULL,
-  plottype = "corrplot", ...)
+corimageplot(
+  x,
+  these = seq_len(nrow(x$y)),
+  order = "original",
+  these4order = these,
+  plotdatedist = 0,
+  plotCI = "n",
+  date.cex = 1.5,
+  col = NULL,
+  fsvsimobj = NULL,
+  plottype = "corrplot",
+  ...
+)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -60,15 +69,19 @@ If correlations haven't been stored during sampling,
 \code{corimageplot} produces an error.
 }
 \seealso{
-Other plotting: \code{\link{comtimeplot}},
-  \code{\link{corplot}}, \code{\link{cortimeplot}},
-  \code{\link{facloadcredplot}},
-  \code{\link{facloaddensplot}},
-  \code{\link{facloadpairplot}},
-  \code{\link{facloadpointplot}},
-  \code{\link{facloadtraceplot}},
-  \code{\link{logvartimeplot}},
-  \code{\link{paratraceplot}}, \code{\link{plot.fsvdraws}},
-  \code{\link{plotalot}}, \code{\link{voltimeplot}}
+Other plotting: 
+\code{\link{comtimeplot}()},
+\code{\link{corplot}()},
+\code{\link{cortimeplot}()},
+\code{\link{facloadcredplot}()},
+\code{\link{facloaddensplot}()},
+\code{\link{facloadpairplot}()},
+\code{\link{facloadpointplot}()},
+\code{\link{facloadtraceplot}()},
+\code{\link{logvartimeplot}()},
+\code{\link{paratraceplot}()},
+\code{\link{plot.fsvdraws}()},
+\code{\link{plotalot}()},
+\code{\link{voltimeplot}()}
 }
 \concept{plotting}

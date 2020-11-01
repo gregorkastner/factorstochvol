@@ -17,7 +17,7 @@ void store(const Rcpp::NumericMatrix &curfacload, Rcpp::NumericVector &facload,
 	   const Rcpp::NumericVector &curlambda2, Rcpp::NumericMatrix &lambda2,
 	   const Rcpp::NumericMatrix &curtau2,    Rcpp::NumericVector &tau2,
            const Rcpp::NumericVector &curmixprob, Rcpp::NumericVector &mixprob,
-	   const Rcpp::IntegerMatrix &curmixind,  Rcpp::IntegerVector &mixind,
+	   const arma::umat &curmixind,  Rcpp::IntegerVector &mixind,
 	   const bool auxstore, const int thintime, const int where) {
  
  std::copy(curfacload.begin(), curfacload.end(), facload.begin() + where * curfacload.length());
@@ -67,7 +67,7 @@ void store(const Rcpp::NumericMatrix &curfacload, Rcpp::NumericVector &facload,
  
  if (auxstore) { // store mixture probabilities, mixture indicators, shrinkage hyperparas, h0
   std::copy(curmixprob.begin(), curmixprob.end(), mixprob.begin() + where * curmixprob.length());
-  std::copy(curmixind.begin(), curmixind.end(), mixind.begin() + where * curmixind.length());
+  std::copy(curmixind.begin(), curmixind.end(), mixind.begin() + where * curmixind.n_elem);
   std::copy(curlambda2.begin(), curlambda2.end(), lambda2.begin() + where * curlambda2.length());
   std::copy(curtau2.begin(), curtau2.end(), tau2.begin() + where * curtau2.length());
  }

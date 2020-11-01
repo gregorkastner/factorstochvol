@@ -14,7 +14,7 @@ void store(const Rcpp::NumericMatrix &curfacload, Rcpp::NumericVector &facload,
 	   const Rcpp::NumericVector &curlambda2, Rcpp::NumericMatrix &lambda2,
 	   const Rcpp::NumericMatrix &curtau2,    Rcpp::NumericVector &tau2,
            const Rcpp::NumericVector &curmixprob, Rcpp::NumericVector &mixprob,
-	   const Rcpp::IntegerMatrix &curmixind,  Rcpp::IntegerVector &mixind,
+	   const arma::umat &curmixind,  Rcpp::IntegerVector &mixind,
 	   const bool auxstore, const int thintime, const int where);
 
 #endif

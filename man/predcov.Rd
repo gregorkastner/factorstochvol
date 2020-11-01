@@ -52,9 +52,12 @@ lines(density(predobj[1,2,,"100"], adjust = 2), col = 3)
 
 }
 \seealso{
-Other predictors: \code{\link{predcond}},
-  \code{\link{predcor}}, \code{\link{predh}},
-  \code{\link{predloglikWB}}, \code{\link{predloglik}},
-  \code{\link{predprecWB}}
+Other predictors: 
+\code{\link{predcond}()},
+\code{\link{predcor}()},
+\code{\link{predh}()},
+\code{\link{predloglikWB}()},
+\code{\link{predloglik}()},
+\code{\link{predprecWB}()}
 }
 \concept{predictors}

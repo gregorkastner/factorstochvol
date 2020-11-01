@@ -172,9 +172,9 @@
 #' variances.
 #'
 #' @param expert \emph{optional} named list of expert parameters for the
-#' univariate SV models (will be passed to the \code{stochvol} package). For most
+#' univariate SV models (will be transformed and passed to the \code{stochvol} package). For most
 #' applications, the default values probably work best. Interested users are
-#' referred to Kastner and Frühwirth-Schnatter (2014) and Kastner (2016). If
+#' referred to Kastner and Frühwirth-Schnatter (2014), the package vignette, and Kastner (2016). If
 #' \code{expert} is provided, it may contain the following named elements:
 #' \itemize{
 #'  \item{\code{parameterization}: }{Character string equal to \code{"centered"},
@@ -337,7 +337,6 @@
 #' }
 #' 
 #' @export
-
 fsvsample <- function(y,
 		      factors = 1,
 		      draws = 1000,
@@ -1072,7 +1071,6 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' @family predictors
 #' 
 #' @export
-
 predcond <- function(x, ahead = 1, each = 1, ...) {
  
  if (!is(x, "fsvdraws")) stop("Argument 'x' must be of class 'fsvdraws'.")

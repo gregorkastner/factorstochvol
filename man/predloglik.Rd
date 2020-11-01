@@ -5,8 +5,14 @@
 \title{Evaluates the predictive log likelihood using the predicted
 covariance matrix}
 \usage{
-predloglik(x, y, ahead = 1, each = 1, alldraws = FALSE,
-  indicator = rep(TRUE, ncol(y)))
+predloglik(
+  x,
+  y,
+  ahead = 1,
+  each = 1,
+  alldraws = FALSE,
+  indicator = rep(TRUE, ncol(y))
+)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -63,9 +69,12 @@ Uses \code{\link{predcov}}. If \code{m} is large
 but only few factors are used, consider also using
 \code{\link{predloglikWB}}.
 
-Other predictors: \code{\link{predcond}},
-  \code{\link{predcor}}, \code{\link{predcov}},
-  \code{\link{predh}}, \code{\link{predloglikWB}},
-  \code{\link{predprecWB}}
+Other predictors: 
+\code{\link{predcond}()},
+\code{\link{predcor}()},
+\code{\link{predcov}()},
+\code{\link{predh}()},
+\code{\link{predloglikWB}()},
+\code{\link{predprecWB}()}
 }
 \concept{predictors}

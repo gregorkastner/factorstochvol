@@ -61,9 +61,12 @@ Uses \code{\link{predprecWB}}. If \code{m} is small
 or many factors are used, consider also using
 \code{\link{predcov}}.
 
-Other predictors: \code{\link{predcond}},
-  \code{\link{predcor}}, \code{\link{predcov}},
-  \code{\link{predh}}, \code{\link{predloglik}},
-  \code{\link{predprecWB}}
+Other predictors: 
+\code{\link{predcond}()},
+\code{\link{predcor}()},
+\code{\link{predcov}()},
+\code{\link{predh}()},
+\code{\link{predloglik}()},
+\code{\link{predprecWB}()}
 }
 \concept{predictors}

@@ -25,7 +25,9 @@ Vector with the requested covariances.
 (exactly) two component series.
 }
 \seealso{
-Other simulation: \code{\link{corelement}},
-  \code{\link{cormat.fsvsim}}, \code{\link{covmat.fsvsim}}
+Other simulation: 
+\code{\link{corelement}()},
+\code{\link{cormat.fsvsim}()},
+\code{\link{covmat.fsvsim}()}
 }
 \concept{simulation}

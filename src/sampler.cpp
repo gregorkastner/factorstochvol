@@ -1,3 +1,4 @@
+#include <RcppArmadillo.h>
 #include "sampler.h"
 
 using namespace Rcpp;
@@ -154,7 +155,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  }
 
  //current mixture indicator draws
- IntegerMatrix curmixind(T, mpr);
+ arma::umat curmixind(T, mpr);
  
  //current mixture probability draws
  NumericVector curmixprob(10 * T * mpr);
@@ -247,6 +248,16 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  const double MHcontrol       = as<double>(mhcontrol_in);
  const int MHsteps            = as<int>(MHsteps_in);
  const int parameterization   = as<int>(para_in);
+ const stochvol::ExpertSpec_FastSV expert {
+   parameterization > 2,  // interweave
+   stochvol::Parameterization::CENTERED,  // centered_baseline always
+   B011inv,
+   B022inv,
+   3,
+   MHcontrol < 0 ? stochvol::ExpertSpec_FastSV::ProposalSigma2::INDEPENDENCE : stochvol::ExpertSpec_FastSV::ProposalSigma2::LOG_RANDOM_WALK,
+   MHcontrol,
+   truncnormal ? stochvol::ExpertSpec_FastSV::ProposalPhi::REPEATED_ACCEPT_REJECT_NORMAL : stochvol::ExpertSpec_FastSV::ProposalPhi::IMMEDIATE_ACCEPT_REJECT_NORMAL
+ };
 
  // offset (only used in zero-factor model)
  const double offset          = as<double>(offset_in);
@@ -263,6 +274,23 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  } else {
   if (MHsteps == 2) cT = c0 + (T+1)/2.0;  // pre-calculation outside the loop
   else return LogicalVector::create(NA_LOGICAL);  // not implemented!
+ }
+ std::vector<stochvol::PriorSpec> prior_specs(mpr);
+ for (int j = 0; j < m; j++) {
+   prior_specs[j] = {
+     (priorh0(j) <= 0) ? stochvol::PriorSpec::Latent0() : stochvol::PriorSpec::Latent0(stochvol::PriorSpec::Constant(priorh0(j))),
+       stochvol::PriorSpec::Mu(stochvol::PriorSpec::Normal(bmu, std::sqrt(Bmu))),
+       stochvol::PriorSpec::Phi(stochvol::PriorSpec::Beta(a0idi, b0idi)),
+       Gammaprior ? stochvol::PriorSpec::Sigma2(stochvol::PriorSpec::Gamma(0.5, 0.5 / Bsigma(j))) : stochvol::PriorSpec::Sigma2(stochvol::PriorSpec::InverseGamma(2.5, C0(j)))
+   };
+ }
+ for (int j = m; j < mpr; j++) {
+   prior_specs[j] = {
+     (priorh0(j) <= 0) ? stochvol::PriorSpec::Latent0() : stochvol::PriorSpec::Latent0(stochvol::PriorSpec::Constant(priorh0(j))),
+       stochvol::PriorSpec::Mu(stochvol::PriorSpec::Constant(0)),
+       stochvol::PriorSpec::Phi(stochvol::PriorSpec::Beta(a0fac, b0fac)),
+       Gammaprior ? stochvol::PriorSpec::Sigma2(stochvol::PriorSpec::Gamma(0.5, 0.5 / Bsigma(j))) : stochvol::PriorSpec::Sigma2(stochvol::PriorSpec::InverseGamma(2.5, C0(j)))
+   };
  }
  
  // NOTE: (Almost) all storage of MCMC draws is done in NumericVectors
@@ -551,10 +579,6 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  // draw2 will hold some random draws in STEP 3
  NumericVector draw2(r*T);
  arma::colvec armadraw2(draw2.begin(), draw2.length(), false);
- 
- // we always use the centered parameterization as baseline
- // (for compatibility reasons with stochvol)
- const bool centered_baseline = true;
 
  int effi = -burnin;
  int effirunningstore = 0;
@@ -576,13 +600,16 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  arma::mat curpara_arma(curpara.begin(), curpara.nrow(), curpara.ncol(), false);
  arma::mat curh_arma(curh.begin(), curh.nrow(), curh.ncol(), false);
  arma::mat curmixprob_arma(curmixprob.begin(), 10*T, mpr, false);
- arma::imat curmixind_arma(curmixind.begin(), curmixind.nrow(), curmixind.ncol(), false);
 
  for (int i = 0; i < N; i++, effi++) {  // BEGIN main MCMC loop
   
   if (verbose && (i % doevery == 0)) {
    Rprintf("\r********* Iteration %*i of %*i (%3.0f%%) *********",
     space4print, i+1, space4print, N, 100.*(i+1)/N);
+  }
+
+  if (i % 20 == 0) {
+    ::R_CheckUserInterrupt();
   }
 
   // "linearized residuals"
@@ -606,13 +633,16 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   for (int j = 0; j < m; j++) {
    if (sv(j) == true) {
      double curh0j = curh0(j);
-     arma::vec curpara_j = curpara_arma.unsafe_col(j);
-     arma::vec curh_j = armah.unsafe_col(j);
-     arma::vec curmixprob_j = curmixprob_arma.unsafe_col(j);
-     arma::ivec curmixind_j = curmixind_arma.unsafe_col(j);
-     stochvol::update_sv(armaynorm.row(j).t(), curpara_j, curh_j, curh0j, curmixprob_j, curmixind_j,
-           centered_baseline, C0(j), cT, Bsigma(j), a0idi, b0idi, bmu, Bmu, B011inv, B022inv, Gammaprior,
-           truncnormal, MHcontrol, MHsteps, parameterization, false, priorh0(j));
+     arma::vec curpara_j = curpara_arma.unsafe_col(j),
+               curh_j = armah.unsafe_col(j),
+               curmixprob_j = curmixprob_arma.unsafe_col(j);
+     arma::uvec curmixind_j = curmixind.unsafe_col(j);
+
+     double mu = curpara_j[0],
+            phi = curpara_j[1],
+            sigma = curpara_j[2];
+     stochvol::update_fast_sv(armaynorm.row(j).t(), mu, phi, sigma, curh0j, curh_j, curmixind_j, prior_specs[j], expert);
+     curpara_j = {mu, phi, sigma};
      curh0(j) = curh0j;
    } else {
      double rss;
@@ -630,13 +660,15 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   for (int j = m; j < mpr; j++) {
    if (sv(j) == true) {
      double curh0j = curh0(j);
-     arma::vec curpara_j = curpara_arma.unsafe_col(j);
-     arma::vec curh_j = armah.unsafe_col(j);
-     arma::vec curmixprob_j = curmixprob_arma.unsafe_col(j);
-     arma::ivec curmixind_j = curmixind_arma.unsafe_col(j);
-     stochvol::update_sv(armafnorm.row(j-m).t(), curpara_j, curh_j, curh0j, curmixprob_j, curmixind_j,
-         centered_baseline, C0(j), cT, Bsigma(j), a0fac, b0fac, bmu, Bmu, B011inv, B022inv, Gammaprior,
-         truncnormal, MHcontrol, MHsteps, parameterization, true, priorh0(j));
+     arma::vec curpara_j = curpara_arma.unsafe_col(j),
+               curh_j = armah.unsafe_col(j),
+               curmixprob_j = curmixprob_arma.unsafe_col(j);
+     arma::uvec curmixind_j = curmixind.unsafe_col(j);
+     double mu = 0,
+            phi = curpara_j[1],
+            sigma = curpara_j[2];
+     stochvol::update_fast_sv(armafnorm.row(j-m).t(), mu, phi, sigma, curh0j, curh_j, curmixind_j, prior_specs[j], expert);
+     curpara_j = {mu, phi, sigma};
      curh0(j) = curh0j;
    }
   }

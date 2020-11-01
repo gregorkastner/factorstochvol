@@ -59,7 +59,9 @@ summary(cors[1,2,,1])
 
 }
 \seealso{
-Other extractors: \code{\link{covmat.fsvdraws}},
-  \code{\link{runningcormat}}, \code{\link{runningcovmat}}
+Other extractors: 
+\code{\link{covmat.fsvdraws}()},
+\code{\link{runningcormat}()},
+\code{\link{runningcovmat}()}
 }
 \concept{extractors}
