@@ -1,3 +1,8 @@
+Changes in version 1.0.0:
+  - New argument 'designmatrix'. Can be used to model a constant mean for
+    every univariate series.
+  - Updated to work with stochvol3.0.0
+
 Changes in version 0.9.3
   - Unit tests added
   - New argument startfacloadvar. Can be used to pass the starting values for

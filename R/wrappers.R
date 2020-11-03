@@ -1,4 +1,25 @@
-# R wrapper function for the main MCMC loop
+#  #####################################################################################
+#  R package factorstochvol by
+#     Gregor Kastner Copyright (C) 2016-2020
+#     Darjus Hosszejni Copyright (C) 2019-2020
+#  
+#  This file is part of the R package factorstochvol: Bayesian Estimation
+#  of (Sparse) Latent Factor Stochastic Volatility Models
+#  
+#  The R package factorstochvol is free software: you can redistribute
+#  it and/or modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation, either version 2 or any
+#  later version of the License.
+#  
+#  The R package factorstochvol is distributed in the hope that it will
+#  be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+#  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#  General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with the R package factorstochvol. If that is not the case,
+#  please refer to <http://www.gnu.org/licenses/>.
+#  #####################################################################################
 
 #' Markov Chain Monte Carlo (MCMC) Sampling for the Factor Stochastic
 #' Volatility Model.
@@ -15,6 +36,12 @@
 #' @param draws Number of MCMC draws kept after burn-in.
 #'
 #' @param burnin Number of initial MCMC draws to be discarded.
+#'
+#' @param designmatrix regression design matrix for modeling the mean. Currently
+#' only a constant mean is implemented for each univariate series.
+#' Must be \code{NA}, in which case the mean is not modeled, or the character
+#' string \code{"ar0"}, in which case a constant mean is included in the model
+#' for each of the \code{m} univariate series.
 #'
 #' @param priormu Vector of length 2 denoting prior mean and standard deviation
 #' for unconditional levels of the idiosyncratic log variance processes.
@@ -77,6 +104,11 @@
 #' \code{priorh0fac} is the string 'stationary', the prior of the corresponding
 #' initial log volatility is taken to be from the stationary distribution, i.e.
 #' h0 is assumed to be Gaussian with mean 0 and variance $sigma^2/(1-phi^2)$.
+#'
+#' @param priorbeta numeric vector of length 2, indicating the mean and
+#' standard deviation of the Gaussian prior for the regression parameters. The
+#' default value is \code{c(0, 10000)}, which constitutes a very vague prior
+#' for many common datasets. Not used if \code{designmatrix} is \code{NA}.
 #'
 #' @param thin Single number greater or equal to 1, coercible to integer.
 #' Every \code{thin}th MCMC draw is kept and returned. The default value
@@ -320,12 +352,13 @@
 #' data(exrates, package = "stochvol")
 #' exrates$date <- NULL
 #' 
-#' # Compute the de-meaned percentage log returns:
-#' dat <- 100 * logret(exrates, demean = TRUE)
+#' # Compute the percentage log returns:
+#' dat <- 100 * logret(exrates)
 #' 
 #' # We are going to fit a one-factor model so the ordering is irrelevant
 #' # NOTE that these are very few draws, you probably want more...
-#' res <- fsvsample(dat, factors = 1, draws = 2000, burnin = 1000, runningstore = 6)
+#' res <- fsvsample(dat, factors = 2, draws = 2000, burnin = 1000,
+#'   runningstore = 6, designmatrix = "ar0")
 #'
 #' voltimeplot(res)
 #'
@@ -334,46 +367,25 @@
 #' oldpar <- par(ask = TRUE)
 #' plot(res)
 #' par(oldpar)
+#' pairs(t(res$beta[1:4, ]))
 #' }
 #' 
 #' @export
-fsvsample <- function(y,
-		      factors = 1,
-		      draws = 1000,
-		      thin = 1,
-		      burnin = 1000,
-		      restrict = "none",
-                      priorfacloadtype = "rowwiseng", 
-		      priorfacload = .1,
-		      priorng = c(1, 1),
-		      priormu = c(0, 10),
-		      priorphiidi = c(10, 3),
-		      priorphifac = c(10, 3),
-		      priorsigmaidi = 1,
-		      priorsigmafac = 1,
-		      priorh0idi = "stationary",
-		      priorh0fac = "stationary",
-		      keeptime = "last",
-		      heteroskedastic = TRUE,
-		      priorhomoskedastic = NA,
-		      runningstore = 6,
-		      runningstorethin = 10,
-		      runningstoremoments = 2,
-		      signident = TRUE,
-		      signswitch = FALSE, 
-		      interweaving = 4,
-		      quiet = FALSE,
-		      samplefac = TRUE,
-		      startfac,
-		      startpara,
-		      startlogvar,
-		      startlatent,
-		      startlogvar0,
-		      startlatent0,
-		      startfacload,
-		      startfacloadvar,
-		      expert
-		      ) {
+fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
+                      restrict = "none", designmatrix = NA,
+                      priorfacloadtype = "rowwiseng", priorfacload = .1,
+                      priorng = c(1, 1), priormu = c(0, 10),
+                      priorphiidi = c(10, 3), priorphifac = c(10, 3),
+                      priorsigmaidi = 1, priorsigmafac = 1,
+                      priorh0idi = "stationary", priorh0fac = "stationary",
+                      priorbeta = c(0, 10000),
+                      keeptime = "last", heteroskedastic = TRUE,
+                      priorhomoskedastic = NA, runningstore = 6,
+                      runningstorethin = 10, runningstoremoments = 2,
+                      signident = TRUE, signswitch = FALSE, interweaving = 4,
+                      quiet = FALSE, samplefac = TRUE, startfac, startpara,
+                      startlogvar, startlatent, startlogvar0, startlatent0,
+                      startfacload, startfacloadvar, expert) {
  
  # startlatent and startlogvar0 are being faded out
  if (!missing("startlatent") || !missing("startlatent0")) {
@@ -430,6 +442,16 @@ fsvsample <- function(y,
  } else {
   burnin <- as.integer(burnin)
  }
+
+ # Some error checking for designmatrix
+ if (any(is.na(designmatrix))) {
+   designmatrix <- NA
+ } else if (identical(designmatrix, "ar0")) {
+   ;
+ } else {
+   stop("Argument 'designmatrix' must be either NA or the character string 'ar0'.")
+ }
+ model_mean <- identical(designmatrix, "ar0")
  
  # Some error checking for priorh0idi
  if (length(priorh0idi) == 1) priorh0idi <- rep(priorh0idi, m)
@@ -502,6 +524,10 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
  }
 
  priorphi <- c(priorphiidi, priorphifac)
+
+ if (!is.numeric(priorbeta) | length(priorbeta) != 2) {
+  stop("Argument 'priorbeta' (mean and sd for the Gaussian prior for beta) must be numeric and of length 2.")
+ }
  
  if (!is.numeric(priorsigmaidi) | any(priorsigmaidi <= 0)) {
   stop("Argument 'priorsigmaidi' (scaling of the chi-squared(df = 1) prior for sigma^2) must be numeric and > 0.")
@@ -885,15 +911,15 @@ startval <- list(facload = startfacload,
 auxstore <- FALSE
 
 res <- .Call("sampler", t(y), draws, burnin, startval,
-       	priormu[1], priormu[2]^2, priorphi, priorsigma,
-	shrinkagepriors,
-       	thin, auxstore, thintime, myquiet, para,
-	mhsteps, B011, B022, mhcontrol, gammaprior, 
-	myoffset, truncnormal,
-	restrinv, interweaving, signswitch, runningstore,
-	runningstorethin, runningstoremoments, pfl,
-	heteroskedastic, priorhomoskedastic, priorh0, samplefac,
-	PACKAGE = "factorstochvol")
+             priormu[1], priormu[2]^2, priorphi, priorsigma,
+             priorbeta, model_mean, shrinkagepriors,
+             thin, auxstore, thintime, myquiet, para,
+             mhsteps, B011, B022, mhcontrol, gammaprior, 
+             myoffset, truncnormal,
+             restrinv, interweaving, signswitch, runningstore,
+             runningstorethin, runningstoremoments, pfl,
+             heteroskedastic, priorhomoskedastic, priorh0, samplefac,
+             PACKAGE = "factorstochvol")
 
 res$y <- y
 
@@ -904,6 +930,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    restrict = restr, interweaving = interweaving,
 		    signswitch = signswitch,
 		    heteroskedastic = heteroskedastic,
+        designmatrix = designmatrix,
 		    expert = list(parameterization = parameterization,
 				  mhcontrol = mhcontrol,
 				  gammaprior = gammaprior,
@@ -916,7 +943,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    startfacload = startfacload,
 		    startfac = startfac,
 		    startfacloadvar = starttau2,
-                    samplefac = samplefac)
+        samplefac = samplefac)
  res$priors <- list(priormu = priormu,
 		    priorphiidi = priorphiidi,
 		    priorphifac = priorphifac,
@@ -924,17 +951,20 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 		    priorsigmafac = priorsigmafac,
 		    priorfacload = priorfacload,
 		    priorfacloadtype = priorfacloadtype,
-		    priorng = priorng,
+		    priorng = priorng, priorbeta = priorbeta,
 		    priorh0idi = priorh0idi, priorh0fac = priorh0fac,
 		    priorhomoskedastic = priorhomoskedastic)
 
- if (auxstore) {
-  attr(res$mixprob, "dim") <- c(10, n, m+factors, dim(res$mixind)[3])
- } else {
+ if (!auxstore) {
   res$tau2 <- NULL
   res$lambda2 <- NULL
-  res$mixprob <- NULL
   res$mixind <- NULL
+ }
+
+ if (NROW(res$beta) == 0) {
+   res$beta <- NULL
+ } else {
+   rownames(res$beta) <- paste0("mean_", seq_len(NROW(res$beta)))
  }
  
  dimnames(res$para) <- list(c("mu", "phi", "sigma"), NULL, NULL)
@@ -1089,6 +1119,13 @@ predcond <- function(x, ahead = 1, each = 1, ...) {
  each <- as.integer(each)
 
  res <- .Call("predict", x, ahead, each, PACKAGE = "factorstochvol")
+
+ if (!is.null(res$beta)) {
+  for (j in seq_len(NROW(res$beta))) {
+   # res$beta[j, ] is one distribution so it doesn't even matter how it is recycled
+   res$means[j, , ] <- res$means[j, , ] + res$beta[j, ]
+  }
+ }
  
  dimnames(res$means) <- list(NULL, NULL, ahead = ahead)
  dimnames(res$vols) <- list(NULL, NULL, ahead = ahead)
