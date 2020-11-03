@@ -359,7 +359,8 @@ dat <- 100 * logret(exrates)
 
 # We are going to fit a one-factor model so the ordering is irrelevant
 # NOTE that these are very few draws, you probably want more...
-res <- fsvsample(dat, factors = 2, draws = 100, burnin = 100, runningstore = 6, designmatrix = "ar0")
+res <- fsvsample(dat, factors = 2, draws = 2000, burnin = 1000,
+  runningstore = 6, designmatrix = "ar0")
 
 voltimeplot(res)
 
