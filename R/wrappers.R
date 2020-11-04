@@ -1120,10 +1120,10 @@ predcond <- function(x, ahead = 1, each = 1, ...) {
 
  res <- .Call("predict", x, ahead, each, PACKAGE = "factorstochvol")
 
- if (!is.null(res$beta)) {
-  for (j in seq_len(NROW(res$beta))) {
+ if (!is.null(x$beta)) {
+  for (j in seq_len(NROW(x$beta))) {
    # res$beta[j, ] is one distribution so it doesn't even matter how it is recycled
-   res$means[j, , ] <- res$means[j, , ] + res$beta[j, ]
+   res$means[j, , ] <- res$means[j, , ] + x$beta[j, ]
   }
  }
  
