@@ -102,7 +102,7 @@
 %% - Separate authors by \And or \AND (in \author) or by comma (in \Plainauthor).
 %% - \AND starts a new line, \And does not.
 \author{Darjus Hosszejni\\[.3em]WU Vienna University\\[-.1em]of Economics and Business
-\And Gregor Kastner\\[.3em]WU Vienna University\\[-.1em]of Economics and Business}
+\And Gregor Kastner\\[.3em]University of Klagenfurt}
 \Plainauthor{Darjus Hosszejni, Gregor Kastner}
 
 %% - \title{} in title case
@@ -160,15 +160,24 @@ financial time series%
 %%   (in extra lines, separated by \emph{and}\\).
 %% - May contain multiple authors for the same affiliation
 %%   (in the same first line, separated by comma).
+
 \Address{
-  Darjus Hosszejni, Gregor Kastner\\
+  Darjus Hosszejni\\
   Institute for Statistics and Mathematics\\
   Department of Finance, Accounting and Statistics\\
   WU Vienna University of Economics and Business\\
   Welthandelsplatz~1 / Building D4 / Level 4\\
   1020 Vienna, Austria\\
-  E-mail: \email{darjus.hosszejni@wu.ac.at}, \email{gregor.kastner@aau.at}\\
-  URL: \url{http://statmath.wu.ac.at/~hosszejni/}, \url{http://statmath.wu.ac.at/~kastner/}
+  E-mail: \email{darjus.hosszejni@wu.ac.at}\\
+  URL: \url{http://statmath.wu.ac.at/~hosszejni/}
+  \\\\
+  Gregor Kastner\\
+  Department of Statistics\\
+  University of Klagenfurt\\
+  Universitätsstraße 65-67\\
+  9020 Klagenfurt, Austria\\
+  E-mail: \email{gregor.kastner@aau.at}\\
+  URL: \url{http://statmath.wu.ac.at/~kastner/}
 }
 
 \begin{document}

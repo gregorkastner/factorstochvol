@@ -1,4 +1,4 @@
-Changes in version 1.0.0:
+Changes in version 0.10.0:
   - New argument 'designmatrix'. Can be used to model a constant mean for
     every univariate series within the Gibbs sampler.
   - Updated to work with stochvol 3.0.0.
