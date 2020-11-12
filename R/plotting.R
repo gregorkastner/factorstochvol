@@ -1157,7 +1157,7 @@ evdiag <- function(x) {
   d[i,] <- svd(crossprod(tmp))$d
  }
  
- xs <- seq_len(dim(l)[1])
+ xs <- seq_len(dim(l)[2])
  ys <- colMeans(d)
  boxplot(d, border = "grey", main = "Eigenvalues of crossprod(facload)",
 	 ylim = c(0, 2*max(ys)))
