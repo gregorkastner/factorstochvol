@@ -26,6 +26,7 @@ Other plotting:
 \code{\link{corimageplot}()},
 \code{\link{corplot}()},
 \code{\link{cortimeplot}()},
+\code{\link{evdiag}()},
 \code{\link{facloaddensplot}()},
 \code{\link{facloadpairplot}()},
 \code{\link{facloadpointplot}()},

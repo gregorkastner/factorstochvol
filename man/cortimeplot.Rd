@@ -51,6 +51,7 @@ Other plotting:
 \code{\link{comtimeplot}()},
 \code{\link{corimageplot}()},
 \code{\link{corplot}()},
+\code{\link{evdiag}()},
 \code{\link{facloadcredplot}()},
 \code{\link{facloaddensplot}()},
 \code{\link{facloadpairplot}()},

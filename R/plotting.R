@@ -1126,3 +1126,42 @@ corplot <- function(x, fsvsimobj = NULL, these = 1:(ncol(x$y)*(ncol(x$y)-1)/2), 
  par(oldpar)
  invisible(x)
 }
+
+#' Plots posterior draws and posterior means of the eigenvalues of crossprod(facload)
+#'
+#' \code{evdiag} computes, returns, and visualizes the eigenvalues of crossprod(facload).
+#' This can be used as a rough guide to choose the numbers of factors in a model.
+#'
+#' @note Experimental feature. Please be aware that - for the sake of simplicity and
+#' interpretability - both the time-varying idiosyncratic as well as the time-varying
+#' factor volatilities are simply ignored.
+#'
+#' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
+#' to \code{\link{fsvsample}}.
+#'
+#' @return Invisibly returns a matrix with posterior samples of the eigenvalues of
+#' crossprod(facload)
+#' 
+#' @family plotting
+#'
+#' @importFrom graphics boxplot
+#'
+#' @export
+evdiag <- function(x) {
+ if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
+ l <- x$facload
+ d <- matrix(NA_real_, dim(l)[3], dim(l)[2])
+ for (i in seq_len(dim(l)[3])) {
+  tmp <- l[,,i, drop=FALSE]
+  dim(tmp) <- c(dim(tmp)[1], dim(tmp)[2])
+  d[i,] <- svd(crossprod(tmp))$d
+ }
+ 
+ xs <- seq_len(dim(l)[1])
+ ys <- colMeans(d)
+ boxplot(d, border = "grey", main = "Eigenvalues of crossprod(facload)",
+	 ylim = c(0, 2*max(ys)))
+ lines(xs, ys, lwd = 2, type = "b", pch = 2)
+ legend("topright", c("Posterior draws", "Posterior means"), col = c("gray", "black"), lty = 1, pch = c(NA, 2), lwd = c(1, 2))
+ invisible(d)
+}
