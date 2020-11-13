@@ -668,7 +668,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
   tmpy <- matrix(rep(y[i,], n), ncol = n)
   
   if (!is.null(x$beta)) {
-   tmpy <- tmpy - x$beta
+   tmpy <- tmpy - matrix(rep(x$beta, each), nrow = m)
   }
   
   ret[,i] <- vecdmvnorm(tmpy, zeros, predobj[,,,i], log = TRUE)
