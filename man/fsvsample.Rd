@@ -12,7 +12,7 @@ fsvsample(
   thin = 1,
   burnin = 1000,
   restrict = "none",
-  designmatrix = NA,
+  zeromean = TRUE,
   priorfacloadtype = "rowwiseng",
   priorfacload = 0.1,
   priorng = c(1, 1),
@@ -78,11 +78,9 @@ of dimension \code{c(m, r)} indicating which elements should be unrestricted
 (where \code{restrict} is \code{FALSE}) or zero (where \code{restrict} is
 \code{TRUE}).}
 
-\item{designmatrix}{regression design matrix for modeling the mean. Currently
-only a constant mean is implemented for each univariate series.
-Must be \code{NA}, in which case the mean is not modeled, or the character
-string \code{"ar0"}, in which case a constant mean is included in the model
-for each of the \code{m} univariate series.}
+\item{zeromean}{Logical. If \code{FALSE}, a constant mean is included in
+the model for each of the \code{m} univariate series.
+If \code{TRUE}, the mean is not modeled. Defaults to \code{TRUE}.}
 
 \item{priorfacloadtype}{Can be \code{"normal"}, \code{"rowwiseng"}, 
 \code{"colwiseng"}.
@@ -149,7 +147,7 @@ h0 is assumed to be Gaussian with mean 0 and variance $sigma^2/(1-phi^2)$.}
 \item{priorbeta}{numeric vector of length 2, indicating the mean and
 standard deviation of the Gaussian prior for the regression parameters. The
 default value is \code{c(0, 10000)}, which constitutes a very vague prior
-for many common datasets. Not used if \code{designmatrix} is \code{NA}.}
+for many common datasets. Not used if \code{zeromean} is \code{TRUE}.}
 
 \item{keeptime}{Either a number coercible to a positive integer, or a string
 equal to "all" or "last". If a number different from 1 is provided, only every
@@ -360,7 +358,7 @@ dat <- 100 * logret(exrates)
 # We are going to fit a one-factor model so the ordering is irrelevant
 # NOTE that these are very few draws, you probably want more...
 res <- fsvsample(dat, factors = 2, draws = 2000, burnin = 1000,
-  runningstore = 6, designmatrix = "ar0")
+  runningstore = 6, zeromean = FALSE)
 
 voltimeplot(res)
 

@@ -37,11 +37,9 @@
 #'
 #' @param burnin Number of initial MCMC draws to be discarded.
 #'
-#' @param designmatrix regression design matrix for modeling the mean. Currently
-#' only a constant mean is implemented for each univariate series.
-#' Must be \code{NA}, in which case the mean is not modeled, or the character
-#' string \code{"ar0"}, in which case a constant mean is included in the model
-#' for each of the \code{m} univariate series.
+#' @param zeromean Logical. If \code{FALSE}, a constant mean is included in
+#' the model for each of the \code{m} univariate series.
+#' If \code{TRUE}, the mean is not modeled. Defaults to \code{TRUE}.
 #'
 #' @param priormu Vector of length 2 denoting prior mean and standard deviation
 #' for unconditional levels of the idiosyncratic log variance processes.
@@ -108,7 +106,7 @@
 #' @param priorbeta numeric vector of length 2, indicating the mean and
 #' standard deviation of the Gaussian prior for the regression parameters. The
 #' default value is \code{c(0, 10000)}, which constitutes a very vague prior
-#' for many common datasets. Not used if \code{designmatrix} is \code{NA}.
+#' for many common datasets. Not used if \code{zeromean} is \code{TRUE}.
 #'
 #' @param thin Single number greater or equal to 1, coercible to integer.
 #' Every \code{thin}th MCMC draw is kept and returned. The default value
@@ -358,7 +356,7 @@
 #' # We are going to fit a one-factor model so the ordering is irrelevant
 #' # NOTE that these are very few draws, you probably want more...
 #' res <- fsvsample(dat, factors = 2, draws = 2000, burnin = 1000,
-#'   runningstore = 6, designmatrix = "ar0")
+#'   runningstore = 6, zeromean = FALSE)
 #'
 #' voltimeplot(res)
 #'
@@ -372,7 +370,7 @@
 #' 
 #' @export
 fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
-                      restrict = "none", designmatrix = NA,
+                      restrict = "none", zeromean = TRUE,
                       priorfacloadtype = "rowwiseng", priorfacload = .1,
                       priorng = c(1, 1), priormu = c(0, 10),
                       priorphiidi = c(10, 3), priorphifac = c(10, 3),
@@ -443,7 +441,14 @@ fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
   burnin <- as.integer(burnin)
  }
 
- # Some error checking for designmatrix
+ # Some error checking for zeromean/designmatrix
+ if (isTRUE(zeromean)) {
+   designmatrix <- NA
+ } else if (identical(zeromean, FALSE)) {
+   designmatrix <- "ar0"
+ } else {
+   stop("Argument 'zeromean' must be a single logical value.")
+ }
  if (any(is.na(designmatrix))) {
    designmatrix <- NA
  } else if (identical(designmatrix, "ar0")) {
