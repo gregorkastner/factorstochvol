@@ -15,7 +15,8 @@ Suggests:
     coda (>= 0.19-2),
     knitr,
     RColorBrewer,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    zoo
 LinkingTo: Rcpp, RcppArmadillo (>= 0.9.900), stochvol
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
