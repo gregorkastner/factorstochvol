@@ -2,8 +2,9 @@ Changes in version 0.10.1:
   - New function 'evdiag'. Plots posterior draws and posterior means of the
     eigenvalues of crossprod(facload) and can be used as a rough guide for
     finding the appropriate number of factors (experimental).
-  - 'designmatrix' is now renamed and simplified to 'zeromean'
-  - 'complot' now reports communalities in percentages
+  - 'designmatrix' is now renamed and simplified to 'zeromean'.
+  - 'complot' now reports communalities in percentages.
+  - Fixed bug in predloglik when each != 1.
 
 Changes in version 0.10.0:
   - New argument 'designmatrix'. Can be used to model a constant mean for
