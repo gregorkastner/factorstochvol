@@ -4,7 +4,13 @@
 \alias{comtimeplot}
 \title{Plot comunalities over time.}
 \usage{
-comtimeplot(x, fsvsimobj = NULL, show = "series", maxrows = 5, ylim = c(0, 1))
+comtimeplot(
+  x,
+  fsvsimobj = NULL,
+  show = "series",
+  maxrows = 5,
+  ylim = c(0, 100)
+)
 }
 \arguments{
 \item{x}{Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -27,7 +33,7 @@ Returns \code{x} invisibly.
 }
 \description{
 \code{comtimeplot} plots the communalities over time, i.e. the
-series-specific proportion of variance explained through the common factors.
+series-specific percentage of variance explained through the common factors.
 }
 \details{
 This function displays the joint (average) communalities over time and all

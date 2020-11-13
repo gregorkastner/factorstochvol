@@ -24,7 +24,7 @@
 #' Plot comunalities over time.
 #'
 #' \code{comtimeplot} plots the communalities over time, i.e. the
-#' series-specific proportion of variance explained through the common factors.
+#' series-specific percentage of variance explained through the common factors.
 #' 
 #' This function displays the joint (average) communalities over time and all
 #' series-specific communalities. If communalities haven't been stored during
@@ -49,7 +49,7 @@
 #'
 #' @export
 comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
-			maxrows = 5, ylim = c(0,1)) {
+			maxrows = 5, ylim = c(0,100)) {
  if (!is(x, "fsvdraws")) stop("This function expects an 'fsvdraws' object.")
  if (!exists("runningstore", x) || !exists("com", x$runningstore))
   stop("Communalities haven't been stored during sampling.")
@@ -79,7 +79,7 @@ comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
 			    mar = c(1.5, 1.5, 1.5, 0.5))
   thismean <- x$runningstore$com[,i,"mean"]
   thissd <- x$runningstore$com[,i,"sd"]
-  ts.plot(cbind(thismean - 2*thissd, thismean, thismean + 2*thissd),
+  ts.plot(100*cbind(thismean - 2*thissd, thismean, thismean + 2*thissd),
 	  lwd = c(1, 2, 1), main = "", xlab = "", ylab = "",
 	  gpars = list(xaxt = 'n'), ylim = ylim)
   ats <- seq(1, n, len = 11)
