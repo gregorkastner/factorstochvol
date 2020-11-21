@@ -1209,8 +1209,8 @@ To obtain draws from the posterior predictive distribution of new data points, o
 set.seed(5)
 predcov_1 <- predcov(res)
 preddraws <- t(res$beta)
-for (i in seq_len(effectivedraws))
-  preddraws[i,] <- res$beta[,i] + chol(predcov_1[,,i,1]) %*% rnorm(m)
+for (i in seq_len(NROW(preddraws)))
+  preddraws[i,] <- preddraws[i,] + chol(predcov_1[,,i,1]) %*% rnorm(m)
 plotlims <- quantile(preddraws, c(0.01, 0.99))
 LSD::heatpairs(preddraws, labels = colnames(y),
   cor.cex = 1.5, gap = 0.3, xlim = plotlims, ylim = plotlims)
