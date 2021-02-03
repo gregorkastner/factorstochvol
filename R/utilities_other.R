@@ -21,7 +21,7 @@
 #  please refer to <http://www.gnu.org/licenses/>.
 #  #####################################################################################
 
-#' Computes the log returns of a vector-valued time series
+#' Compute the log returns of a vector-valued time series
 #'
 #' \code{logret} computes the log returns of a multivariate time
 #' series, with optional de-meaning.
@@ -59,13 +59,9 @@ logret.data.frame <- function(dat, demean = FALSE, standardize = FALSE, ...) {
  logret(dat, demean, standardize, ...)
 }
 
-#' @rdname logret
-#' @name logret
-#' @export
-logret <- function(dat, demean = FALSE, standardize = FALSE, ...) {
- UseMethod("logret")
-}
 
+#' @export logret
+NULL
 
 
 #' Ledermann bound for the number of factors

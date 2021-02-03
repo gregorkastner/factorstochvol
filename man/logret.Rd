@@ -4,13 +4,11 @@
 \alias{logret}
 \alias{logret.matrix}
 \alias{logret.data.frame}
-\title{Computes the log returns of a vector-valued time series}
+\title{Compute the log returns of a vector-valued time series}
 \usage{
 \method{logret}{matrix}(dat, demean = FALSE, standardize = FALSE, ...)
 
 \method{logret}{data.frame}(dat, demean = FALSE, standardize = FALSE, ...)
-
-logret(dat, demean = FALSE, standardize = FALSE, ...)
 }
 \arguments{
 \item{dat}{The raw data, a matrix or data frame with \code{n}

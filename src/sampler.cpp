@@ -316,18 +316,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
  const double offset          = as<double>(offset_in);
 
  // moment-matched IG-prior
- const double c0 = 2.5;
  const NumericVector C0 = 1.5*Bsigma;
-
- // pre-calculation of a posterior parameter
- double cT = 0; 
- if (Gammaprior) {  
-  if (MHsteps == 2 || MHsteps == 3) cT = T/2.0; // we want IG(-.5,0) as proposal
-  else if (MHsteps == 1) cT = (T-1)/2.0; // we want IG(-.5,0) as proposal
- } else {
-  if (MHsteps == 2) cT = c0 + (T+1)/2.0;  // pre-calculation outside the loop
-  else return LogicalVector::create(NA_LOGICAL);  // not implemented!
- }
 
  // prior specification object for stochvol
  std::vector<stochvol::PriorSpec> prior_specs(mpr);

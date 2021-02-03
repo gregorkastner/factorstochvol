@@ -1,3 +1,8 @@
+Changes in version 0.10.2:
+  - Bugfix about exporting 'logret'
+  - Updated vignette
+  - Prevent a compile warning
+
 Changes in version 0.10.1:
   - New function 'evdiag'. Plots posterior draws and posterior means of the
     eigenvalues of crossprod(facload) and can be used as a rough guide for
