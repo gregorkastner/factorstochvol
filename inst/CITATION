@@ -12,16 +12,16 @@ bibentry(bibtype = "Article",
                    person(given = "Gregor",
                           family = "Kastner",
                           email = "gregor.kastner@aau.at")),
-  journal      = "R package vignette",
-  year         = "2020",
-  url          = "https://CRAN.R-project.org/package=factorstochvol/vignettes/paper.pdf",
+  journal      = "Journal of Statistical Software",
+  year         = "forthcoming",
+  url          = "https://arxiv.org/abs/1906.12123",
 
   header       = "To cite factorstochvol in publications use:",
   textVersion  =
-  paste("Hosszejni, Darjus and Gregor Kastner (2020).",
+  paste("Hosszejni, Darjus and Gregor Kastner (forthcoming).",
         "Modeling Univariate and Multivariate Stochastic Volatility in R with stochvol and factorstochvol.",
-        "R package vignette.",
-        "URL: https://CRAN.R-project.org/package=factorstochvol/vignettes/paper.pdf")
+        "Journal of Statistical Software.",
+        "https://arxiv.org/abs/1906.12123")
 )
 
 citEntry(header = "To refer to the interweaving (ASIS) methodology used in factorstochvol please cite:",

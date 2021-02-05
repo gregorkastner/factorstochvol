@@ -46,7 +46,7 @@
 \newcommand{\rhopar}{\rho}
 \newcommand{\nupar}{\nu}
 \newcommand{\hpar}{h}
-\NewDocumentCommand{\Sigmay}{o}{\bm{\IfValueTF{#1}{#1}{}\Sigma}}
+\NewDocumentCommand{\Sigmay}{o}{\bm{\IfValueTF{#1}{#1}{}\Sigma}}  % usage: \Sigmay or \Sigmay[\tilde]  (tilde is also bold face then!)
 \newcommand{\deffsvpars}[2]{%
   \expandafter\def\csname phi#1\endcsname{#2{\phipar}}
   \expandafter\def\csname mu#1\endcsname{#2{\mupar}}
@@ -55,8 +55,9 @@
   \expandafter\def\csname h#1\endcsname{#2{\hpar}}
   \expandafter\def\csname Sigma#1\endcsname{\Sigmay[#2]}
 }
-\deffsvpars{idi}{\bar}
-\deffsvpars{fac}{\tilde}
+\deffsvpars{idi}{\bar}   % define all at once
+\deffsvpars{fac}{\tilde} % define all at once
+% now we have \phiidi, \phifac, ..., \hidi, \hfac, ...
 
 % betaprior{fs}: f for first, s for second
 \newcommand{\betapriorf}{\bm{b_\beta}}
@@ -107,7 +108,7 @@ Stochastic volatility (SV) models are nonlinear state-space models that enjoy in
 However, due to the large number of latent quantities, their efficient estimation is non-trivial and software that allows to easily fit SV models to data is rare.
   We aim to alleviate this issue by presenting novel implementations of five SV models delivered in two \proglang{R} packages.
   Several unique features are included and documented.
-  As opposed to previous versions, \stochvol{} is now capable of handling linear mean models, conditionally heavy tailes, and the leverage effect in combination with SV.
+  As opposed to previous versions, \stochvol{} is now capable of handling linear mean models, conditionally heavy tails, and the leverage effect in combination with SV.
   Moreover, we newly introduce \factorstochvol{} which caters for multivariate SV.
   Both packages offer a user-friendly interface through the conventional \proglang{R} generics and a range of tailor-made methods.
   Computational efficiency is achieved via interfacing \proglang{R} to \proglang{C++} and doing the heavy work in the latter.
@@ -148,7 +149,7 @@ financial time series%
   WU Vienna University of Economics and Business\\
   Welthandelsplatz~1 / Building D4 / Level 4\\
   1020 Vienna, Austria\\
-  E-mail: \email{darjus.hosszejni@wu.ac.at}\\
+  E-mail: \email{Darjus.Hosszejni@wu.ac.at}\\
   URL: \url{http://statmath.wu.ac.at/~hosszejni/}
   \\\\
   Gregor Kastner\\
@@ -156,14 +157,14 @@ financial time series%
   University of Klagenfurt\\
   Universit\"atsstraße 65-67\\
   9020 Klagenfurt, Austria\\
-  E-mail: \email{gregor.kastner@aau.at}\\
-  URL: \url{https://www.aau.at/team/kastner-gregor/}
+  E-mail: \email{Gregor.Kastner@aau.at}\\
+  URL: \url{http://statmath.wu.ac.at/~kastner/}
 }
 
 \begin{document}
 
 <<setup, include=FALSE, cache=FALSE>>=
-knitr::render_latex()
+knitr::render_sweave()
 knitr::opts_chunk$set(prompt = TRUE,
                       fig.show = "hide",
                       warning = FALSE,
@@ -1005,6 +1006,10 @@ facloadcredplot(res)
 par(mgp = c(1.7, 0.5, 0), mar = c(2.7, 2.7, 2, 0.5))
 logvartimeplot(res, show = "fac")
 @
+<<varplot2, echo=2, fig.width=7, fig.height=6.5, results='hide'>>=
+par(mgp = c(1.7, 0.5, 0), mar = c(2.7, 2.7, 2, 0.5))
+logvartimeplot(res, show = "idi", maxrows = 6)
+@
 \begin{figure}[tp]
   \centering
   \includegraphics[width=0.49\textwidth]{jss3813-loadplot2-1}\hfill
@@ -1016,10 +1021,6 @@ logvartimeplot(res, show = "fac")
     The bottom panels depict posterior means plus/minus two standard deviations of factor log variances.}
   \label{fig:loadplot2}
 \end{figure}
-<<varplot2, echo=2, fig.width=7, fig.height=6.5, results='hide'>>=
-par(mgp = c(1.7, 0.5, 0), mar = c(2.7, 2.7, 2, 0.5))
-logvartimeplot(res, show = "idi", maxrows = 6)
-@
 \begin{figure}[tp]
   \centering
   \includegraphics[width=\textwidth]{jss3813-varplot2-1}
@@ -1050,7 +1051,7 @@ evdiag(largemodel)
 
 \subsection{Predicting covariances, correlations, and future observations}
 
-One of the main use cases of \factorstochvol might be to predict covariance and correlation matrices of time series. To this end, \fct{predcov} and \fct{predcor} yield draws from the posterior predictive distribution of these, defined in analogy to Equation~\ref{eq:predictive-density}. For instance, the code below can be used to obtain one-step-ahead posterior predictive means and standard deviations for the correlation matrix on April 5, 2012 (using data up to April 4 only).
+One of the main use cases of \factorstochvol{} might be to predict covariance and correlation matrices of time series. To this end, \fct{predcov} and \fct{predcor} yield draws from the posterior predictive distribution of these, defined in analogy to Equation~\ref{eq:predictive-density}. For instance, the code below can be used to obtain one-step-ahead posterior predictive means and standard deviations for the correlation matrix on April 5, 2012 (using data up to April 4 only).
 <<predcov1, echo=TRUE>>=
 set.seed(4)
 predcor1 <- predcor(res)
@@ -1090,10 +1091,11 @@ We showcased the features that are the most important to end users in \proglang{
 Due to its more involved nature, however, we did not include the description of the \proglang{C++} interface.
 Two functions called \fct{update\_fast\_sv} and \fct{update\_general\_sv} are exported and programmers have the possibility to access the samplers in \stochvol{} directly from \proglang{C++} after linking to the compiled package.
 For usage examples, see the implementations of \factorstochvol{} or \pkg{shrinkTVP} \citep{shrinktvp}.
+Source code is available in the GitHub repositories \url{https://github.com/gregorkastner/stochvol} and \url{https://github.com/gregorkastner/factorstochvol}.
 
 \section*{Acknowledgments}
 
-Gregor Kastner acknowledges funding from the Austrian Science Fund (FWF) for the project ``High-dimensional statistical learning: New methods to advance economic and sustainability policies'' (ZK 35), jointly carried out by the University of Klagenfurt, WU Vienna University of Economics and Business, Paris Lodron University Salzburg, TU Wien, and the Austrian Institute of Economic Research (WIFO).
+Gregor Kastner acknowledges funding from the Austrian Science Fund (FWF) for the project ``High-dimensional statistical learning: New methods to advance economic and sustainability policy'' (ZK 35), jointly carried out by the University of Klagenfurt, WU Vienna University of Economics and Business, Paris Lodron University Salzburg, TU Wien, and the Austrian Institute of Economic Research (WIFO).
 
 \bibliography{ref}
 
