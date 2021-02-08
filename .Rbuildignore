@@ -15,3 +15,6 @@ sp500_perclogret_2000d.RDS
 ^.*\.Rproj$
 ^\.Rproj\.user$
 
+Makefile
+paper.Rnw
+
