@@ -19,15 +19,17 @@ vignettes/paper-knitr.Rtex: vignettes/paper-Sweave.Rtex
 	mv vignettes/paper-Sweave-knitr.Rtex vignettes/paper-knitr.Rtex
 
 clean:
-	rm \
-		vignettes/paper-original.Rnw \
-		vignettes/paper-knitr.Rtex \
-		vignettes/paper-Sweave.Rtex
-
-distclean:
-	rm \
+	rm -rf \
 		vignettes/paper-original.Rnw \
 		vignettes/paper-knitr.Rtex \
 		vignettes/paper-Sweave.Rtex \
+		vignettes/Sweave.sty
+
+distclean:
+	rm -rf \
+		vignettes/paper-original.Rnw \
+		vignettes/paper-knitr.Rtex \
+		vignettes/paper-Sweave.Rtex \
+		vignettes/Sweave.sty \
 		vignettes/paper.Rtex
 
