@@ -31,5 +31,6 @@ distclean:
 		vignettes/paper-knitr.Rtex \
 		vignettes/paper-Sweave.Rtex \
 		vignettes/Sweave.sty \
-		vignettes/paper.Rtex
+		vignettes/paper.Rtex \
+		vignettes/Figures
 
