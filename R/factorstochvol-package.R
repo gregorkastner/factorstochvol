@@ -61,16 +61,16 @@
 #' Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2017).
 #' Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models.
 #' \emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
-#' \url{https://doi.org/10.1080/10618600.2017.1322091}.
+#' \doi{10.1080/10618600.2017.1322091}.
 #' 
 #' Kastner, G. (2019). Sparse Bayesian Time-Varying Covariance Estimation
 #' in Many Dimensions. \emph{Journal of Econometrics}, \bold{210}(1), 98--115.
-#' \url{https://doi.org/10.1016/j.jeconom.2018.11.007}.
+#' \doi{10.1016/j.jeconom.2018.11.007}.
 #' 
 #' Kastner, G. and Frühwirth-Schnatter, S. (2014). Ancillarity-Sufficiency
 #' Interweaving Strategy (ASIS) for Boosting MCMC Estimation of Stochastic
 #' Volatility Models. \emph{Computational Statistics and Data Analysis},
-#' \url{https://doi.org/10.1016/j.csda.2013.01.002}.
+#' \doi{10.1016/j.csda.2013.01.002}.
 #'
 #' @keywords package models ts
 #'
