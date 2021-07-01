@@ -897,7 +897,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
      
     double newdiag2 = do_rgig1((nonzerospercol(j)- T) / 2.,
        sum(square(armaf.row(j) * armafacload(userow,j))/exp(armah.col(m+j)).t()),
-       sum(square(nonzeros(armafacload.col(j))) / nonzeros(armatau2.col(j))) / (armafacload(userow,j) * armafacload(userow,j)));
+       1/armatau2(userow,j) + sum(square(nonzeros(armafacload.col(j))) / nonzeros(armatau2.col(j))) / (armafacload(userow,j) * armafacload(userow,j)));
    
     double tmp = sqrt(newdiag2)/armafacload(userow,j);
    
