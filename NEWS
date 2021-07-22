@@ -1,3 +1,6 @@
+Changes in version 0.10.3:
+  - Bugfix in interweaving. Thanks to Luis Gruber for finding and patching.
+
 Changes in version 0.10.2:
   - Bugfix about exporting 'logret'
   - Updated vignette
