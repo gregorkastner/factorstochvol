@@ -66,7 +66,8 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
                         const SEXP runningstoreevery_in, const SEXP runningstoremoments_in,
                         const SEXP pfl_in, const SEXP heteroskedastic_in,
                         const SEXP priorhomoskedastic_in, const SEXP priorh0_in,
-                        const SEXP samplefac_in) {
+                        const SEXP samplefac_in,
+                        const SEXP facloadtol_in) {
   
   // note: SEXP to Rcpp conversion REUSES memory unless "clone"d
   // Rcpp to Armadillo conversion allocates NEW memory unless deact'd
@@ -90,6 +91,8 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   const bool samplefac   = as<bool>(samplefac_in);
   
   const bool model_mean  = as<bool>(model_mean_in);
+  
+  const double facloadtol = as<double>(facloadtol_in);
   
   /*
    * LOOP STORAGE (current_* variables)
@@ -987,14 +990,24 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
         //   Rprintf("\n");
       }
       
-      for (int i = 0; i<m; i++) {
-        for (int j = 0; j<r; j++) {
-          if(armafacload(i,j)< 1e-100 && armafacload(i,j)>=0){
-            armafacload(i,j) = 1e-100;
-          }else if (armafacload(i,j)> -1e-100 && armafacload(i,j)<=0){
-            armafacload(i,j) = -1e-100;
-          } 
+      if (facloadtol > 0) {
+        
+        for (int ii = 0; ii<m; ii++) {
+          for (int jj = 0; jj<r; jj++) {
+            if(armafacload(ii,jj) == 0) {
+              if(R::rbinom( 1, 0.5 )==0){
+                armafacload(ii,jj) = facloadtol;
+              }else{
+                armafacload(ii,jj) = -facloadtol;
+              }
+            }else if(armafacload(ii,jj) < facloadtol && armafacload(ii,jj) > 0){
+              armafacload(ii,jj) = facloadtol;
+            }else if (armafacload(ii,jj) > -facloadtol && armafacload(ii,jj) < 0){
+              armafacload(ii,jj) = -facloadtol;
+            } 
+          }
         }
+        
       }
       
       // STEP 3:
