@@ -66,8 +66,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
                         const SEXP runningstoreevery_in, const SEXP runningstoremoments_in,
                         const SEXP pfl_in, const SEXP heteroskedastic_in,
                         const SEXP priorhomoskedastic_in, const SEXP priorh0_in,
-                        const SEXP samplefac_in,
-                        const SEXP facloadtol_in) {
+                        const SEXP samplefac_in, const SEXP facloadtol_in) { 
   
   // note: SEXP to Rcpp conversion REUSES memory unless "clone"d
   // Rcpp to Armadillo conversion allocates NEW memory unless deact'd
