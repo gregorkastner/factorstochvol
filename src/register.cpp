@@ -28,7 +28,7 @@
 using namespace Rcpp;
 
 static const R_CallMethodDef CallEntries[] = {
-    {"sampler", (DL_FUNC) &sampler, 34},
+    {"sampler", (DL_FUNC) &sampler, 35},
     {"predict", (DL_FUNC) &predict, 3},
     {"dmvnorm", (DL_FUNC) &dmvnorm, 4},
     {NULL, NULL, 0}
