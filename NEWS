@@ -1,5 +1,9 @@
 Changes in version 0.10.3:
   - Bugfix in interweaving. Thanks to Luis Gruber for finding and patching.
+  - New argument facloadtol to fsvsample. Allows to specify a (small) number
+    as a lower bound to elements of the factor loadings matrix. This increases
+    numerical stability in case of heavy shrinkage. Thanks to Luis Gruber for
+    patching.
 
 Changes in version 0.10.2:
   - Bugfix about exporting 'logret'
