@@ -372,6 +372,7 @@
 fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
                       restrict = "none", zeromean = TRUE,
                       priorfacloadtype = "rowwiseng", priorfacload = .1,
+                      facloadtol = 1e-100,
                       priorng = c(1, 1), priormu = c(0, 10),
                       priorphiidi = c(10, 3), priorphifac = c(10, 3),
                       priorsigmaidi = 1, priorsigmafac = 1,
@@ -653,6 +654,10 @@ shrinkagepriors <- list(a = aShrink,
 			c = cShrink,
 			d = dShrink)
 
+if(facloadtol < 0){
+  stop("Argument 'facloadtol' (tolerance for the factor loadings) must be >=0.")
+}
+
  # Some error checking for thin
  if (!is.numeric(thin) | thin < 1) {
   stop("Argument 'thin' (thinning parameter for the latent log variances and parameters) must be a single number >= 1.")
@@ -923,7 +928,7 @@ res <- .Call("sampler", t(y), draws, burnin, startval,
              myoffset, truncnormal,
              restrinv, interweaving, signswitch, runningstore,
              runningstorethin, runningstoremoments, pfl,
-             heteroskedastic, priorhomoskedastic, priorh0, samplefac,
+             heteroskedastic, priorhomoskedastic, priorh0, samplefac, facloadtol,
              PACKAGE = "factorstochvol")
 
 res$y <- y
