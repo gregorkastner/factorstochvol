@@ -60,11 +60,6 @@
 #' prior volatilities of log variances. If \code{priorsigmafac} has exactly
 #' one element, it will be recycled for all factor log variances.
 #'
-#' @param priorfacload Either a matrix of dimensions \code{m} times \code{factors}
-#' with positive elements or a single number (which will be recycled accordingly).
-#' The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
-#' and is explained there.
-#'
 #' @param priorfacloadtype Can be \code{"normal"}, \code{"rowwiseng"}, 
 #' \code{"colwiseng"}.
 #' \itemize{
@@ -77,6 +72,15 @@
 #'                              is interpreted as the shrinkage parameter \code{a}.}
 #' }
 #' For details please see Kastner (2019).
+#'
+#' @param priorfacload Either a matrix of dimensions \code{m} times \code{factors}
+#' with positive elements or a single number (which will be recycled accordingly).
+#' The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
+#' and is explained there.
+#'
+#' @param facloadtol Minimum number that a draw of the factor loadings matrix can take.
+#' Prevents numerical issues that can appear when strong shrinkage is enforced if chosen
+#' to be greater than zero.
 #'
 #' @param priorng Two-element vector with positive entries indicating the Normal-Gamma
 #' prior's hyperhyperparameters \code{c} and \code{d}.
