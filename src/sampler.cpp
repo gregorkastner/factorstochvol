@@ -40,13 +40,33 @@ double rgig1(double lambda, double chi, double psi) {
 double do_rgig1(double lambda, double chi, double psi) { 
         
   double res;
+  // circumvent GIGrvg in these cases
+  if (chi < 11 * DOUBLE_EPS) {
+    /* special cases which are basically Gamma and Inverse Gamma distribution */
+    if (lambda > 0.0) {
+      res = R::rgamma(lambda, 2.0/psi);
+    }
+    else {
+      res = 1.0/R::rgamma(-lambda, 2.0/chi); // fixed
+    }
+  }
   
-  SEXP (*fun)(int, double, double, double) = NULL;
+  else if (psi < 11 * DOUBLE_EPS) {
+    /* special cases which are basically Gamma and Inverse Gamma distribution */
+    if (lambda > 0.0) {
+      res = R::rgamma(lambda, 2.0/psi);  // fixed
+    }
+    else {
+      res = 1.0/R::rgamma(-lambda, 2.0/chi); // fixed
+    }
+    
+  } else {
+    SEXP (*fun)(int, double, double, double) = NULL;
   if (!fun) fun = (SEXP(*)(int, double, double, double)) R_GetCCallable("GIGrvg", "do_rgig");
     res = as<double>(fun(1, lambda, chi, psi));
   
-  return res;
-    
+  return res;  
+  }
 }
 
 void test(double * data, int size) {
