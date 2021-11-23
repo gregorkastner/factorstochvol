@@ -39,6 +39,14 @@ double rgig1(double lambda, double chi, double psi) {
 
 double do_rgig1(double lambda, double chi, double psi) { 
         
+  if ( !(R_FINITE(lambda) && R_FINITE(chi) && R_FINITE(psi)) ||
+       (chi <  0. || psi < 0)      ||
+       (chi == 0. && lambda <= 0.) ||
+       (psi == 0. && lambda >= 0.) ) {
+    Rcpp::stop("invalid parameters for GIG distribution: lambda=%g, chi=%g, psi=%g",
+               lambda, chi, psi);
+  }
+  
   double res;
   // circumvent GIGrvg in these cases
   if (chi < 11 * DOUBLE_EPS) {
