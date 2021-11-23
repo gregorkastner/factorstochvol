@@ -39,6 +39,10 @@ double rgig1(double lambda, double chi, double psi) {
 
 double do_rgig1(double lambda, double chi, double psi) { 
   
+  if (chi == 0){
+    chi = DOUBLE_XMIN;
+  }
+  
   if ( !(R_FINITE(lambda) && R_FINITE(chi) && R_FINITE(psi)) ||
        (chi <  0. || psi < 0)      ||
        (chi == 0. && lambda <= 0.) ||
