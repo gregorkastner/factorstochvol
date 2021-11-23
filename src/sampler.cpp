@@ -64,9 +64,9 @@ double do_rgig1(double lambda, double chi, double psi) {
     SEXP (*fun)(int, double, double, double) = NULL;
   if (!fun) fun = (SEXP(*)(int, double, double, double)) R_GetCCallable("GIGrvg", "do_rgig");
     res = as<double>(fun(1, lambda, chi, psi));
-  
-  return res;  
   }
+  return res;  
+  
 }
 
 void test(double * data, int size) {
