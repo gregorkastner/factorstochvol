@@ -43,7 +43,7 @@ double do_rgig1(double lambda, double chi, double psi) {
        (chi <  0. || psi < 0)      ||
        (chi == 0. && lambda <= 0.) ||
        (psi == 0. && lambda >= 0.) ) {
-    Rcpp::stop("invalid parameters for GIG distribution: lambda=%g, chi=%g, psi=%g",
+    ::Rf_error("invalid parameters for GIG distribution: lambda=%g, chi=%g, psi=%g",
                lambda, chi, psi);
   }
   
