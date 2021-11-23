@@ -49,7 +49,7 @@ double do_rgig1(double lambda, double chi, double psi) {
   
   double res;
   // circumvent GIGrvg in these cases
-  if (chi < 11 * DOUBLE_EPS) {
+  if (chi < 10 * DOUBLE_EPS) {
     /* special cases which are basically Gamma and Inverse Gamma distribution */
     if (lambda > 0.0) {
       res = R::rgamma(lambda, 2.0/psi);
@@ -59,7 +59,7 @@ double do_rgig1(double lambda, double chi, double psi) {
     }
   }
   
-  else if (psi < 11 * DOUBLE_EPS) {
+  else if (psi < 10 * DOUBLE_EPS) {
     /* special cases which are basically Gamma and Inverse Gamma distribution */
     if (lambda > 0.0) {
       res = R::rgamma(lambda, 2.0/psi);  // fixed
