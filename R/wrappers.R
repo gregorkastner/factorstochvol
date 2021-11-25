@@ -2,20 +2,20 @@
 #  R package factorstochvol by
 #     Gregor Kastner Copyright (C) 2016-2020
 #     Darjus Hosszejni Copyright (C) 2019-2020
-#  
+#
 #  This file is part of the R package factorstochvol: Bayesian Estimation
 #  of (Sparse) Latent Factor Stochastic Volatility Models
-#  
+#
 #  The R package factorstochvol is free software: you can redistribute
 #  it and/or modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation, either version 2 or any
 #  later version of the License.
-#  
+#
 #  The R package factorstochvol is distributed in the hope that it will
 #  be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 #  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 #  General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with the R package factorstochvol. If that is not the case,
 #  please refer to <http://www.gnu.org/licenses/>.
@@ -27,7 +27,7 @@
 #' \code{fsvsample} simulates from the joint posterior distribution and returns
 #' the MCMC draws. It is the main workhorse to conduct inference for factor
 #' stochastic volatility models in this package.
-#' 
+#'
 #' @param y Data matrix. Each of \code{m} columns is assumed to contain a single
 #' (univariate) series of length \code{n}.
 #'
@@ -60,7 +60,7 @@
 #' prior volatilities of log variances. If \code{priorsigmafac} has exactly
 #' one element, it will be recycled for all factor log variances.
 #'
-#' @param priorfacloadtype Can be \code{"normal"}, \code{"rowwiseng"}, 
+#' @param priorfacloadtype Can be \code{"normal"}, \code{"rowwiseng"},
 #' \code{"colwiseng"}.
 #' \itemize{
 #'  \item{\code{"normal"}: }{Normal prior. The value of \code{priorfacload}
@@ -158,7 +158,7 @@
 #'
 #' @param restrict Either "upper", "none", or "auto", indicating whether
 #' the factor loadings
-#' matrix should be restricted to have zeros above the diagonal ("upper"), 
+#' matrix should be restricted to have zeros above the diagonal ("upper"),
 #' whether all elements should be estimated from the data ("none"), or
 #' whether the function \code{\link{findrestrict}} should be invoked for a
 #' priori finding suitable zeros. Setting
@@ -242,7 +242,7 @@
 #'
 #' @param startpara \emph{optional} numeric matrix of dimension
 #' \code{c(3, m + factors)}, containing the starting values
-#' for the parameter draws. The first \code{m} columns must contain 
+#' for the parameter draws. The first \code{m} columns must contain
 #' parameters values corresponding to the idiosyncratic volatilities,
 #' the subsequent \code{factor} columns must contain parameter values
 #' corresponding to the factor volatilities. The first row of \code{startpara}
@@ -285,17 +285,17 @@
 #' prior is employed (priorfacloadtype != "normal") while ignored when static
 #' loadings variances are used (priorfacloadtype == "normal").
 #'
-#' @param samplefac If set to \code{FALSE}, the factors are not sampled (but 
+#' @param samplefac If set to \code{FALSE}, the factors are not sampled (but
 #' remain at their starting values forever). This might be useful if one
 #' wants to include observed factors instead of latent ones.
 #'
 #' @param signident If set to \code{FALSE}, no ex-post sign-identification is
 #' performed. Defaults to \code{TRUE}.
-#' 
+#'
 #' @details For details concerning the factor SV algorithm please see
 #' Kastner et al. (2017), details about the univariate SV estimation
 #' can be found in Kastner and Frühwirth-Schnatter (2014).
-#' 
+#'
 #' @return The value returned is a list object of class \code{fsvdraws} holding
 #'  \itemize{
 #'  \item{\code{facload}: }{Array containing draws from the posterior distribution of the
@@ -323,7 +323,7 @@
 #' \code{\link{covmat}} or \code{\link{runningcovmat}} are also available.
 #' The \code{plot} method invokes a simple covariance matrix plot; specialized plotting
 #' functions are linked in the documentation of \code{\link{plot.fsvdraws}}.
-#' 
+#'
 #' @references Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2017).
 #' Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models.
 #' \emph{Journal of Computational and Graphical Statistics}, \bold{26}(4), 905--917,
@@ -353,10 +353,10 @@
 #' # Load exchange rate data (ships with stochvol):
 #' data(exrates, package = "stochvol")
 #' exrates$date <- NULL
-#' 
+#'
 #' # Compute the percentage log returns:
 #' dat <- 100 * logret(exrates)
-#' 
+#'
 #' # We are going to fit a one-factor model so the ordering is irrelevant
 #' # NOTE that these are very few draws, you probably want more...
 #' res <- fsvsample(dat, factors = 2, draws = 2000, burnin = 1000,
@@ -365,13 +365,13 @@
 #' voltimeplot(res)
 #'
 #' corimageplot(res, nrow(dat), plotCI = 'circle')
-#' 
+#'
 #' oldpar <- par(ask = TRUE)
 #' plot(res)
 #' par(oldpar)
 #' pairs(t(res$beta[1:4, ]))
 #' }
-#' 
+#'
 #' @export
 fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
                       restrict = "none", zeromean = TRUE,
@@ -389,7 +389,7 @@ fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
                       quiet = FALSE, samplefac = TRUE, startfac, startpara,
                       startlogvar, startlatent, startlogvar0, startlatent0,
                       startfacload, startfacloadvar, expert) {
- 
+
  # startlatent and startlogvar0 are being faded out
  if (!missing("startlatent") || !missing("startlatent0")) {
   warning("The arguments 'startlatent' and 'startlatent0' were renamed to 'startlogvar' and 'startlogvar0', respectively. Please use the new argument names.")
@@ -403,7 +403,7 @@ fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
   warning("Extracted data vector from 'fsvsim'-object.")
  }
  if (!is.matrix(y)) stop("Argument 'y' must be a matrix.")
- 
+
  n <- nrow(y)
  m <- ncol(y)
 
@@ -412,7 +412,7 @@ fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
 			  "this is what you want?"))
 
  if (!is.numeric(y)) stop("Argument 'y' (data matrix) must be numeric.")
- 
+
  if (n < 2) stop("Argument 'y' (data matrix) must contain at least two rows.")
 
  if (any(y == 0) && factors == 0) {
@@ -462,7 +462,7 @@ fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
    stop("Argument 'designmatrix' must be either NA or the character string 'ar0'.")
  }
  model_mean <- identical(designmatrix, "ar0")
- 
+
  # Some error checking for priorh0idi
  if (length(priorh0idi) == 1) priorh0idi <- rep(priorh0idi, m)
  if (length(priorh0idi) != m) stop("Argument 'priorh0idi' must be of length 1 or ncol(y).")
@@ -519,16 +519,16 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
   }
  }
  priorhomoskedastic <- as.matrix(priorhomoskedastic)
- 
- # Some error checking for the prior parameters 
+
+ # Some error checking for the prior parameters
  if (!is.numeric(priormu) | length(priormu) != 2) {
   stop("Argument 'priormu' (mean and sd for the Gaussian prior for mu) must be numeric and of length 2.")
  }
- 
+
  if (!is.numeric(priorphiidi) | length(priorphiidi) != 2) {
   stop("Argument 'priorphiidi' (shape1 and shape2 parameters for the Beta prior for (phi+1)/2) must be numeric and of length 2.")
  }
- 
+
  if (!is.numeric(priorphifac) | length(priorphifac) != 2) {
   stop("Argument 'priorphifac' (shape1 and shape2 parameters for the Beta prior for (phi+1)/2) must be numeric and of length 2.")
  }
@@ -538,7 +538,7 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
  if (!is.numeric(priorbeta) | length(priorbeta) != 2) {
   stop("Argument 'priorbeta' (mean and sd for the Gaussian prior for beta) must be numeric and of length 2.")
  }
- 
+
  if (!is.numeric(priorsigmaidi) | any(priorsigmaidi <= 0)) {
   stop("Argument 'priorsigmaidi' (scaling of the chi-squared(df = 1) prior for sigma^2) must be numeric and > 0.")
  }
@@ -556,22 +556,22 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
  }
 
  if (length(priorsigmafac) == 1) {
-  priorsigmafac <- rep(priorsigmafac, m)
- } else if (length(priorsigmafac) == m) {
+  priorsigmafac <- rep(priorsigmafac, factors)
+ } else if (length(priorsigmafac) == factors) {
   priorsigmafac <- priorsigmafac
  } else {
   stop("Argument 'priorsigmafac' (scaling of the chi-squared(df = 1) prior for sigma^2) must of length 1 or factors.")
  }
 
  priorsigma <- c(priorsigmaidi, priorsigmafac)
- 
+
  if (!is.numeric(priorng) || length(priorng) != 2 || any(priorng <= 0)) {
   stop("Argument 'priorng' (prior hyperhyperparameters for Normal-Gamma prior) must be numeric and of length 2.")
  }
 
  cShrink <- priorng[1]
  dShrink <- priorng[2]
- 
+
  if (!is.numeric(priorfacload) || any(priorfacload <= 0)) {
   stop("Argument 'priorfacload' must be numeric and positive.")
  }
@@ -582,7 +582,7 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
 
  if (!missing(startfacloadvar)) {
   if (!is.numeric(startfacloadvar) || !is.matrix(startfacloadvar) || nrow(startfacloadvar) != m ||
-     ncol(startfacloadvar) != factors || any(startfacloadvar <= 0)) 
+     ncol(startfacloadvar) != factors || any(startfacloadvar <= 0))
    stop("If argument 'startfacloadvar' is provided, it must be a matrix of appropriate dimensions with positive real entries.")
   if (priorfacloadtype == "normal")
     warning("Because priorfacloadtype is 'normal', the values passed via 'startfacloadvar' are being ignored.")
@@ -653,7 +653,7 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
    dShrink <- NA
   }
  }
- 
+
 shrinkagepriors <- list(a = aShrink,
 			c = cShrink,
 			d = dShrink)
@@ -668,9 +668,9 @@ if(facloadtol < 0){
  } else {
   thin <- as.integer(thin)
  }
- 
+
  # Some error checking for keeptime
- 
+
  if (is.numeric(keeptime)) {
   thintime <- as.integer(keeptime)
  } else {
@@ -701,9 +701,9 @@ if(facloadtol < 0){
   exist <- pmatch(expertnames, allowednames)
   if (any(is.na(exist)))
    stop(paste("Illegal element '", paste(expertnames[is.na(exist)], collapse="' and '"), "' in argument 'expert'.", sep=''))
-  
-  expertenv <- list2env(expert) 
-  
+
+  expertenv <- list2env(expert)
+
   if (exists("parameterization", expertenv)) {
    parameterization <- expert[["parameterization"]]
    if (!is.character(parameterization) | is.na(parameterization)) {
@@ -745,7 +745,7 @@ if(facloadtol < 0){
   } else {
    truncnormal <- FALSE
   }
- 
+
   if (exists("mhsteps", expertenv)) {
    mhsteps <- as.integer(expert[["mhsteps"]])
    if (mhsteps != 2L & mhsteps != 1L & mhsteps != 3L) stop("mhsteps must be 1, 2, or 3")
@@ -793,22 +793,22 @@ if (missing(startfacload)) {
  if (missing(startpara)) {
   startpara <- list(mu = c(rep(-3, m) + rnorm(m), rep(0, factors)),
 		    phi = c(rep(.8, m), rep(.8, factors)) + pmin(rnorm(m + factors, sd=.06), .095),
-		    sigma = rep(.1, m + factors) + rgamma(m + factors, 1, 10)) 
+		    sigma = rep(.1, m + factors) + rgamma(m + factors, 1, 10))
  } else {
   if (!is.numeric(startpara) || !is.matrix(startpara) || nrow(startpara) != 3 || ncol(startpara) != m + factors)
    stop("Argument 'startpara' must be a numeric matrix of dimension c(3, ncol(y) + factors).")
-  
+
   if (any(startpara[1, m + seq_len(factors)] != 0)) {
    warning("Some of the levels of the factor log variance starting values are different from zero. Setting those to zero for you.")
    startpara[1, m + seq_len(factors)] <- 0
   }
-  
+
   if (any(abs(startpara[2,]) >= 1))
    stop("All elements of 'startpara[2,]' must be between -1 and 1.")
 
   if (any(startpara[3,] <= 0))
    stop("All elements of 'startpara[3,]' must be positive.")
- 
+
   startpara <- list(mu = startpara[1,], phi = startpara[2,], sigma = startpara[3,]) # this is what the sampler expects
  }
 
@@ -868,7 +868,7 @@ if (!is.numeric(runningstoremoments) || length(runningstoremoments) != 1 || runn
 	    nrow(y), ".\n\n", sep = ""))
   flush.console()
  }
- 
+
  ## Hack to prevent console flushing problems with Windows
  #if (.Platform$OS.type != "unix") myquiet <- TRUE else myquiet <- quiet
  myquiet <- quiet
@@ -928,7 +928,7 @@ res <- .Call("sampler", t(y), draws, burnin, startval,
              priormu[1], priormu[2]^2, priorphi, priorsigma,
              priorbeta, model_mean, shrinkagepriors,
              thin, auxstore, thintime, myquiet, para,
-             mhsteps, B011, B022, mhcontrol, gammaprior, 
+             mhsteps, B011, B022, mhcontrol, gammaprior,
              myoffset, truncnormal,
              restrinv, interweaving, signswitch, runningstore,
              runningstorethin, runningstoremoments, pfl,
@@ -980,9 +980,9 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
  } else {
    rownames(res$beta) <- paste0("mean_", seq_len(NROW(res$beta)))
  }
- 
+
  dimnames(res$para) <- list(c("mu", "phi", "sigma"), NULL, NULL)
- 
+
  if (!quiet) {
   cat("\n\nReorganizing runningstores... ")
   flush.console()
@@ -1010,11 +1010,11 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
  if (runningstore >= 4L) {  # stored running covariances (and sqrt(diag(covariances)),
                             # factor sds, factors, and factor log variances
    tmpnames <- apply(expand.grid(1:m, 1:m)[lower.tri(diag(m), diag = TRUE),], 1, paste, collapse = "_")
-   
+
    res$runningstore$cov <- standardizer(force(array(unlist(res$runningstore$cov, FALSE, FALSE),
      dim = c(dim(res$runningstore$cov$mean), runningstoremoments),
      dimnames = list(NULL, tmpnames, mynames))))
-   
+
    res$runningstore$vol <- standardizer(force(array(unlist(res$runningstore$vol, FALSE, FALSE),
      dim = c(dim(res$runningstore$vol$mean), runningstoremoments),
      dimnames = list(NULL, NULL, mynames))))
@@ -1022,7 +1022,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
    res$runningstore$cov <- NULL
    res$runningstore$vol <- NULL
  }
- 
+
  if (runningstore >= 3L) {  # stored running factor sds, factors, and factor log variances
    res$runningstore$sd <- standardizer(force(array(unlist(res$runningstore$sd, FALSE, FALSE),
      dim = c(dim(res$runningstore$logvar$mean), runningstoremoments),
@@ -1051,7 +1051,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
   cat("Done!\n")
   flush.console()
  }
- 
+
  class(res) <- "fsvdraws"
 
  if (signident) {
@@ -1078,7 +1078,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' has the advantage that the predictive density can be written as
 #' the product of the marginals but introduces sampling uncertainty
 #' that grows with the number of factors used.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' to \code{\link{fsvsample}}.
 #' @param ahead Vector of timepoints, indicating how many steps
@@ -1093,13 +1093,13 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' \item{means}{Array containing the draws of the predictive means.}
 #' \item{vars}{Array containing the draws of the predictive variances.}
 #' }
-#' 
+#'
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(n = 500, series = 4, factors = 1) # simulate 
+#' sim <- fsvsim(n = 500, series = 4, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1) # estimate
-#' 
+#'
 #' # Predict 1 day ahead:
 #' predobj <- predcond(res, each = 5)
 #'
@@ -1107,29 +1107,29 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' preddraws <- matrix(rnorm(length(predobj$mean[,,1]),
 #'                     mean = predobj$mean[,,1],
 #'                     sd = predobj$vols[,,1]), nrow = 4)
-#' 
+#'
 #' # Visualize the predictive distribution
 #' pairs(t(preddraws), col = rgb(0,0,0,.1), pch = 16)
 #' }
 #'
 #' @family predictors
-#' 
+#'
 #' @export
 predcond <- function(x, ahead = 1, each = 1, ...) {
- 
+
  if (!is(x, "fsvdraws")) stop("Argument 'x' must be of class 'fsvdraws'.")
- 
+
  if (!is.vector(ahead) | !is.numeric(ahead) | any(is.na(ahead)))
   stop("Argument 'ahead' must be a numeric vector, NAs are not allowed.")
- 
+
  ahead <- as.integer(ahead)
  ahead <- sort(ahead)
- 
+
  if (any(ahead < 1)) stop("All elements of 'ahead' must be greater or equal to 1.")
- 
+
  if (!is.vector(each) || !is.numeric(each) || any(is.na(each)) || length(each) != 1 || each < 1)
   stop("Argument 'each' must be a single number >= 1, NAs are not allowed.")
- 
+
  each <- as.integer(each)
 
  res <- .Call("predict", x, ahead, each, PACKAGE = "factorstochvol")
@@ -1140,7 +1140,7 @@ predcond <- function(x, ahead = 1, each = 1, ...) {
    res$means[j, , ] <- res$means[j, , ] + x$beta[j, ]
   }
  }
- 
+
  dimnames(res$means) <- list(NULL, NULL, ahead = ahead)
  dimnames(res$vols) <- list(NULL, NULL, ahead = ahead)
 
@@ -1156,7 +1156,7 @@ myrgig <- function(n = 1, lambda, chi, psi) {
   ##
   ## density proportional to
   ##    f(x) = x^{lambda-1} e^{-1/2 (chi/x+psi x)}
-  ## 
+  ##
   ##       x >= 0
   ## --------------------------------------------------------------------
   ## Arguments:
@@ -1166,7 +1166,7 @@ myrgig <- function(n = 1, lambda, chi, psi) {
   ##   chi   ... parameter for distribution
   ##   psi   ... parameter for distribution
   ## --------------------------------------------------------------------
-  
+
   ## generate sample
   .Call("my_rgig", n, lambda, chi, psi, PACKAGE = "factorstochvol")
 }
