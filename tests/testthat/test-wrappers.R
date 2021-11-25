@@ -30,4 +30,10 @@ test_that("fsvsample works", {
       }
     }
   }
+
+  # bug report from Kevin Kurt
+  sim_res <- fsvsim(n = 10, series = 3, factors = 2)
+  expect_warning(fsvsample(y = sim_res$y, factors = 2, draws = 10, quiet = TRUE,
+                           priorsigmafac = rep(1, 2)), NA)
 })
+
