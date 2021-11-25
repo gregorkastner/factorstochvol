@@ -13,15 +13,17 @@ bibentry(bibtype = "Article",
                           family = "Kastner",
                           email = "gregor.kastner@aau.at")),
   journal      = "Journal of Statistical Software",
-  year         = "forthcoming",
-  url          = "https://arxiv.org/abs/1906.12123",
-
+  year         = "2021",
+  volume       = "100",
+  issue        = "12",
+  pages        = "1--34",
+  doi          = "10.18637/jss.v100.i12",
   header       = "To cite factorstochvol in publications use:",
   textVersion  =
-  paste("Hosszejni, Darjus and Gregor Kastner (forthcoming).",
+  paste("Hosszejni, Darjus and Gregor Kastner (2021).",
         "Modeling Univariate and Multivariate Stochastic Volatility in R with stochvol and factorstochvol.",
-        "Journal of Statistical Software.",
-        "https://arxiv.org/abs/1906.12123")
+        "Journal of Statistical Software, 100(12), 1-34.",
+        "URL: https://doi.org/10.18637/jss.v100.i12")
 )
 
 citEntry(header = "To refer to the interweaving (ASIS) methodology used in factorstochvol please cite:",
