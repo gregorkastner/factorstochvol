@@ -1,3 +1,9 @@
+Changes in version 1.0.0:
+  - Luis Gruber is now formally a contributor to stochvol. Welcome Luis!
+  - Avoid calling GIGrvg in some boundary cases where the GIG is essentially
+    (inverse) gamma.
+  - Updated package information to cater for JSS publication.
+
 Changes in version 0.10.3:
   - Bugfix in interweaving. Thanks to Luis Gruber for finding and patching.
   - New argument facloadtol to fsvsample. Allows to specify a (small) number
