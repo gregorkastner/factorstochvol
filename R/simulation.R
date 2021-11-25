@@ -1,32 +1,33 @@
 #  #####################################################################################
 #  R package factorstochvol by
-#     Gregor Kastner Copyright (C) 2016-2020
-#     Darjus Hosszejni Copyright (C) 2019-2020
-#  
+#     Gregor Kastner Copyright (C) 2016-2021
+#     Darjus Hosszejni Copyright (C) 2019-2021
+#     Luis Gruber Copyright (C) 2021
+#
 #  This file is part of the R package factorstochvol: Bayesian Estimation
 #  of (Sparse) Latent Factor Stochastic Volatility Models
-#  
+#
 #  The R package factorstochvol is free software: you can redistribute
 #  it and/or modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation, either version 2 or any
 #  later version of the License.
-#  
+#
 #  The R package factorstochvol is distributed in the hope that it will
 #  be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 #  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 #  General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with the R package factorstochvol. If that is not the case,
 #  please refer to <http://www.gnu.org/licenses/>.
 #  #####################################################################################
 
 rvolonly <- function(para, n) {
- 
+
  mu <- para[1]
  phi <- para[2]
  sigma <- para[3]
- 
+
  h <- rep(as.numeric(NA), n+1)
  h[1] <- rnorm(1, mean=mu, sd=sigma/sqrt((1-phi^2)))
  nu <- rnorm(n)
@@ -64,7 +65,7 @@ rvolonly <- function(para, n) {
 #' \code{FALSE}, constant volatilities (equal to \code{mu}) are generated.
 #' @param df If not equal to Inf, the factors are misspecified (come from
 #' a t distribution instead of a Gaussian). Only used for testing.
-#' 
+#'
 #' @return The value returned is a list object of class \code{fsvsim} holding
 #'  \itemize{
 #'  \item{y}{The simulated data, stored in a \code{n} times \code{m} matrix with
@@ -79,17 +80,17 @@ rvolonly <- function(para, n) {
 #'  \item{idipara}{The parameters of the idiosyncratic volatility
 #'  processes.}
 #' }
-#' 
+#'
 #' @note This object can be passed to many plotting functions to indicate
 #' the data generating processes when visualizing results.
-#' 
+#'
 #' @export
 
 fsvsim <- function(n = 1000, series = 10, factors = 1, facload = "dense", idipara, facpara,
 		   heteroskedastic = rep(TRUE, series + factors), df = Inf) {
  if (!is.numeric(factors) || is.na(factors) || factors < 0) stop('Number of factors must be numeric and >= 0')
  if (!is.numeric(series) || is.na(series) || series < factors) stop('Number of series must be numeric and >= factors')
- 
+
  if (length(facload) == 1 && is.character(facload)) {
   if (facload == "dense") {
    facload <- matrix(NA_real_, nrow = series, ncol = factors)
@@ -122,7 +123,7 @@ fsvsim <- function(n = 1000, series = 10, factors = 1, facload = "dense", idipar
  if (!is.matrix(idipara)) stop('SV-parameter specification for idiosyncratic variances "idipara" must be a matrix')
  if (ncol(idipara) != 3) stop("idipara needs exactly three columns: mu, phi, sigma")
  if (nrow(idipara) != nrow(facload)) stop("Dimensions of idipara and facload don't match")
- 
+
  if (missing(facpara)) {
   facpara <- matrix(NA_real_, nrow = ncol(facload), ncol = 2)
   colnames(facpara) <- c("phi", "sigma")
@@ -147,7 +148,7 @@ fsvsim <- function(n = 1000, series = 10, factors = 1, facload = "dense", idipar
    idivol[,i] <- idipara[i,"mu"]
   }
  }
- 
+
  # simulate factor variances and data:
  facvol <- matrix(NA_real_, nrow = n + 1, ncol = factors)
  if (factors > 0) {
@@ -158,15 +159,15 @@ fsvsim <- function(n = 1000, series = 10, factors = 1, facload = "dense", idipar
     facvol[,i] <- 0
    }
   }
-  
-  facvol0 <- facvol[1,,drop=FALSE] 
-  
+
+  facvol0 <- facvol[1,,drop=FALSE]
+
   # note: if df != Inf, this means misspecification!
   f <- t(apply(facvol[-1,,drop=FALSE], 2, function(x) exp(x/2) * rt(n, df = df)))
   #f <- t(apply(facvol[-1,,drop=FALSE], 2, function(x) exp(x/2) * runif(n, -2, 2)))
   tmp <- t(apply(idivol[-1,,drop=FALSE], 2, function(x) rnorm(n, mean=0, sd=exp(x/2))))
   y <- t(facload%*%f + tmp)
-  
+
  } else {
   facvol0 <- matrix(NA_real_, nrow = 1, ncol = 0)
   f <- t(facvol)

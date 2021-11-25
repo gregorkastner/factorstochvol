@@ -1,21 +1,22 @@
 #  #####################################################################################
 #  R package factorstochvol by
-#     Gregor Kastner Copyright (C) 2016-2020
-#     Darjus Hosszejni Copyright (C) 2019-2020
-#  
+#     Gregor Kastner Copyright (C) 2016-2021
+#     Darjus Hosszejni Copyright (C) 2019-2021
+#     Luis Gruber Copyright (C) 2021
+#
 #  This file is part of the R package factorstochvol: Bayesian Estimation
 #  of (Sparse) Latent Factor Stochastic Volatility Models
-#  
+#
 #  The R package factorstochvol is free software: you can redistribute
 #  it and/or modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation, either version 2 or any
 #  later version of the License.
-#  
+#
 #  The R package factorstochvol is distributed in the hope that it will
 #  be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 #  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 #  General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with the R package factorstochvol. If that is not the case,
 #  please refer to <http://www.gnu.org/licenses/>.
@@ -65,12 +66,12 @@ NULL
 
 
 #' Ledermann bound for the number of factors
-#' 
+#'
 #' In the static factor case, the Ledermann bound is the largest
 #' integer rank for which a unique decomposition of the covariance
 #' matrix is possible. (This is the largest possible number of
 #' factors which can be used for \code{\link[stats]{factanal}}.
-#' 
+#'
 #' @param m Number of component series.
 #'
 #' @return The Ledermann bound, a nonnegative integer.
@@ -94,7 +95,7 @@ ledermann <- function(m) {
 #' the highest loading on factor 2 second (unless this variable
 #' is already placed first, in which case the variable with the
 #' second highest loading is taken).
-#' 
+#'
 #' @param dat Matrix containing the data, with \code{n} rows
 #' (points in time) and \code{m} columns (component series).
 #' @param factors Number of factors to be used, defaults to the
@@ -102,7 +103,7 @@ ledermann <- function(m) {
 #' @param type Can be "fixed" or "dynamic". The option "fixed"
 #' means that that a \code{factors}-factor model is fit once and
 #' the entire ordering is determined according to this fit
-#' (the default). The option "dynamic" means that 
+#' (the default). The option "dynamic" means that
 #' the model is re-fit \code{factors} times with the number of
 #' factors going from 1 to
 #' \code{factors} and in each round the correspondingly largest
@@ -113,14 +114,14 @@ ledermann <- function(m) {
 #'
 #' @return A vector of length \code{m} with the ordering found.
 #'
-#' @seealso ledermann 
+#' @seealso ledermann
 #'
 #' @export
 preorder <- function(dat, factors = ledermann(ncol(dat)), type = "fixed", transload = identity) {
  m <- ncol(dat)
- control <- list(opt = list(maxit = 100000)) 
+ control <- list(opt = list(maxit = 100000))
  ordering <- rep(NA_integer_, m)
- 
+
  if (type == "fixed") {
   fa <- factanal(dat, factors, control = control)
   for (i in 1:factors) {
@@ -144,15 +145,15 @@ preorder <- function(dat, factors = ledermann(ncol(dat)), type = "fixed", transl
 #'
 #' In factor SV models, the identification of the factor loadings
 #' matrix is often
-#' chosen through a preliminary static factor analysis. 
+#' chosen through a preliminary static factor analysis.
 #' After a maximum likelihood factor model is fit to the data,
 #' variables are ordered as follows: The variable with the
 #' lowest loadings on all factors except the first (relative to
 #' it) is determined to lead the first factor,
 #' the variable with the lowest loadings on all factors except the
 #' first two (relative to these) is determined to lead the second
-#' factor, etc. 
-#' 
+#' factor, etc.
+#'
 #' @param dat Matrix containing the data, with \code{n} rows
 #' (points in time) and \code{m} columns (component series).
 #' @param factors Number of factors to be used.
@@ -171,20 +172,20 @@ preorder <- function(dat, factors = ledermann(ncol(dat)), type = "fixed", transl
 #' @note This function is automatically invoked by fsvsample if
 #' restrict is set to 'auto'.
 #'
-#' @seealso ledermann 
+#' @seealso ledermann
 #'
 #' @export
 findrestrict <- function(dat, factors, transload = abs, relto = 'all') {
  m <- ncol(dat)
- control <- list(opt = list(maxit = 100000)) 
+ control <- list(opt = list(maxit = 100000))
  ordering <- rep(NA_integer_, m)
  restrict <- matrix(FALSE, nrow = m, ncol = factors)
 
  fa <- factanal(dat, factors, control = control)
- 
+
  for (i in seq_len(factors - 1)) {
   if (relto == 'current') {
-   cur <- transload(fa$loadings[, i]) 
+   cur <- transload(fa$loadings[, i])
    tmp <- order(rowSums(transload(fa$loadings[, (i+1):factors, drop = FALSE])) / cur)
   } else if (relto == 'all') {
    cur <- rowSums(transload(fa$loadings[, 1:i, drop = FALSE]))
@@ -209,7 +210,7 @@ findrestrict <- function(dat, factors, transload = abs, relto = 'all') {
 #' (points in time) and \code{m} columns (component series).
 #'
 #' @param alpha Speed of decay.
-#' 
+#'
 #' @param hist How far to go back in time?
 #'
 #' @return A \code{m} times \code{m} covariance matrix estimate.

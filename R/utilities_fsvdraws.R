@@ -1,21 +1,22 @@
 #  #####################################################################################
 #  R package factorstochvol by
-#     Gregor Kastner Copyright (C) 2016-2020
-#     Darjus Hosszejni Copyright (C) 2019-2020
-#  
+#     Gregor Kastner Copyright (C) 2016-2021
+#     Darjus Hosszejni Copyright (C) 2019-2021
+#     Luis Gruber Copyright (C) 2021
+#
 #  This file is part of the R package factorstochvol: Bayesian Estimation
 #  of (Sparse) Latent Factor Stochastic Volatility Models
-#  
+#
 #  The R package factorstochvol is free software: you can redistribute
 #  it and/or modify it under the terms of the GNU General Public License
 #  as published by the Free Software Foundation, either version 2 or any
 #  later version of the License.
-#  
+#
 #  The R package factorstochvol is distributed in the hope that it will
 #  be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 #  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 #  General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with the R package factorstochvol. If that is not the case,
 #  please refer to <http://www.gnu.org/licenses/>.
@@ -26,7 +27,7 @@
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
 #' @param ... Ignored.
-#' 
+#'
 #' @return Returns \code{x} invisibly.
 #'
 #' @family printing
@@ -54,7 +55,7 @@ print.fsvdraws <- function(x, ...) {
 #' \code{runningcovmat} extracts summary statistics from the model-implied
 #' covariance matrix
 #' from an \code{fsvdraws} object for one point in time.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
 #' @param i A single point in time.
@@ -62,13 +63,13 @@ print.fsvdraws <- function(x, ...) {
 #' to \code{'mean'}.
 #' @param type Indicates whether covariance (\code{cov}) or correlation
 #' (\code{cor}) should be extracted.
-#' 
+#'
 #' @return Matrix containing the requested covariance matrix summary statistic.
 #'
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1) # estimate
 #'
 #' cov100mean <- runningcovmat(res, 100) # extract mean at t = 100
@@ -91,7 +92,7 @@ print.fsvdraws <- function(x, ...) {
 #' }
 #'
 #' @family extractors
-#' 
+#'
 #' @export
 
 
@@ -105,7 +106,7 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 
  if (!length(i) == 1 || !is.numeric(i) || i < 1 || i > n)
   stop("Argument 'i' must be a single integer between 1 and ncol(x$y).")
- 
+
  tryCatch(myobj <- x$runningstore[[type]][i,,statistic], error = function(e)
 	   stop(paste0("Argument 'statistic' must be one of: ",
             paste(dimnames(x$runningstore[[type]])[[3]], collapse = ', '), ".")))
@@ -129,7 +130,7 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 #' \code{runningcormat} extracts summary statistics from the model-implied
 #' correlation matrix
 #' from an \code{fsvdraws} object for one point in time.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
 #' @param i A single point in time.
@@ -137,13 +138,13 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 #' to \code{'mean'}.
 #' @param type Indicates whether covariance (\code{cov}) or correlation
 #' (\code{cor}) should be extracted.
-#' 
+#'
 #' @return Matrix containing the requested correlation matrix summary statistic.
 #'
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
 #'
 #' cor100mean <- runningcormat(res, 100) # extract mean at t = 100
@@ -166,7 +167,7 @@ runningcovmat <- function(x, i, statistic = "mean", type = "cov") {
 #' }
 #'
 #' @family extractors
-#' 
+#'
 #' @export
 
 runningcormat <- function(x, i, statistic = "mean", type = "cor") {
@@ -179,17 +180,17 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' \code{covmat} extracts draws from the model-implied covariance matrix
 #' from an \code{fsvdraws} object for all points in time which have been
 #' stored.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
 #' @param timepoints Vector indicating at which point(s) in time (of those that
 #' have been stored during sampling) the correlation matrices should be
 #' extracted. Can also be "all" or "last".
 #' @param ... Ignored.
-#' 
+#'
 #' @note Currently crudely implemented as a double loop in pure R,
 #' may be slow.
-#' 
+#'
 #' @return Array of dimension \code{m} times \code{m} times \code{draws}
 #' times \code{timepoints} containing the posterior draws for the
 #' model-implied covariance matrix.
@@ -197,7 +198,7 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
 #' covs <- covmat(res, "last") # extract
 #'
@@ -213,7 +214,7 @@ runningcormat <- function(x, i, statistic = "mean", type = "cor") {
 #' # time t = n = 500:
 #' ts.plot(covs[1,2,,1])
 #' abline(h = covmat(sim, "last")[1,2,1], col = 3) # "true" value
-#' 
+#'
 #' # Smoothed kernel density estimate:
 #' plot(density(covs[1,2,,1], adjust = 2))
 #'
@@ -254,17 +255,17 @@ covmat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' \code{cormat} extracts draws from the model-implied correlation matrix
 #' from an \code{fsvdraws} object for all points in time which have been
 #' stored.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' of \code{\link{fsvsample}}.
 #' @param timepoints Vector indicating at which point(s) in time (of those that
 #' have been stored during sampling) the correlation matrices should be extracted.
 #' Can also be "all" or "last".
 #' @param ... Ignored.
-#' 
+#'
 #' @note Currently crudely implemented as a double loop in pure R,
 #' may be slow.
-#' 
+#'
 #' @return Array of dimension \code{m} times \code{m} times \code{draws}
 #' times \code{timepoints} containing the posterior draws for the
 #' model-implied covariance matrix.
@@ -272,7 +273,7 @@ covmat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+#' sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
 #' cors <- cormat(res, "last") # extract
 #'
@@ -288,7 +289,7 @@ covmat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' # time t = n = 500:
 #' ts.plot(cors[1,2,,1])
 #' abline(h = cormat(sim, "last")[1,2,1], col = 3) # "true" value
-#' 
+#'
 #' # Smoothed kernel density estimate:
 #' plot(density(cors[1,2,,1], adjust = 2))
 #'
@@ -309,9 +310,9 @@ cormat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' Predicts factor and idiosyncratic log-volatilities h
 #'
 #' \code{predh} simulates from the posterior predictive distribution
-#' of the latent log-variances h, both for factors as well as for 
+#' of the latent log-variances h, both for factors as well as for
 #' idiosyncratic series.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' to \code{\link{fsvsample}}.
 #' @param ahead Vector of timepoints, indicating how many steps
@@ -327,20 +328,20 @@ cormat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' \item{factorh}{Array containing the draws of the latent factor
 #' log-volatilities.}
 #' }
-#' 
+#'
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(series = 3, factors = 1) # simulate 
+#' sim <- fsvsim(series = 3, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1) # estimate
-#' 
+#'
 #' # Predict 1, 10, and 100 days ahead:
 #' predobj <- predh(res, ahead = c(1, 10, 100))
 #'
 #' # Trace plot of draws from posterior predictive factor log-variance
 #' # (one, ten, and 100 days ahead):
 #' plot.ts(predobj$factorh[1,,])
-#' 
+#'
 #' # Smoothed kernel density estimates of predicted volas:
 #' plot(density(exp(predobj$factorh[1,,"1"]/2), adjust = 2))
 #' lines(density(exp(predobj$factorh[1,,"10"]/2), adjust = 2), col = 2)
@@ -348,7 +349,7 @@ cormat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' }
 #'
 #' @family predictors
-#' 
+#'
 #' @export
 
 predh <- function(x, ahead = 1, each = 1) {
@@ -372,7 +373,7 @@ predh <- function(x, ahead = 1, each = 1) {
  len <- ncol(sigmas)
  hpreds <- array(NA_real_, dim = c(m+r, len, length(ahead)))
  dimnames(hpreds) <- list(NULL, NULL, ahead = ahead)
- 
+
  storecounter <- 1L
  for (i in 1:max(ahead)) {
   hpredtmp <- mus + phis * (hpredtmp - mus) + sigmas * rnorm(len*(m+r))
@@ -394,7 +395,7 @@ predh <- function(x, ahead = 1, each = 1) {
 #'
 #' \code{predcov} simulates from the posterior predictive distribution
 #' of the model-implied covariance matrix.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' to \code{\link{fsvsample}}.
 #' @param ahead Vector of timepoints, indicating how many steps
@@ -405,16 +406,16 @@ predh <- function(x, ahead = 1, each = 1) {
 #'
 #' @return 4-dimensional array containing draws from the predictive
 #' covariance distribution.
-#' 
+#'
 #' @note Currently crudely implemented as a triple loop in pure R,
 #' may be slow.
-#' 
+#'
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(series = 3, factors = 1) # simulate 
+#' sim <- fsvsim(series = 3, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1) # estimate
-#' 
+#'
 #' # Predict 1, 10, and 100 days ahead:
 #' predobj <- predcov(res, ahead = c(1, 10, 100))
 #'
@@ -422,7 +423,7 @@ predh <- function(x, ahead = 1, each = 1) {
 #' # of the covariance of Sim1 and Sim2:
 #' # (one, ten, and 100 days ahead):
 #' plot.ts(predobj[1,2,,])
-#' 
+#'
 #' # Smoothed kernel density estimates of predicted covariance
 #' # of Sim1 and Sim2:
 #' plot(density(predobj[1,2,,"1"], adjust = 2))
@@ -431,7 +432,7 @@ predh <- function(x, ahead = 1, each = 1) {
 #' }
 #'
 #' @family predictors
-#' 
+#'
 #' @export
 
 predcov <- function(x, ahead = 1, each = 1) {
@@ -446,7 +447,7 @@ predcov <- function(x, ahead = 1, each = 1) {
     tmp <- (j-1)*each+k
     if (r >= 1) {
      ret[,,tmp,i] <- x$facload[,,j] %*%
-                    (exp(pred$factorh[,tmp,i]) * t(x$facload[,,j])) + 
+                    (exp(pred$factorh[,tmp,i]) * t(x$facload[,,j])) +
                     diag(exp(pred$idih[,tmp,i]))
     } else {
      ret[,,tmp,i] <- diag(exp(pred$idih[,tmp,i]))
@@ -461,7 +462,7 @@ predcov <- function(x, ahead = 1, each = 1) {
 #'
 #' \code{predcor} simulates from the posterior predictive distribution
 #' of the model-implied correlation matrix.
-#' 
+#'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
 #' to \code{\link{fsvsample}}.
 #' @param ahead Vector of timepoints, indicating how many steps
@@ -472,16 +473,16 @@ predcov <- function(x, ahead = 1, each = 1) {
 #'
 #' @return 4-dimensional array containing draws from the predictive
 #' correlation distribution.
-#' 
+#'
 #' @note Currently crudely implemented as a triple loop in pure R,
 #' may be slow.
-#' 
+#'
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(series = 3, factors = 1) # simulate 
+#' sim <- fsvsim(series = 3, factors = 1) # simulate
 #' res <- fsvsample(sim$y, factors = 1) # estimate
-#' 
+#'
 #' # Predict 1, 10, and 100 days ahead:
 #' predobj <- predcor(res, ahead = c(1, 10, 100))
 #'
@@ -489,7 +490,7 @@ predcov <- function(x, ahead = 1, each = 1) {
 #' # of the correlation of Sim1 and Sim2:
 #' # (one, ten, and 100 days ahead):
 #' plot.ts(predobj[1,2,,])
-#' 
+#'
 #' # Smoothed kernel density estimates of predicted covariance
 #' # of Sim1 and Sim2:
 #' plot(density(predobj[1,2,,"1"], adjust = 2))
@@ -498,7 +499,7 @@ predcov <- function(x, ahead = 1, each = 1) {
 #' }
 #'
 #' @family predictors
-#' 
+#'
 #' @export
 
 predcor <- function(x, ahead = 1, each = 1) {
@@ -513,7 +514,7 @@ predcor <- function(x, ahead = 1, each = 1) {
     tmp <- (j-1)*each+k
     if (r >= 1) {
      ret[,,tmp,i] <- cov2cor(x$facload[,,j] %*%
-                     (exp(pred$factorh[,tmp,i]) * t(x$facload[,,j])) + 
+                     (exp(pred$factorh[,tmp,i]) * t(x$facload[,,j])) +
                      diag(exp(pred$idih[,tmp,i])))
     } else {
      ret[,,tmp,i] <- diag(exp(pred$idih[,tmp,i]))
@@ -546,12 +547,12 @@ predcor <- function(x, ahead = 1, each = 1) {
 #' \item{precisionlogdet}{Matrix containing the draws of the determinant
 #' of the predicted precision matrix.}
 #' }
-#' 
+#'
 #' @note Currently crudely implemented as a triple loop in pure R,
 #' may be slow.
 #'
 #' @family predictors
-#' 
+#'
 #' @seealso Usually used for evaluating the predictive likelihood when many
 #' series but few factors are used, see
 #' \code{\link{predloglik}} and \code{\link{predloglikWB}}.
@@ -587,7 +588,7 @@ predprecWB <- function(x, ahead = 1, each = 1) {
    for (j in seq_len(dim(x$facload)[3])) {
     for (k in seq_len(each)) {
      tmp <- (j-1)*each+k
-     ret[,,tmp,i] <- diag(1/exp(pred$idih[,tmp,i]), nrow = m) 
+     ret[,,tmp,i] <- diag(1/exp(pred$idih[,tmp,i]), nrow = m)
      logdet[tmp,i] <- sum(pred$idih[,tmp,i])
     }
    }
@@ -632,7 +633,7 @@ predprecWB <- function(x, ahead = 1, each = 1) {
 #'
 #' # Estimate using only 1000 days:
 #' res <- fsvsample(y[seq_len(1000),], factors = 1)
-#' 
+#'
 #' # Evaluate the 1, 10, and 100 days ahead predictive log
 #' # likelihood:
 #' ahead <- c(1, 10, 100)
@@ -641,7 +642,7 @@ predprecWB <- function(x, ahead = 1, each = 1) {
 #' }
 #'
 #' @family predictors
-#' 
+#'
 #' @seealso Uses \code{\link{predcov}}. If \code{m} is large
 #' but only few factors are used, consider also using
 #' \code{\link{predloglikWB}}.
@@ -666,11 +667,11 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
  zeros <- matrix(0, nrow = m, ncol = n)
  for (i in seq_along(ahead)) {
   tmpy <- matrix(rep(y[i,], n), ncol = n)
-  
+
   if (!is.null(x$beta)) {
    tmpy <- tmpy - matrix(rep(x$beta, each), nrow = m)
   }
-  
+
   ret[,i] <- vecdmvnorm(tmpy, zeros, predobj[,,,i], log = TRUE)
   numericnormalizer <- max(ret[,i]) - 700 # exp(700) should be fine as double
   realret[i] <- log(mean(exp(ret[,i] - numericnormalizer))) + numericnormalizer
@@ -714,7 +715,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
 #'
 #' # Estimate using only 1000 days:
 #' res <- fsvsample(y[seq_len(1000),], factors = 1)
-#' 
+#'
 #' # Evaluate the 1, 10, and 100 days ahead predictive log
 #' # likelihood:
 #' ahead <- c(1, 10, 100)
@@ -726,7 +727,7 @@ predloglik <- function(x, y, ahead = 1, each = 1, alldraws = FALSE, indicator = 
 #' may be slow.
 #'
 #' @family predictors
-#' 
+#'
 #' @seealso Uses \code{\link{predprecWB}}. If \code{m} is small
 #' or many factors are used, consider also using
 #' \code{\link{predcov}}.
@@ -784,20 +785,20 @@ predloglikWB <- function(x, y, ahead = 1, each = 1, alldraws = FALSE) {
 #' @param implementation Either 1, 2, or 3 (the default). Determines
 #' how the reordering is implemented. Should not be necessary to depart
 #' from the default.
-#' 
+#'
 #' @return Returns an object of class \code{'fsvdraws'} with adjusted
 #' factors and factor loadings. Moreover, a list element called
 #' \code{'identifier'} is added, providing the numbers of the series
 #' used for identification and the corresponding minimum distances to
 #' zero.
-#' 
+#'
 #' @examples
 #' \donttest{
 #' set.seed(1)
-#' sim <- fsvsim(series = 8, factors = 2) # simulate 
+#' sim <- fsvsim(series = 8, factors = 2) # simulate
 #' res <- fsvsample(sim$y, factors = 2, signswitch = TRUE,
 #'                  draws = 2000, burnin = 1000) # estimate
-#' 
+#'
 #' # Plot unidentified loadings:
 #' facloaddensplot(res, fsvsimobj = sim, rows = 8)
 #'
@@ -809,7 +810,7 @@ predloglikWB <- function(x, y, ahead = 1, each = 1, alldraws = FALSE) {
 #' }
 #'
 #' @family postprocessing
-#' 
+#'
 #' @export
 
 signident <- function(x, method = "maximin", implementation = 3) {
@@ -851,7 +852,7 @@ signident <- function(x, method = "maximin", implementation = 3) {
  }
 
  colnames(x$identifier) <- c("identifier", "distance")
- 
+
  x
 }
 
@@ -860,7 +861,7 @@ signident <- function(x, method = "maximin", implementation = 3) {
 #'
 #' \code{orderident} provides some (very ad-hoc) methods for identifying
 #' the ordering of the factors after running the (unrestricted) MCMC
-#' sampler by 
+#' sampler by
 #' ordering according to the argument \code{method}.
 #'
 #' @param x Object of class \code{'fsvdraws'}, usually resulting from a call
@@ -883,7 +884,7 @@ signident <- function(x, method = "maximin", implementation = 3) {
 #' ordering.
 #'
 #' @family postprocessing
-#' 
+#'
 #' @export
 
 orderident <- function(x, method = "summed") {

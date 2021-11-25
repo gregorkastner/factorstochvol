@@ -1,21 +1,22 @@
 /*
  * R package stochvol by
- *     Gregor Kastner Copyright (C) 2016-2020
- *     Darjus Hosszejni Copyright (C) 2019-2020
- *  
+ *     Gregor Kastner Copyright (C) 2016-2021
+ *     Darjus Hosszejni Copyright (C) 2019-2021
+ *     Luis Gruber Copyright (C) 2021
+ *
  *  This file is part of the R package factorstochvol: Bayesian Estimation
  *  of (Sparse) Latent Factor Stochastic Volatility Models
- *  
+ *
  *  The R package factorstochvol is free software: you can redistribute
  *  it and/or modify it under the terms of the GNU General Public License
  *  as published by the Free Software Foundation, either version 2 or any
  *  later version of the License.
- *  
+ *
  *  The R package factorstochvol is distributed in the hope that it will
  *  be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  *  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  *  General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with the R package factorstochvol. If that is not the case,
  *  please refer to <http://www.gnu.org/licenses/>.
@@ -59,11 +60,11 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
  const arma::cube facloads(facload.begin(), facloadDims(0), facloadDims(1), facloadDims(2), false);
 
  const arma::cube hs(h.begin(), hDims(0), hDims(1), hDims(2), false);
- 
+
  NumericVector hpreds_(mpr * len * each, 0.0);
  arma::cube hpredscub(hpreds_.begin(), mpr, len, each, false);
  arma::mat hpredsmat(hpreds_.begin(), mpr, len * each, false);
- 
+
  for (int i = 0; i < each; i++) {
   hpredscub.slice(i) = hs.subcube(arma::span(hDims(0) - 1), arma::span(), arma::span());
  }
@@ -82,14 +83,14 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
 
  arma::mat X(mpr, len);
  arma::mat Y(r, len * each);
- 
+
  int storeindex = 0;
 
  //RNGScope scope;
  GetRNGstate(); // "by hand" because RNGScope isn't safe if return
                 // variables are declared afterwards
 
- 
+
  for (int i = 0; i < horizon; i++) {
   for (int e = 0; e < each; e++) {
    std::generate(X.begin(), X.end(), ::norm_rand);
@@ -102,14 +103,14 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
     meanpreds.col(j) = facloads.slice(j/each) * facpreds.col(j);
    }
   }
-  
+
   if (i == store(storeindex)-1) {
    volpredsstore.slice(storeindex) = exp(hpredsmat.rows(0, m-1)/2);
    if (r > 0) meanpredsstore.slice(storeindex) = meanpreds;
    storeindex++;
   }
  }
- 
+
  List retval = List::create(
   Named("means") = wrap(meanpredsstore),
   Named("vols")  = wrap(volpredsstore)

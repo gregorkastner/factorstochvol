@@ -1,7 +1,8 @@
 #  #####################################################################################
 #  R package factorstochvol by
-#     Gregor Kastner Copyright (C) 2016-2020
-#     Darjus Hosszejni Copyright (C) 2019-2020
+#     Gregor Kastner Copyright (C) 2016-2021
+#     Darjus Hosszejni Copyright (C) 2019-2021
+#     Luis Gruber Copyright (C) 2021
 #
 #  This file is part of the R package factorstochvol: Bayesian Estimation
 #  of (Sparse) Latent Factor Stochastic Volatility Models
