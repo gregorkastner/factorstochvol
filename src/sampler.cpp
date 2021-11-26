@@ -41,7 +41,7 @@ double rgig1(double lambda, double chi, double psi) {
 double do_rgig1(double lambda, double chi, double psi) {
 
   if ( !(R_FINITE(lambda) && R_FINITE(chi) && R_FINITE(psi)) ||
-       (chi <  0. || psi < 0)      ||
+       (chi <  0. || psi < 0.)      ||
        (chi == 0. && lambda <= 0.) ||
        (psi == 0. && lambda >= 0.) ) {
     ::Rf_error("invalid parameters for GIG distribution: lambda=%g, chi=%g, psi=%g",
@@ -910,19 +910,19 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
 
       if (facloadtol > 0) {
 
-        for (int ii = 0; ii<m; ii++) {
-          for (int jj = 0; jj<r; jj++) {
-            if(armarestr(ii,jj) != 0){
-              if(armafacload(ii,jj) == 0) {
-                if(R::rbinom( 1, 0.5 )==0){
-                  armafacload(ii,jj) = facloadtol;
-                }else{
-                  armafacload(ii,jj) = -facloadtol;
+        for (int ii = 0; ii < m; ii++) {
+          for (int jj = 0; jj < r; jj++) {
+            if (armarestr(ii, jj) != 0) {
+              if (armafacload(ii, jj) == 0.) {
+                if (R::rbinom(1, 0.5) == 0) {
+                  armafacload(ii, jj) = facloadtol;
+                } else {
+                  armafacload(ii, jj) = -facloadtol;
                 }
-              }else if(armafacload(ii,jj) < facloadtol && armafacload(ii,jj) > 0){
-                armafacload(ii,jj) = facloadtol;
-              }else if (armafacload(ii,jj) > -facloadtol && armafacload(ii,jj) < 0){
-                armafacload(ii,jj) = -facloadtol;
+              } else if (armafacload(ii, jj) < facloadtol && armafacload(ii, jj) > 0.) {
+                armafacload(ii, jj) = facloadtol;
+              } else if (armafacload(ii, jj) > -facloadtol && armafacload(ii, jj) < 0.) {
+                armafacload(ii, jj) = -facloadtol;
               }
             }
           }

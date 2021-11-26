@@ -377,7 +377,7 @@
 fsvsample <- function(y, factors = 1, draws = 1000, thin = 1, burnin = 1000,
                       restrict = "none", zeromean = TRUE,
                       priorfacloadtype = "rowwiseng", priorfacload = .1,
-                      facloadtol = 1e-100,
+                      facloadtol = 1e-18,
                       priorng = c(1, 1), priormu = c(0, 10),
                       priorphiidi = c(10, 3), priorphifac = c(10, 3),
                       priorsigmaidi = 1, priorsigmafac = 1,
