@@ -913,21 +913,20 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
         for (int ii = 0; ii < m; ii++) {
           for (int jj = 0; jj < r; jj++) {
             if (armarestr(ii, jj) != 0) {
-              if (armafacload(ii, jj) == 0.) {
+              if (armafacload(ii, jj) < facloadtol && armafacload(ii, jj) > 0.) {
+                armafacload(ii, jj) = facloadtol;
+              } else if (armafacload(ii, jj) > -facloadtol && armafacload(ii, jj) < 0.) {
+                armafacload(ii, jj) = -facloadtol;
+              } else if (armafacload(ii, jj) == 0.) {
                 if (R::rbinom(1, 0.5) == 0) {
                   armafacload(ii, jj) = facloadtol;
                 } else {
                   armafacload(ii, jj) = -facloadtol;
                 }
-              } else if (armafacload(ii, jj) < facloadtol && armafacload(ii, jj) > 0.) {
-                armafacload(ii, jj) = facloadtol;
-              } else if (armafacload(ii, jj) > -facloadtol && armafacload(ii, jj) < 0.) {
-                armafacload(ii, jj) = -facloadtol;
               }
             }
           }
         }
-
       }
 
       //Rprintf("\n\n");

@@ -15,7 +15,7 @@ fsvsample(
   zeromean = TRUE,
   priorfacloadtype = "rowwiseng",
   priorfacload = 0.1,
-  facloadtol = 1e-100,
+  facloadtol = 1e-18,
   priorng = c(1, 1),
   priormu = c(0, 10),
   priorphiidi = c(10, 3),
