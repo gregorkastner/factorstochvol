@@ -237,15 +237,14 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
 
  for (i in these) {
   toplot <- runningcormat(x, i, type = type, statistic = "mean")
+  rownames(toplot) <- colnames(toplot) <- snames
   if (!(plotCI == 'n')) {
    toplot2 <- runningcormat(x, i, type = type, statistic = "sd")
    lower <- toplot - 2*toplot2
    upper <- toplot + 2*toplot2
+   rownames(lower) <- colnames(lower) <- snames
+   rownames(upper) <- colnames(upper) <- snames
   } else lower <- upper <- NULL
-
-  rownames(toplot) <- colnames(toplot) <- snames
-  rownames(lower) <- colnames(lower) <- snames
-  rownames(upper) <- colnames(upper) <- snames
 
   if (plottype == "corrplot") {
    corrplot::corrplot(toplot[orderthis, orderthis], plotCI = plotCI,
