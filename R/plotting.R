@@ -243,6 +243,8 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
   } else lower <- upper <- NULL
 
   rownames(toplot) <- colnames(toplot) <- snames
+  rownames(lower) <- colnames(lower) <- snames
+  rownames(upper) <- colnames(upper) <- snames
 
   if (plottype == "corrplot") {
    corrplot::corrplot(toplot[orderthis, orderthis], plotCI = plotCI,
@@ -818,6 +820,8 @@ paratraceplot.fsvdraws <- function(x, fsvsimobj = NULL, thinning = NULL, maxrows
  invisible(x)
 }
 
+#' @export paratraceplot
+NULL
 
 #' Trace plots of factor loadings draws
 #'

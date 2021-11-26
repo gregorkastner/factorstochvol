@@ -32,7 +32,7 @@ may be slow.
 \examples{
 \donttest{
 set.seed(1)
-sim <- fsvsim(series = 3, factors = 1) # simulate 
+sim <- fsvsim(series = 3, factors = 1) # simulate
 res <- fsvsample(sim$y, factors = 1) # estimate
 
 # Predict 1, 10, and 100 days ahead:

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{comtimeplot}
 \alias{comtimeplot}
-\title{Plot comunalities over time.}
+\title{Plot communalities over time.}
 \usage{
 comtimeplot(
   x,

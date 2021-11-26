@@ -30,7 +30,7 @@ the restrictions.
 \description{
 In factor SV models, the identification of the factor loadings
 matrix is often
-chosen through a preliminary static factor analysis. 
+chosen through a preliminary static factor analysis.
 After a maximum likelihood factor model is fit to the data,
 variables are ordered as follows: The variable with the
 lowest loadings on all factors except the first (relative to

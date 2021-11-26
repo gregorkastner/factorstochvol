@@ -37,7 +37,7 @@ the factor loadings after running the MCMC sampler
 \examples{
 \donttest{
 set.seed(1)
-sim <- fsvsim(series = 8, factors = 2) # simulate 
+sim <- fsvsim(series = 8, factors = 2) # simulate
 res <- fsvsample(sim$y, factors = 2, signswitch = TRUE,
                  draws = 2000, burnin = 1000) # estimate
 

@@ -16,7 +16,7 @@ to \code{\link{fsvsample}}.}
 Returns \code{x} invisibly.
 }
 \description{
-\code{facloadcredplot} illustrates the bivariate marginals of the 
+\code{facloadcredplot} illustrates the bivariate marginals of the
 factor loadings distribution. It is a monochrome variant of
 \code{\link{facloadpairplot}}.
 }

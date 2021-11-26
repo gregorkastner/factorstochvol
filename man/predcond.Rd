@@ -36,7 +36,7 @@ that grows with the number of factors used.
 \examples{
 \donttest{
 set.seed(1)
-sim <- fsvsim(n = 500, series = 4, factors = 1) # simulate 
+sim <- fsvsim(n = 500, series = 4, factors = 1) # simulate
 res <- fsvsample(sim$y, factors = 1) # estimate
 
 # Predict 1 day ahead:

@@ -21,7 +21,7 @@ Ledermann bound.}
 \item{type}{Can be "fixed" or "dynamic". The option "fixed"
 means that that a \code{factors}-factor model is fit once and
 the entire ordering is determined according to this fit
-(the default). The option "dynamic" means that 
+(the default). The option "dynamic" means that
 the model is re-fit \code{factors} times with the number of
 factors going from 1 to
 \code{factors} and in each round the correspondingly largest

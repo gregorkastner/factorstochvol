@@ -33,7 +33,7 @@ may be slow.
 \examples{
 \donttest{
 set.seed(1)
-sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate
 res <- fsvsample(sim$y, factors = 1, keeptime = "all") # estimate
 covs <- covmat(res, "last") # extract
 

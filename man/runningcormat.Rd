@@ -30,7 +30,7 @@ from an \code{fsvdraws} object for one point in time.
 \examples{
 \donttest{
 set.seed(1)
-sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate 
+sim <- fsvsim(n = 500, series = 3, factors = 1) # simulate
 res <- fsvsample(sim$y, factors = 1, runningstore = 6) # estimate
 
 cor100mean <- runningcormat(res, 100) # extract mean at t = 100

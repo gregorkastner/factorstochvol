@@ -31,7 +31,7 @@ ordering.
 \description{
 \code{orderident} provides some (very ad-hoc) methods for identifying
 the ordering of the factors after running the (unrestricted) MCMC
-sampler by 
+sampler by
 ordering according to the argument \code{method}.
 }
 \seealso{

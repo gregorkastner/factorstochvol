@@ -22,7 +22,7 @@ thinned accordingly.}
 Returns \code{x} invisibly.
 }
 \description{
-\code{facloadpairplot} illustrates the bivariate marginals of the 
+\code{facloadpairplot} illustrates the bivariate marginals of the
 factor loadings distribution. For a monochrome variant, see
 \code{\link{facloadcredplot}}.
 }

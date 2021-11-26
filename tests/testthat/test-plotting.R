@@ -9,6 +9,7 @@ test_that("plots execute error-free", {
   expect_invisible(voltimeplot(res))
   expect_invisible(corimageplot(res, plottype = "corrplot"))
   expect_invisible(corimageplot(res, plottype = "imageplot"))
+  expect_invisible(corimageplot(res, plotCI = "circle"))
   expect_invisible(cortimeplot(res, series = 2))
   expect_invisible(covtimeplot(res, series = 2))
   expect_invisible(facloadpairplot(res))

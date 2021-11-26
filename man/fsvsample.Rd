@@ -15,6 +15,7 @@ fsvsample(
   zeromean = TRUE,
   priorfacloadtype = "rowwiseng",
   priorfacload = 0.1,
+  facloadtol = 1e-100,
   priorng = c(1, 1),
   priormu = c(0, 10),
   priorphiidi = c(10, 3),
@@ -63,7 +64,7 @@ stored.}
 
 \item{restrict}{Either "upper", "none", or "auto", indicating whether
 the factor loadings
-matrix should be restricted to have zeros above the diagonal ("upper"), 
+matrix should be restricted to have zeros above the diagonal ("upper"),
 whether all elements should be estimated from the data ("none"), or
 whether the function \code{\link{findrestrict}} should be invoked for a
 priori finding suitable zeros. Setting
@@ -82,7 +83,7 @@ of dimension \code{c(m, r)} indicating which elements should be unrestricted
 the model for each of the \code{m} univariate series.
 If \code{TRUE}, the mean is not modeled. Defaults to \code{TRUE}.}
 
-\item{priorfacloadtype}{Can be \code{"normal"}, \code{"rowwiseng"}, 
+\item{priorfacloadtype}{Can be \code{"normal"}, \code{"rowwiseng"},
 \code{"colwiseng"}.
 \itemize{
  \item{\code{"normal"}: }{Normal prior. The value of \code{priorfacload}
@@ -99,6 +100,10 @@ For details please see Kastner (2019).}
 with positive elements or a single number (which will be recycled accordingly).
 The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
 and is explained there.}
+
+\item{facloadtol}{Minimum number that a draw of the factor loadings matrix can take.
+Prevents numerical issues that can appear when strong shrinkage is enforced if chosen
+to be greater than zero.}
 
 \item{priorng}{Two-element vector with positive entries indicating the Normal-Gamma
 prior's hyperhyperparameters \code{c} and \code{d}.}
@@ -223,7 +228,7 @@ A value of 4 is the highly recommended default.}
 informative output during sampling should be omitted. The default
 value is \code{FALSE}, implying verbose output.}
 
-\item{samplefac}{If set to \code{FALSE}, the factors are not sampled (but 
+\item{samplefac}{If set to \code{FALSE}, the factors are not sampled (but
 remain at their starting values forever). This might be useful if one
 wants to include observed factors instead of latent ones.}
 
@@ -234,7 +239,7 @@ In case of a single factor model, a numeric vector of length \code{n} is also ac
 
 \item{startpara}{\emph{optional} numeric matrix of dimension
 \code{c(3, m + factors)}, containing the starting values
-for the parameter draws. The first \code{m} columns must contain 
+for the parameter draws. The first \code{m} columns must contain
 parameters values corresponding to the idiosyncratic volatilities,
 the subsequent \code{factor} columns must contain parameter values
 corresponding to the factor volatilities. The first row of \code{startpara}

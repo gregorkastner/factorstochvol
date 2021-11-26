@@ -28,13 +28,13 @@ log-volatilities.}
 }
 \description{
 \code{predh} simulates from the posterior predictive distribution
-of the latent log-variances h, both for factors as well as for 
+of the latent log-variances h, both for factors as well as for
 idiosyncratic series.
 }
 \examples{
 \donttest{
 set.seed(1)
-sim <- fsvsim(series = 3, factors = 1) # simulate 
+sim <- fsvsim(series = 3, factors = 1) # simulate
 res <- fsvsample(sim$y, factors = 1) # estimate
 
 # Predict 1, 10, and 100 days ahead:
