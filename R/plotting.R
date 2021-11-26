@@ -212,6 +212,7 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
  r <- dim(x$logvar)[2] - m
  draws <- dim(x$para)[3]
  snames <- colnames(x$y)
+ if (is.null(snames)) snames <- 1:m
  dates <- rownames(x$y)
  if (is.null(dates)) dates <- 1:n
 
@@ -1030,6 +1031,10 @@ plot.fsvdraws <- function(x, quantiles = c(.05, .5, .95), col = NULL, fsvsimobj 
  m <- ncol(x$y)
 
  mycormat <- cormat(x, "last")[,,,1]
+ 
+ # a new version corrplot requires rownames and colnames to be set
+ if (is.null(rownames(mycormat))) rownames(mycormat) <- colnames(mycormat) <- seq_len(m)
+
  if (length(quantiles) == 1) {
    plotCI <- "n"
    mycormatlower <- NULL
