@@ -79,7 +79,7 @@
 #' The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
 #' and is explained there.
 #'
-#' @param facloadtol Minimum number that a draw of the factor loadings matrix can take.
+#' @param facloadtol Minimum number that the absolute value of a factor loadings draw can take.
 #' Prevents numerical issues that can appear when strong shrinkage is enforced if chosen
 #' to be greater than zero.
 #'

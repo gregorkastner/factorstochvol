@@ -240,8 +240,8 @@ corimageplot <- function(x, these = seq_len(nrow(x$y)), order = "original",
   rownames(toplot) <- colnames(toplot) <- snames
   if (!(plotCI == 'n')) {
    toplot2 <- runningcormat(x, i, type = type, statistic = "sd")
-   lower <- toplot - 2*toplot2
-   upper <- toplot + 2*toplot2
+   lower <- pmax(toplot - 2 * toplot2, -1)
+   upper <- pmin(toplot + 2 * toplot2, 1)
    rownames(lower) <- colnames(lower) <- snames
    rownames(upper) <- colnames(upper) <- snames
   } else lower <- upper <- NULL
