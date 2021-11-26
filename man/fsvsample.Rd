@@ -101,7 +101,7 @@ with positive elements or a single number (which will be recycled accordingly).
 The meaning of \code{priorfacload} depends on the setting of \code{priorfacloadtype}
 and is explained there.}
 
-\item{facloadtol}{Minimum number that a draw of the factor loadings matrix can take.
+\item{facloadtol}{Minimum number that the absolute value of a factor loadings draw can take.
 Prevents numerical issues that can appear when strong shrinkage is enforced if chosen
 to be greater than zero.}
 

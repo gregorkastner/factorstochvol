@@ -179,7 +179,7 @@ base::options(continue = "+  ", prompt = "R> ", width = 70,
 @
 
 \section*{Preface}
-This vignette corresponds to the article of the same name published in the Journal of Statistical Software \citep{thisjss}.
+This vignette corresponds to \citet{thisjss} published in the Journal of Statistical Software.
 The version at hand might receive minor updates as time goes by.
 Further information about citing \pkg{factorstochvol} can be obtained in \proglang{R} by installing the package, e.g., through \code{install.packages("factorstochvol")}, and calling \code{citation("factorstochvol")}.
 
@@ -943,7 +943,7 @@ corimageplot(res, these = seq(1, n, length.out = 3), plotCI = "circle",
 @
 \begin{figure}[tp]
   \centering
-  \includegraphics[width=\textwidth, clip, trim=22 185 0 174]{jss3813-corimageplot-1}
+  \includegraphics[width=\textwidth, clip, trim=0 174 0 174]{jss3813-corimageplot-1}
   \caption{Three estimated correlation matrices and their posterior uncertainty depicted using circles.
     Inner (outer) radii of the circles illustrate to the posterior mean minus (plus) two standard deviations.
     Colors blue and red represent negative and positive values, respectively.
