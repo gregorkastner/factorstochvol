@@ -1,3 +1,8 @@
+Changes in version 1.0.1:
+  - Use DBL_EPSILON instead of DOUBLE_EPS to allow STRICT_R_HEADERS. Thanks
+    to Dirk Eddelbuettel for bringing this up.
+  - Fixed a typo..
+
 Changes in version 1.0.0:
   - Luis Gruber is now formally a contributor to stochvol. Welcome Luis!
   - Avoid calling GIGrvg in some boundary cases where the GIG is essentially
