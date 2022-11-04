@@ -88,10 +88,10 @@ comtimeplot <- function(x, fsvsimobj = NULL, show = "series",
 
   if (i == m+1) {
    title(paste0("Joint communalities (mean +/- 2sd)"))
-   if (!is.null(fsvsimobj)) lines(colMeans(communalities), col = 3)
+   if (!is.null(fsvsimobj)) lines(100*colMeans(communalities), col = 3)
   } else {
    title(paste0("Communalities of series ", i, " (", snames[i], ", mean +/- 2sd)"), font.main = 1)
-   if (!is.null(fsvsimobj)) lines(communalities[i,], col = 3)
+   if (!is.null(fsvsimobj)) lines(100*communalities[i,], col = 3)
   }
  }
  if (show != "joint") par(oldpar)
