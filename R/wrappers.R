@@ -1092,7 +1092,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' @return List of class \code{fsvpredcond} containing two elements:
 #' \itemize{
 #' \item{means}{Array containing the draws of the predictive means.}
-#' \item{vars}{Array containing the draws of the predictive variances.}
+#' \item{vols}{Array containing the draws of the predictive volatilities (square root of variances).}
 #' }
 #'
 #' @examples
@@ -1105,8 +1105,8 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' predobj <- predcond(res, each = 5)
 #'
 #' # Draw from the predictive distribution:
-#' preddraws <- matrix(rnorm(length(predobj$mean[,,1]),
-#'                     mean = predobj$mean[,,1],
+#' preddraws <- matrix(rnorm(length(predobj$means[,,1]),
+#'                     mean = predobj$means[,,1],
 #'                     sd = predobj$vols[,,1]), nrow = 4)
 #'
 #' # Visualize the predictive distribution
