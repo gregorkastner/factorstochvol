@@ -22,23 +22,18 @@
  *  please refer to <http://www.gnu.org/licenses/>.
  */
 
-#include "sampler.h"
-#include "predict.h"
-#include "dmvnorm.h"
+#ifndef _SAMPLER_H
+#define _SAMPLER_H
 
-using namespace Rcpp;
+#include <RcppArmadillo.h>
 
-static const R_CallMethodDef CallEntries[] = {
-    {"sampler", (DL_FUNC) &sampler, 35},
-    {"predict", (DL_FUNC) &predict, 3},
-    {"dmvnorm", (DL_FUNC) &dmvnorm, 4},
-    {NULL, NULL, 0}
-};
+RcppExport SEXP sampler(const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP);
 
-RcppExport void R_init_factorstochvol(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
-    
-    // register "sampler" to be availbale for other packages
-    R_RegisterCCallable("factorstochvol", "sampler", (DL_FUNC)sampler);
-}
+#endif
