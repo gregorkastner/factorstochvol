@@ -32,14 +32,6 @@
 
 double rgig1(double, double, double);
 
-// Main sampler (as called from R):
-RcppExport SEXP sampler(const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-  const SEXP, const SEXP);
+// Main sampler (as called from R) moved to ../inst/include/factorstochvol.h
 
 #endif

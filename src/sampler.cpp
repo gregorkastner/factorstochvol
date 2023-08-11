@@ -24,6 +24,7 @@
 
 #include <RcppArmadillo.h>
 #include "sampler.h"
+#include "../inst/include/factorstochvol.h"
 
 using namespace Rcpp;
 

@@ -25,6 +25,7 @@
 #include "sampler.h"
 #include "predict.h"
 #include "dmvnorm.h"
+#include "../inst/include/factorstochvol.h"
 
 using namespace Rcpp;
 
@@ -38,4 +39,7 @@ static const R_CallMethodDef CallEntries[] = {
 RcppExport void R_init_factorstochvol(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
+    
+    // register "sampler" to be available for other packages
+    R_RegisterCCallable("factorstochvol", "sampler", (DL_FUNC)sampler);
 }
