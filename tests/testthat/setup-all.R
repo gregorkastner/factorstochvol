@@ -9,7 +9,7 @@ factors_values <- c(0, 1, 3)
 restrict_mat <- matrix(FALSE, nrow = NCOL(y), ncol = max(factors_values))
 restrict_mat[1, 1] <- TRUE  # restrict the upper left element to zero
 restrict_values <- list("upper", "auto", restrict_mat)
-priorfacloadtype_values <- c("normal", "rowwiseng", "colwiseng", "dl")
+priorfacloadtype_values <- c("normal", "rowwiseng", "colwiseng") #, "dl" is not supported anymore
 priorhomoskedastic <- matrix(c(1.1, 1.1), nrow = NCOL(y),
                              ncol = 2, byrow = TRUE)
 heteroskedastic_values <- list(TRUE, c(FALSE, FALSE))

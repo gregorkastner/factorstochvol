@@ -576,9 +576,9 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
  if (!is.numeric(priorfacload) || any(priorfacload <= 0)) {
   stop("Argument 'priorfacload' must be numeric and positive.")
  }
- if (!(priorfacloadtype %in% c("normal", "rowwiseng", "colwiseng", "dl"))) {
+ if (!(priorfacloadtype %in% c("normal", "rowwiseng", "colwiseng"))) { #, "dl" not supported anymore
   stop("Argument 'priorfacloadtype' must be one of: 'normal', 'rowwiseng',
-       'colwiseng', 'dl'.")
+       'colwiseng'.")
  }
 
  if (!missing(startfacloadvar)) {
@@ -616,14 +616,15 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
    warning("Only first row of 'priorfacload' is used.'")
    cShrink <- rep(cShrink, factors)
    dShrink <- rep(dShrink, factors)
-  } else if (priorfacloadtype == "dl") {
-   pfl <- 4L
-   starttau2 <- startfacloadvarUsed
-   aShrink <- priorfacload[1,1]
-   warning("Only first element of 'priorfacload' is used.'")
-   cShrink <- NA
-   dShrink <- NA
-  }
+  } 
+  # else if (priorfacloadtype == "dl") {
+  #  pfl <- 4L
+  #  starttau2 <- startfacloadvarUsed
+  #  aShrink <- priorfacload[1,1]
+  #  warning("Only first element of 'priorfacload' is used.'")
+  #  cShrink <- NA
+  #  dShrink <- NA
+  # }
  } else {
   if (length(priorfacload) != 1) {
    stop("If argument 'priorfacload' isn't a matrix, it must be a single number.")
@@ -646,13 +647,14 @@ if (interweaving != 0 & interweaving != 1 & interweaving != 2 & interweaving != 
    aShrink <- rep(priorfacload, factors)
     cShrink <- rep(cShrink, factors)
     dShrink <- rep(dShrink, factors)
-  } else if (priorfacloadtype == "dl") {
-   pfl <- 4L
-   starttau2 <- startfacloadvarUsed
-   aShrink <- priorfacload
-   cShrink <- NA
-   dShrink <- NA
   }
+  # else if (priorfacloadtype == "dl") {
+  #  pfl <- 4L
+  #  starttau2 <- startfacloadvarUsed
+  #  aShrink <- priorfacload
+  #  cShrink <- NA
+  #  dShrink <- NA
+  # }
  }
 
 shrinkagepriors <- list(a = aShrink,
