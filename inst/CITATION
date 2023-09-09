@@ -5,7 +5,7 @@ note <- sprintf("R package version %s", meta$Version)
 
 bibentry(bibtype = "Article",
   title        = "Modeling Univariate and Multivariate Stochastic Volatility in {R} with {stochvol} and {factorstochvol}",
-  author       = personList(
+  author       = c(
                    person(given = "Darjus",
                           family = "Hosszejni",
                           email = "darjus.hosszejni@wu.ac.at"),
@@ -26,10 +26,10 @@ bibentry(bibtype = "Article",
         "URL: https://doi.org/10.18637/jss.v100.i12")
 )
 
-citEntry(header = "To refer to the interweaving (ASIS) methodology used in factorstochvol please cite:",
-         entry = "article",
+bibentry(header = "To refer to the interweaving (ASIS) methodology used in factorstochvol please cite:",
+         bibtype = "Article",
          title = "Efficient {B}ayesian Inference for Multivariate Factor Stochastic Volatility Models",
-         author = personList(as.person("Gregor Kastner"),
+         author = c(as.person("Gregor Kastner"),
                              as.person("Sylvia Fr\\\"{u}hwirth-Schnatter"),
                              as.person("Hedibert Freitas Lopes")),
          journal = "Journal of Computational and Graphical Statistics",
@@ -41,10 +41,10 @@ citEntry(header = "To refer to the interweaving (ASIS) methodology used in facto
          textVersion = "Kastner, Gregor, Sylvia Frühwirth-Schnatter and Hedibert Freitas Lopes (2017). Efficient Bayesian Inference for Multivariate Factor Stochastic Volatility Models. Journal of Computational and Graphical Statistics, 26(4), 905-917. URL: https://doi.org/10.1080/10618600.2017.1322091"
 )
 
-citEntry(header = "To refer to the shrinkage methodology used in factorstochvol (NG priors) please cite:",
-         entry = "article",
+bibentry(header = "To refer to the shrinkage methodology used in factorstochvol (NG priors) please cite:",
+         bibtype = "Article",
          title = "Sparse {B}ayesian Time-Varying Covariance Estimation in Many Dimensions",
-         author = personList(as.person("Gregor Kastner")),
+         author = c(as.person("Gregor Kastner")),
          journal = "Journal of Econometrics",
          year = "2019",
 	 volume = "210",
