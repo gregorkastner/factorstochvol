@@ -5,7 +5,7 @@ test_that("Drawing from the posterior in one as well as in multiple calls to fsv
 factors <- 2
 iterations <- 2
 
-sim <- fsvsim(factors = factors, series = 3)
+sim <- fsvsim(factors = factors, series = 5)
 
 # Do all draws in one call to fsvsample
 cat("Drawing in one call to fsvsample...\n")
