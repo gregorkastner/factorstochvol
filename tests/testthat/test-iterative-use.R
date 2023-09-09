@@ -57,5 +57,7 @@ expect_equal(res$para[,,iterations], res2$para[,,1])
 
 # If you are interested in speed, set iterations to a few hundred at least
 cat("Absolute time difference:", tim2 - tim, "\n")
-cat("Relative time difference:", (tim2 - tim) / tim, "\n")
+if (all(tim > 0)) {
+  cat("Relative time difference:", (tim2 - tim) / tim, "\n")
+}
 })
