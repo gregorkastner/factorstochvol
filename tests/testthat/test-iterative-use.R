@@ -3,7 +3,7 @@ context("Iterative-use")
 test_that("Drawing from the posterior in one as well as in multiple calls to fsvsample()", {
 
 factors <- 2
-iterations <- 2
+iterations <- 10
 
 sim <- fsvsim(factors = factors, series = 5)
 

@@ -1,3 +1,6 @@
+Changes in version 1.0.3:
+  - Fixed some more issues when test_check(ing) factorstochvol.
+
 Changes in version 1.0.2:
   - Fixed some issues when test_check(ing) factorstochvol. Thank to Brian
     Ripley for pointing this out.
