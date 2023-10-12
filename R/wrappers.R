@@ -63,7 +63,7 @@
 #'
 #' @param priorfacloadtype Can be \code{"normal"}, \code{"rowwiseng"},
 #' \code{"colwiseng"}.
-#' \itemize{
+#' \describe{
 #'  \item{\code{"normal"}: }{Normal prior. The value of \code{priorfacload}
 #'                           is interpreted as the standard deviations of the
 #'                           Gaussian prior distributions for the factor loadings.}
@@ -135,7 +135,7 @@
 #' ergodic moments of certain variables of interest. More specifically, mean,
 #' variance, skewness, etc. will be stored for certain variables
 #' if \code{runningstore} is set to a value...
-#' \itemize{
+#' \describe{
 #'  \item{\code{>= 1}: }{Latent log variances \code{h_1,h_2,...,h_(n+r)}.}
 #'  \item{\code{>= 2}: }{Latent factors \code{f_1,...,f_r}.}
 #'  \item{\code{>= 3}: }{Latent volatilities \code{sqrt(exp(h_1,h_2,...,h_(n+r)))}.}
@@ -176,7 +176,7 @@
 #'
 #' @param interweaving The following values for interweaving the factor loadings
 #' are accepted:
-#' \itemize{
+#' \describe{
 #'  \item{0: }{No interweaving.}
 #'  \item{1: }{Shallow interweaving through the diagonal entries.}
 #'  \item{2: }{Deep interweaving through the diagonal entries.}
@@ -211,7 +211,7 @@
 #' applications, the default values probably work best. Interested users are
 #' referred to Kastner and Frühwirth-Schnatter (2014), the package vignette, and Kastner (2016). If
 #' \code{expert} is provided, it may contain the following named elements:
-#' \itemize{
+#' \describe{
 #'  \item{\code{parameterization}: }{Character string equal to \code{"centered"},
 #'        \code{"noncentered"}, \code{"GIS_C"}, or \code{"GIS_NC"}. Defaults to
 #'        \code{"GIS_C"}.}
@@ -298,7 +298,7 @@
 #' can be found in Kastner and Frühwirth-Schnatter (2014).
 #'
 #' @return The value returned is a list object of class \code{fsvdraws} holding
-#'  \itemize{
+#'  \describe{
 #'  \item{\code{facload}: }{Array containing draws from the posterior distribution of the
 #'                 factor loadings matrix.}
 #'  \item{\code{fac}: }{Array containing factor draws from the posterior distribution.}
@@ -1090,7 +1090,7 @@ res$config <- list(draws = draws, burnin = burnin, thin = thin,
 #' @param ... Ignored.
 #'
 #' @return List of class \code{fsvpredcond} containing two elements:
-#' \itemize{
+#' \describe{
 #' \item{means}{Array containing the draws of the predictive means.}
 #' \item{vols}{Array containing the draws of the predictive volatilities (square root of variances).}
 #' }

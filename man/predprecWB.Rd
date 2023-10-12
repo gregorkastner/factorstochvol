@@ -19,7 +19,7 @@ for each draw that has been stored during MCMC sampling.}
 }
 \value{
 List containing two elements:
-\itemize{
+\describe{
 \item{precision}{Array containing the draws of the predicted
 precision matrix.}
 \item{precisionlogdet}{Matrix containing the draws of the determinant
