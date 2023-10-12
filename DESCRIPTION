@@ -2,7 +2,7 @@ Encoding: UTF-8
 Package: factorstochvol
 Type: Package
 Title: Bayesian Estimation of (Sparse) Latent Factor Stochastic Volatility Models
-Version: 1.0.3
+Version: 1.0.4
 Authors@R: c(
 	person("Gregor", "Kastner", role = c("aut", "cre"), email = "gregor.kastner@aau.at", comment = c(ORCID = "0000-0002-8237-8271")),
 	person("Darjus", "Hosszejni", role = c("ctb"), email = "darjus.hosszejni@wu.ac.at", comment = c(ORCID = "0000-0002-3803-691X")),
