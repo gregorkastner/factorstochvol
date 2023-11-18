@@ -19,7 +19,7 @@ for each draw that has been stored during MCMC sampling.}
 }
 \value{
 List of class \code{fsvpredh} containing two elements:
-\itemize{
+\describe{
 \item{idih}{Array containing the draws of the latent idiosyncratic
 log-volatilities.}
 \item{factorh}{Array containing the draws of the latent factor

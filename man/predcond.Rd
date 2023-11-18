@@ -21,7 +21,7 @@ for each draw that has been stored during MCMC sampling.}
 }
 \value{
 List of class \code{fsvpredcond} containing two elements:
-\itemize{
+\describe{
 \item{means}{Array containing the draws of the predictive means.}
 \item{vols}{Array containing the draws of the predictive volatilities (square root of variances).}
 }
