@@ -322,7 +322,7 @@ cormat.fsvdraws <- function(x, timepoints = "all", ...) {
 #' for each draw that has been stored during MCMC sampling.
 #'
 #' @return List of class \code{fsvpredh} containing two elements:
-#' \itemize{
+#' \describe{
 #' \item{idih}{Array containing the draws of the latent idiosyncratic
 #' log-volatilities.}
 #' \item{factorh}{Array containing the draws of the latent factor
@@ -541,7 +541,7 @@ predcor <- function(x, ahead = 1, each = 1) {
 #' for each draw that has been stored during MCMC sampling.
 #'
 #' @return List containing two elements:
-#' \itemize{
+#' \describe{
 #' \item{precision}{Array containing the draws of the predicted
 #' precision matrix.}
 #' \item{precisionlogdet}{Matrix containing the draws of the determinant

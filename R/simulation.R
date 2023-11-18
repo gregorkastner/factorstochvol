@@ -67,7 +67,7 @@ rvolonly <- function(para, n) {
 #' a t distribution instead of a Gaussian). Only used for testing.
 #'
 #' @return The value returned is a list object of class \code{fsvsim} holding
-#'  \itemize{
+#'  \describe{
 #'  \item{y}{The simulated data, stored in a \code{n} times \code{m} matrix with
 #'  colnames 'Sim1', 'Sim2', etc.}
 #'  \item{fac}{The simulated factors, stored in a \code{r} times \code{r} matrix.}

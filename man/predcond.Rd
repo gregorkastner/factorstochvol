@@ -21,9 +21,9 @@ for each draw that has been stored during MCMC sampling.}
 }
 \value{
 List of class \code{fsvpredcond} containing two elements:
-\itemize{
+\describe{
 \item{means}{Array containing the draws of the predictive means.}
-\item{vars}{Array containing the draws of the predictive variances.}
+\item{vols}{Array containing the draws of the predictive volatilities (square root of variances).}
 }
 }
 \description{
@@ -43,8 +43,8 @@ res <- fsvsample(sim$y, factors = 1) # estimate
 predobj <- predcond(res, each = 5)
 
 # Draw from the predictive distribution:
-preddraws <- matrix(rnorm(length(predobj$mean[,,1]),
-                    mean = predobj$mean[,,1],
+preddraws <- matrix(rnorm(length(predobj$means[,,1]),
+                    mean = predobj$means[,,1],
                     sd = predobj$vols[,,1]), nrow = 4)
 
 # Visualize the predictive distribution
