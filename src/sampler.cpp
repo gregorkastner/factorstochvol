@@ -24,7 +24,6 @@
 
 #include <RcppArmadillo.h>
 #include "sampler.h"
-#include "../inst/include/factorstochvol.h"
 
 using namespace Rcpp;
 
@@ -113,14 +112,15 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   const int r = curfacload.ncol(); // number of latent factors
   const int mpr = m + r;
 
-  // 1 = Normal, 2 = NG (rowwise), 3 = NG (colwise), 4 = DL
+  // 1 = Normal, 2 = NG (rowwise), 3 = NG (colwise), 
+  // 4 = DL not supported anymore
   const int pfl = as<int>(pfl_in);
   bool ngprior = false;
   if (r > 0 && (pfl == 2 || pfl == 3)) ngprior = true;
   bool columnwise = false;
   if (r > 0 && pfl == 3) columnwise = true;
-  bool dlprior = false;
-  if (r > 0 && pfl == 4) dlprior = true;
+  // bool dlprior = false;
+  // if (r > 0 && pfl == 4) dlprior = true;
   NumericVector sv(heteroskedastic_in);
   NumericMatrix priorhomoskedastic(priorhomoskedastic_in);
   NumericVector priorh0(priorh0_in);
@@ -142,17 +142,20 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   arma::mat armay = armay_original;  //(armay_original.begin(), m, T, model_mean);  // demeaned
   arma::mat armay_regression = armay;
   arma::mat armafacload(curfacload.begin(), m, r, false);
+/*
   arma::mat armafacloadt = arma::trans(armafacload);
-
+*/
   arma::uvec armafacloadtunrestrictedelements = arma::find(armarestr.t() != 0);
   //for (int i = 0; i < 10; i++) Rprintf("%i ", armafacloadtunrestrictedelements(i));
   //Rprintf("\n\n");
+/*
   arma::vec armafacloadtmp = arma::zeros<arma::vec>(armafacloadtunrestrictedelements.size());
-
+*/
   // curfacloadinter will hold the diagonal factor loadings stemming from the interwoven sampler
+/* zombie???
   NumericVector curfacload2inter(r);
   arma::vec armafacload2inter(curfacload2inter.begin(), curfacload2inter.length(), false);
-
+*/
   //current factor draws
   NumericMatrix curf = startval["fac"];
   arma::mat armaf(curf.begin(), curf.nrow(), curf.ncol(), false);
@@ -167,9 +170,9 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
 
   //transformation thereof (cols 1 to m)
   NumericMatrix curhtilde(curh.nrow(), m);
-
+/*
   arma::mat armahtilde(curhtilde.begin(), curhtilde.nrow(), curhtilde.ncol(), false);
-
+*/
   // //transformation thereof (cols m+1 to m+r)
   // NumericMatrix curhtilde2(curh.nrow(), r);
   // arma::mat armahtilde2(curhtilde2.begin(), curhtilde2.nrow(), curhtilde2.ncol(), false);
@@ -200,8 +203,9 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   arma::umat curmixind(T, mpr);
 
   //current mixture probability draws
+/* zombie ???
   NumericVector curmixprob(10 * T * mpr);
-
+*/
   // shrinkage prior:
   const List shrinkagepriors(shrinkagepriors_in);
 
@@ -243,22 +247,22 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     }
   }
 
-  int unrestrictedelementcount = arma::accu(armarestr);
+  // int unrestrictedelementcount = arma::accu(armarestr); only needed for DL prior
   arma::mat armatau2(curtau2.begin(), curtau2.nrow(), curtau2.ncol(), false);
-  double tauDL = 1.; // whatever
-  double tmpcounter4samplingtauDL;
-  arma::mat armapsiDL(m, r, arma::fill::zeros);  // used for DL prior
-  arma::mat armaphiDL(m, r, arma::fill::zeros);  // used for DL prior
-  arma::mat armaTDL(m, r, arma::fill::zeros);  // used for DL prior
-  for (int i = 0; i < m; i++) {
-    for (int j = 0; j < r; j++) {
-      if (armarestr(i,j) != 0) {
-        armapsiDL(i,j) = 1./unrestrictedelementcount;
-        armaphiDL(i,j) = 1./unrestrictedelementcount;
-        armaTDL(i,j) = 1./unrestrictedelementcount;
-      }
-    }
-  }
+  // double tauDL = 1.; // whatever
+  // double tmpcounter4samplingtauDL;
+  // arma::mat armapsiDL(m, r, arma::fill::zeros);  // used for DL prior
+  // arma::mat armaphiDL(m, r, arma::fill::zeros);  // used for DL prior
+  // arma::mat armaTDL(m, r, arma::fill::zeros);  // used for DL prior
+  // for (int i = 0; i < m; i++) {
+  //   for (int j = 0; j < r; j++) {
+  //     if (armarestr(i,j) != 0) {
+  //       armapsiDL(i,j) = 1./unrestrictedelementcount;
+  //       armaphiDL(i,j) = 1./unrestrictedelementcount;
+  //       armaTDL(i,j) = 1./unrestrictedelementcount;
+  //     }
+  //   }
+  // }
 
   // number of MCMC draws
   const int burnin = as<int>(burnin_in);
@@ -586,6 +590,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
    * TEMPORARY STORAGE
    */
 
+/*
   // curynorm will hold log((y - facload %*% f)^2) in STEP 1
   NumericMatrix curynorm(y.nrow(), y.ncol());
   arma::mat armaynorm(curynorm.begin(), curynorm.nrow(), curynorm.ncol(), false);
@@ -651,13 +656,13 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
   // draw2 will hold some random draws in STEP 3
   NumericVector draw2(r*T);
   arma::colvec armadraw2(draw2.begin(), draw2.length(), false);
-
+ */
   int effi = -burnin;
   int effirunningstore = 0;
 
   // temporary variables for the updated stochvol code
   arma::mat curpara_arma(curpara.begin(), curpara.nrow(), curpara.ncol(), false);
-  arma::mat curh_arma(curh.begin(), curh.nrow(), curh.ncol(), false);
+//  arma::mat curh_arma(curh.begin(), curh.nrow(), curh.ncol(), false); ??? zombie ??? maybe once replaced by armah?
   arma::vec beta_j(1);
 
   RNGScope scope;
@@ -672,7 +677,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
 
   int space4print = floor(log10(N + .1)) + 1;
   int doevery = ceil((2000.*N)/((r+1)*T*m));
-
+  
   for (int i = 0; i < N; i++, effi++) {  // BEGIN main MCMC loop
 
     if (verbose && (i % doevery == 0)) {
@@ -683,7 +688,41 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     if (i % 20 == 0) {
       ::R_CheckUserInterrupt();
     }
+    
+    update_fsv(armafacload,
+               armaf,
+               armah,
+               armah0,
+               curpara_arma,
+               armatau2,
+               armalambda2,
+               curmixind,
+               armay,
+               facloadtol,
+               armarestr,
+               armafacloadtunrestrictedelements,
+               nonzerospercol,
+               nonzerosperrow,
+               priorh0,
+               ngprior,
+               columnwise,
+               aShrink,
+               cShrink,
+               dShrink,
+               priorhomoskedastic,
+               offset,
+               sv, // heteroskedastic,
+               interweaving,
+               expert_idi,
+               expert_fac,
+               prior_specs,
+               B011inv,
+               samplefac,
+               signswitch,
+               i// rep
+    );
 
+    /*
     // "linearized residuals"
     // NOTE: "log", "square" are component-wise functions, '*' denotes matrix multiplication
     if (r > 0) {
@@ -1083,7 +1122,8 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
         }
       }
     }
-
+    */
+    
     // REGRESSION (only single regression)
     if (model_mean) {
       if (r > 0) {
@@ -1191,7 +1231,6 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
       }
     }
   }  // END main MCMC loop
-
   if (verbose) {
     Rprintf("\r********* Iteration %*i of %*i (%3.0f%%) *********",
             space4print, N, space4print, N, 100.);

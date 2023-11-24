@@ -93,7 +93,7 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
 
  for (int i = 0; i < horizon; i++) {
   for (int e = 0; e < each; e++) {
-   std::generate(X.begin(), X.end(), ::norm_rand);
+   std::generate(X.begin(), X.end(), ::norm_rand); //R::norm_rand is underlying function where R::rnorm() and Rcpp::rnorm() are wrappers around;
    hpredscub.slice(e) = mus + phis % (hpredscub.slice(e) - mus) + sigmas % X;
   }
   if (r > 0) {

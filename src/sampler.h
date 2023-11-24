@@ -29,9 +29,19 @@
 #include <RcppArmadillo.h>
 #include <stochvol.h>  // decl'd and def'd in "stochvol" (univariate SV-update)
 #include "progutils.h"
+#include "update_fsv.h"
 
 double rgig1(double, double, double);
+double do_rgig1(double lambda, double chi, double psi);
 
-// Main sampler (as called from R) moved to ../inst/include/factorstochvol.h
+// Main sampler (as called from R)
+RcppExport SEXP sampler(const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
+                        const SEXP, const SEXP);
 
 #endif

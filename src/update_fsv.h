@@ -22,18 +22,12 @@
  *  please refer to <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FACTORSTOCHVOL_H
-#define _FACTORSTOCHVOL_H
+#ifndef _UPDATE_FSV_H
+#define _UPDATE_FSV_H
 
 #include <RcppArmadillo.h>
-#include <Rcpp.h>
 #include <stochvol.h>
 
-namespace factorstochvol {
-
-using namespace Rcpp;
-
-inline 
 void update_fsv(arma::mat& facload,
                 arma::mat& fac,
                 arma::mat& logvar,
@@ -64,77 +58,7 @@ void update_fsv(arma::mat& facload,
                 const double& B011inv,
                 const bool& samplefac,
                 const bool& signswitch,
-                const int& i) {
-  typedef void(*Ptr_update_fsv)(arma::mat&,
-               arma::mat&,
-               arma::mat&,
-               arma::vec&,
-               arma::mat&,
-               arma::mat&,
-               arma::vec&, 
-               arma::umat&, 
-               const arma::mat&,
-               const double&,
-               const arma::imat&,
-               const arma::uvec&,
-               const arma::irowvec&,
-               const arma::icolvec&,
-               const Rcpp::NumericVector,
-               const bool&,
-               const bool&,
-               const Rcpp::NumericVector,
-               const Rcpp::NumericVector,
-               const Rcpp::NumericVector,
-               const Rcpp::NumericMatrix,
-               const double&,
-               const Rcpp::NumericVector, 
-               const int&,
-               const stochvol::ExpertSpec_FastSV&,
-               const stochvol::ExpertSpec_FastSV&,
-               const std::vector<stochvol::PriorSpec>&,
-               const double&,
-               const bool&,
-               const bool&,
-               const int&);
-  static Ptr_update_fsv p_update_fsv = NULL;
-  if (p_update_fsv == NULL) {
-    p_update_fsv = (Ptr_update_fsv)R_GetCCallable("factorstochvol", "update_fsv");
-  }
-  {
-    p_update_fsv(facload,
-                 fac,
-                 logvar,
-                 logvar0,
-                 svpara,
-                 tau2,
-                 lambda2, 
-                 curmixind, 
-                 y,
-                 facloadtol,
-                 restriction,
-                 facloadtunrestrictedelements,
-                 nonzerospercol,
-                 nonzerosperrow,
-                 priorh0,
-                 ngprior,
-                 columnwise,
-                 aShrink,
-                 cShrink,
-                 dShrink,
-                 priorhomoskedastic,
-                 offset,
-                 heteroskedastic, 
-                 interweaving,
-                 expert_idi,
-                 expert_fac,
-                 prior_specs,
-                 B011inv,
-                 samplefac,
-                 signswitch,
-                 i);
-  }
-}
-
-}
+                const int& i
+);
 
 #endif
