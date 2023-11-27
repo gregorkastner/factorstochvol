@@ -1,3 +1,11 @@
+Changes in version 1.1.0:
+  - New C-level function update_fsv. Makes it possible to obtain single
+    FSV draws without much of the overhead required otherwise. To be used
+    with caution (check the source files for details, see also package
+    bayesianVARs for a use case). Thanks to Luis Gruber for taking care of this.
+  - DL prior (previously undocumented) is not available anymore
+  - Fix in help file (predcond returns vols, not variances)
+
 Changes in version 1.0.6:
   - Fixed incorrect use of itemize in .rd files. Thanks to Uwe Ligges for
     a detailed explanation of the issue.
