@@ -875,7 +875,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
         try {
           armaR.submat(0, 0, activecols-1, activecols-1) = arma::chol(armaSigma.submat(0,0,activecols-1,activecols-1));
         } catch (...) {
-          ::Rf_error("Error in run %i: Couldn't Cholesky-decompose posterior loadings precision in row %i", i+1, j+1);
+          Rcpp::stop("Error in run %i: Couldn't Cholesky-decompose posterior loadings precision in row %i", i+1, j+1);
         }
 
 
@@ -887,7 +887,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
             arma::solve(arma::trimatu(armaR.submat(0,0,activecols-1,activecols-1)),
                         arma::eye<arma::mat>(activecols, activecols));
         } catch (...) {
-          ::Rf_error("Error in run %i: Couldn't invert Cholesky factor of posterior loadings precision in row %i", i+1, j+1);
+          Rcpp::stop("Error in run %i: Couldn't invert Cholesky factor of posterior loadings precision in row %i", i+1, j+1);
         }
 
         // calculate posterior covariance armaSigma:
@@ -907,7 +907,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
         try {
           armafacloadtmp(arma::span(oldpos, oldpos + activecols - 1)) = armamean.head(activecols) + armaRinv.submat(0,0,activecols-1,activecols-1) * armadraw.head(activecols);
         } catch(...) {
-          ::Rf_error("Error in run %i: Couldn't sample row %i of factor loadings", i+1, j+1);
+          Rcpp::stop("Error in run %i: Couldn't sample row %i of factor loadings", i+1, j+1);
         }
 
         //  Rprintf("\n%i to %i: ", oldpos, oldpos+activecols-1);
@@ -1085,7 +1085,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
           try {
             armaR2 = arma::chol(armaSigma2);
           } catch (...) {
-            ::Rf_error("Error in run %i: Couldn't Cholesky-decompose posterior factor precision at time %i of %i", i+1, j+1, T);
+            Rcpp::stop("Error in run %i: Couldn't Cholesky-decompose posterior factor precision at time %i of %i", i+1, j+1, T);
           }
 
           try {
@@ -1093,7 +1093,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
             //   armaR2inv = arma::inv(arma::trimatu(armaR2)); # This is OK on Native R but not so nice in OpenBLAS
             armaR2inv = arma::solve(arma::trimatu(armaR2), arma::eye<arma::mat>(r, r));
           } catch (...) {
-            ::Rf_error("Error in run %i: Couldn't invert Cholesky factor of posterior factor precision at time %i of %i", i+1, j+1, T);
+            Rcpp::stop("Error in run %i: Couldn't invert Cholesky factor of posterior factor precision at time %i of %i", i+1, j+1, T);
           }
 
           // calculate posterior covariance matrix armaSigma2:
@@ -1106,7 +1106,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
           try {
             armaf.col(j) = armamean2 + (armaR2inv * armadraw2.subvec(j*r, (j+1)*r - 1));
           } catch(...) {
-            ::Rf_error("Error in run %i: Couldn't sample factors at time %i of %i", i+1, j+1, T);
+            Rcpp::stop("Error in run %i: Couldn't sample factors at time %i of %i", i+1, j+1, T);
           }
         }
       }

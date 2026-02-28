@@ -242,7 +242,7 @@ void update_fsv(arma::mat& facload,
       try {
         armaR.submat(0, 0, activecols-1, activecols-1) = arma::chol(armaSigma.submat(0,0,activecols-1,activecols-1));
       } catch (...) {
-        ::Rf_error("Error in run %i: Couldn't Cholesky-decompose posterior loadings precision in row %i", i+1, j+1);
+        Rcpp::stop("Error in run %i: Couldn't Cholesky-decompose posterior loadings precision in row %i", i+1, j+1);
       }
       
       
@@ -254,7 +254,7 @@ void update_fsv(arma::mat& facload,
           arma::solve(arma::trimatu(armaR.submat(0,0,activecols-1,activecols-1)),
                       arma::eye<arma::mat>(activecols, activecols));
       } catch (...) {
-        ::Rf_error("Error in run %i: Couldn't invert Cholesky factor of posterior loadings precision in row %i", i+1, j+1);
+        Rcpp::stop("Error in run %i: Couldn't invert Cholesky factor of posterior loadings precision in row %i", i+1, j+1);
       }
       
       // calculate posterior covariance armaSigma:
@@ -275,7 +275,7 @@ void update_fsv(arma::mat& facload,
       try {
         armafacloadtmp(arma::span(oldpos, oldpos + activecols - 1)) = armamean.head(activecols) + armaRinv.submat(0,0,activecols-1,activecols-1) * armadraw.head(activecols);
       } catch(...) {
-        ::Rf_error("Error in run %i: Couldn't sample row %i of factor loadings", i+1, j+1);
+        Rcpp::stop("Error in run %i: Couldn't sample row %i of factor loadings", i+1, j+1);
       }
       
       //  Rprintf("\n%i to %i: ", oldpos, oldpos+activecols-1);
@@ -461,7 +461,7 @@ void update_fsv(arma::mat& facload,
         try {
           armaR2 = arma::chol(armaSigma2);
         } catch (...) {
-          ::Rf_error("Error in run %i: Couldn't Cholesky-decompose posterior factor precision at time %i of %i", i+1, j+1, T);
+          Rcpp::stop("Error in run %i: Couldn't Cholesky-decompose posterior factor precision at time %i of %i", i+1, j+1, T);
         }
         
         try {
@@ -469,7 +469,7 @@ void update_fsv(arma::mat& facload,
           //   armaR2inv = arma::inv(arma::trimatu(armaR2)); # This is OK on Native R but not so nice in OpenBLAS
           armaR2inv = arma::solve(arma::trimatu(armaR2), arma::eye<arma::mat>(r, r));
         } catch (...) {
-          ::Rf_error("Error in run %i: Couldn't invert Cholesky factor of posterior factor precision at time %i of %i", i+1, j+1, T);
+          Rcpp::stop("Error in run %i: Couldn't invert Cholesky factor of posterior factor precision at time %i of %i", i+1, j+1, T);
         }
         
         // calculate posterior covariance matrix armaSigma2:
@@ -482,7 +482,7 @@ void update_fsv(arma::mat& facload,
         try {
           fac.col(j) = armamean2 + (armaR2inv * armadraw2.subvec(j*r, (j+1)*r - 1));
         } catch(...) {
-          ::Rf_error("Error in run %i: Couldn't sample factors at time %i of %i", i+1, j+1, T);
+          Rcpp::stop("Error in run %i: Couldn't sample factors at time %i of %i", i+1, j+1, T);
         }
       }
     }
