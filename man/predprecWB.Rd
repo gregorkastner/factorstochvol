@@ -45,7 +45,7 @@ Other predictors:
 \code{\link{predcor}()},
 \code{\link{predcov}()},
 \code{\link{predh}()},
-\code{\link{predloglikWB}()},
-\code{\link{predloglik}()}
+\code{\link{predloglik}()},
+\code{\link{predloglikWB}()}
 }
 \concept{predictors}

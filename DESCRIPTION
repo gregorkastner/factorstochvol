@@ -22,3 +22,4 @@ LinkingTo: Rcpp, RcppArmadillo (>= 0.9.900), stochvol
 BuildResaveData: best
 VignetteBuilder: knitr
 BugReports: https://github.com/gregorkastner/factorstochvol/issues
+RoxygenNote: 7.3.2

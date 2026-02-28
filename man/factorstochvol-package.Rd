@@ -2,6 +2,7 @@
 % Please edit documentation in R/factorstochvol-package.R
 \docType{package}
 \name{factorstochvol-package}
+\alias{factorstochvol}
 \alias{factorstochvol-package}
 \title{Bayesian Estimation of (Sparse) Latent Factor Stochastic
 Volatility Models through MCMC}

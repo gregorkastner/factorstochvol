@@ -123,7 +123,6 @@
 #' comtimeplot(res, fsvsimobj = sim, show = 'series')
 #' }
 #'
-#' @docType package
 #' @name factorstochvol-package
 
-NULL
+"_PACKAGE"
