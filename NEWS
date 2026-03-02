@@ -1,5 +1,6 @@
 Changes in version 1.1.1:
   - Replaced calls to Rf_error with calls to Rcpp::stop.
+  - Minor fixes (URLs, help files).
 
 Changes in version 1.1.0:
   - New C-level function update_fsv. Makes it possible to obtain single
