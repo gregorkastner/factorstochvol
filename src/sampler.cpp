@@ -686,7 +686,7 @@ RcppExport SEXP sampler(const SEXP y_in, const SEXP draws_in,
     }
 
     if (i % 20 == 0) {
-      ::R_CheckUserInterrupt();
+      Rcpp::checkUserInterrupt();
     }
     
     update_fsv(armafacload,
