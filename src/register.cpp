@@ -22,25 +22,37 @@
  *  please refer to <http://www.gnu.org/licenses/>.
  */
 
-#include "sampler.h"
-#include "predict.h"
-#include "dmvnorm.h"
+#include "RcppExports.h"
 #include "update_fsv.h"
 #include "../inst/include/factorstochvol.h"
 
 using namespace Rcpp;
 
+// validate (ensure exported C++ functions exist before calling them)
+static int _factorstochvol_RcppExport_validate(const char* sig) { 
+  static std::set<std::string> signatures;
+  if (signatures.empty()) {
+    signatures.insert("void(*update_fsv)(arma::mat&, arma::mat&, arma::mat&, arma::vec&, arma::mat&, arma::mat&, arma::vec&, arma::umat&, const arma::mat&, const double&, const arma::imat&, const arma::uvec&, const arma::irowvec&, const arma::icolvec&, const Rcpp::NumericVector, const bool&, const bool&, const Rcpp::NumericVector, const Rcpp::NumericVector, const Rcpp::NumericVector, const Rcpp::NumericMatrix, const double&, const Rcpp::NumericVector, const int&, const stochvol::ExpertSpec_FastSV&, const stochvol::ExpertSpec_FastSV&, const std::vector<stochvol::PriorSpec>&, const double&, const bool&, const bool&, const int&)");
+  }
+  return signatures.find(sig) != signatures.end();
+}
+
+// registerCCallable (register entry points for exported C++ functions)
+RcppExport SEXP _factorstochvol_RcppExport_registerCCallable() { 
+  R_RegisterCCallable("factorstochvol", "update_fsv", (DL_FUNC)update_fsv);
+  R_RegisterCCallable("factorstochvol", "_factorstochvol_RcppExport_validate", (DL_FUNC)_factorstochvol_RcppExport_validate);
+  return R_NilValue;
+}
+
 static const R_CallMethodDef CallEntries[] = {
-    {"sampler", (DL_FUNC) &sampler, 35},
-    {"predict", (DL_FUNC) &predict, 3},
-    {"dmvnorm", (DL_FUNC) &dmvnorm, 4},
-    {NULL, NULL, 0}
+  {"_factorstochvol_dmvnorm", (DL_FUNC) &_factorstochvol_dmvnorm, 4},
+  {"_factorstochvol_predict", (DL_FUNC) &_factorstochvol_predict, 3},
+  {"_factorstochvol_sampler", (DL_FUNC) &_factorstochvol_sampler, 35},
+  {"_factorstochvol_RcppExport_registerCCallable", (DL_FUNC) &_factorstochvol_RcppExport_registerCCallable, 0},
+  {NULL, NULL, 0}
 };
 
 RcppExport void R_init_factorstochvol(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
-    
-    // register "update_fsv" to be available for other packages
-    R_RegisterCCallable("factorstochvol", "update_fsv", (DL_FUNC)update_fsv);
+  R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+  R_useDynamicSymbols(dll, FALSE);
 }
