@@ -26,20 +26,16 @@
 
 using namespace Rcpp;
 
-RcppExport SEXP dmvnorm(const SEXP x_in, const SEXP means_in, const SEXP vars_in, const SEXP log_in) {
+// [[Rcpp::export]]
+NumericVector dmvnorm(NumericMatrix x_, NumericMatrix means_, NumericVector vars_, const bool loga) {
 
  // note: SEXP to Rcpp conversion REUSES memory unless "clone"d
  // Rcpp to Armadillo conversion allocates NEW memory unless deact'd
 
- const bool loga = as<bool>(log_in);
-
- NumericMatrix x_(x_in);
  arma::mat x(x_.begin(), x_.nrow(), x_.ncol(), false);
 
- NumericMatrix means_(means_in);
  arma::mat means(means_.begin(), means_.nrow(), means_.ncol(), false);
 
- NumericVector vars_(vars_in);
  IntegerVector vars_dims = vars_.attr("dim");
  int dim = vars_dims(0);
  int reps = vars_dims(2);
@@ -67,5 +63,5 @@ RcppExport SEXP dmvnorm(const SEXP x_in, const SEXP means_in, const SEXP vars_in
  }
 
  if (!loga) out_ = exp(out_);
- return wrap(out_);
+ return out_;
 }

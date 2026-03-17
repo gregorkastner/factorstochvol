@@ -26,17 +26,14 @@
 
 using namespace Rcpp;
 
-RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_in) {
+// [[Rcpp::export]]
+List predict(const List obj, const IntegerVector store, const int each) {
 
  // note: SEXP to Rcpp conversion REUSES memory unless "clone"d
  // Rcpp to Armadillo conversion allocates NEW memory unless deact'd
 
- const List obj(obj_in);
-
- const IntegerVector store(store_in);
  const int storelen = store.size();
  const int horizon = store(storelen - 1);
- const int each = as<int>(each_in);
 
  NumericVector h = obj["logvar"];
  const IntegerVector hDims = h.attr("dim");
@@ -76,9 +73,11 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
  arma::mat meanpreds(meanpreds_.begin(), m, len * each, false);
 
  NumericVector volpredsstore_(m * len * each * storelen, 0.0);
+ volpredsstore_.attr("dim") = Dimension(m, len * each, storelen);
  arma::cube volpredsstore(volpredsstore_.begin(), m, len * each, storelen, false);
 
  NumericVector meanpredsstore_(m * len * each * storelen, 0.0);
+ meanpredsstore_.attr("dim") = Dimension(m, len * each, storelen);
  arma::cube meanpredsstore(meanpredsstore_.begin(), m, len * each, storelen, false);
 
  arma::mat X(mpr, len);
@@ -87,7 +86,7 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
  int storeindex = 0;
 
  //RNGScope scope;
- GetRNGstate(); // "by hand" because RNGScope isn't safe if return
+ // GetRNGstate(); // "by hand" because RNGScope isn't safe if return
                 // variables are declared afterwards
 
 
@@ -112,10 +111,10 @@ RcppExport SEXP predict(const SEXP obj_in, const SEXP store_in, const SEXP each_
  }
 
  List retval = List::create(
-  Named("means") = wrap(meanpredsstore),
-  Named("vols")  = wrap(volpredsstore)
+  Named("means") = meanpredsstore_,
+  Named("vols")  = volpredsstore_
  );
 
- PutRNGstate();
+ // PutRNGstate();
  return retval;
 }

@@ -28,7 +28,9 @@
 //#define ARMA_NO_DEBUG // disables bounds checks
 #include <RcppArmadillo.h>
 
+using namespace Rcpp;
+
 // Main predict function (as called from R):
-RcppExport SEXP dmvnorm(const SEXP, const SEXP, const SEXP, const SEXP);
+NumericVector dmvnorm(NumericMatrix x_, NumericMatrix means_, NumericVector vars_, const bool loga);
 
 #endif

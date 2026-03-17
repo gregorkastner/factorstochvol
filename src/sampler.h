@@ -34,14 +34,4 @@
 double rgig1(double, double, double);
 double do_rgig1(double lambda, double chi, double psi);
 
-// Main sampler (as called from R)
-RcppExport SEXP sampler(const SEXP, const SEXP, const SEXP,
-                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-                        const SEXP, const SEXP, const SEXP, const SEXP, const SEXP,
-                        const SEXP, const SEXP);
-
 #endif

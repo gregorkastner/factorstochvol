@@ -28,7 +28,9 @@
 //#define ARMA_NO_DEBUG // disables bounds checks
 #include <RcppArmadillo.h>
 
+using namespace Rcpp;
+
 // Main predict function (as called from R):
-RcppExport SEXP predict(const SEXP, const SEXP, const SEXP);
+List predict(const List obj, const IntegerVector store, const int each);
 
 #endif
