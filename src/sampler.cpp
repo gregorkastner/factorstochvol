@@ -28,16 +28,6 @@
 using namespace Rcpp;
 
 // rgig is imported from GIGrvg
-double rgig1(double lambda, double chi, double psi) {
-  PutRNGstate();
-  SEXP (*fun)(SEXP, SEXP, SEXP, SEXP) = NULL;
-  if (!fun) {
-    fun = (SEXP(*)(SEXP, SEXP, SEXP, SEXP)) R_GetCCallable("GIGrvg", "rgig");
-  }
-  GetRNGstate();
-  return as<double>(fun(wrap(1), wrap(lambda), wrap(chi), wrap(psi)));
-}
-
 double do_rgig1(double lambda, double chi, double psi) {
 
   double res;

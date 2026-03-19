@@ -31,7 +31,6 @@
 #include "progutils.h"
 #include "update_fsv.h"
 
-double rgig1(double, double, double);
 double do_rgig1(double lambda, double chi, double psi);
 
 #endif
