@@ -91,14 +91,11 @@ List sampler(NumericMatrix y, const int draws,
   const int r = curfacload.ncol(); // number of latent factors
   const int mpr = m + r;
   
-  // 1 = Normal, 2 = NG (rowwise), 3 = NG (colwise), 
-  // 4 = DL not supported anymore
+  // 1 = Normal, 2 = NG (rowwise), 3 = NG (colwise)
   bool ngprior = false;
   if (r > 0 && (pfl == 2 || pfl == 3)) ngprior = true;
   bool columnwise = false;
   if (r > 0 && pfl == 3) columnwise = true;
-  // bool dlprior = false;
-  // if (r > 0 && pfl == 4) dlprior = true;
   arma::imat armarestr(restr.begin(), restr.nrow(), restr.ncol(), false);
   
   arma::irowvec nonzerospercol = arma::sum(armarestr, 0);
@@ -122,34 +119,14 @@ List sampler(NumericMatrix y, const int draws,
   arma::uvec armafacloadtunrestrictedelements = arma::find(armarestr.t() != 0);
   //for (int i = 0; i < 10; i++) Rprintf("%i ", armafacloadtunrestrictedelements(i));
   //Rprintf("\n\n");
-  /*
-   arma::vec armafacloadtmp = arma::zeros<arma::vec>(armafacloadtunrestrictedelements.size());
-   */
-  // curfacloadinter will hold the diagonal factor loadings stemming from the interwoven sampler
-  /* zombie???
-   NumericVector curfacload2inter(r);
-   arma::vec armafacload2inter(curfacload2inter.begin(), curfacload2inter.length(), false);
-   */
+  
   //current factor draws
   NumericMatrix curf = startval["fac"];
   arma::mat armaf(curf.begin(), curf.nrow(), curf.ncol(), false);
   
-  // //current "centered" factor loadings
-  // NumericMatrix curfstar(curf.nrow(), curf.ncol());
-  // arma::mat armafstar(curfstar.begin(), curfstar.nrow(), curfstar.ncol(), false);
-  
   //current log-volatility draws
   NumericMatrix curh = startval["latent"]; // does not contain h0!
   arma::mat armah(curh.begin(), curh.nrow(), curh.ncol(), false);
-  
-  //transformation thereof (cols 1 to m)
-  NumericMatrix curhtilde(curh.nrow(), m);
-  /*
-   arma::mat armahtilde(curhtilde.begin(), curhtilde.nrow(), curhtilde.ncol(), false);
-   */
-  // //transformation thereof (cols m+1 to m+r)
-  // NumericMatrix curhtilde2(curh.nrow(), r);
-  // arma::mat armahtilde2(curhtilde2.begin(), curhtilde2.nrow(), curhtilde2.ncol(), false);
   
   NumericVector curh0 = startval["latent0"];
   arma::vec armah0(curh0.begin(), curh0.length(), false);
@@ -176,10 +153,6 @@ List sampler(NumericMatrix y, const int draws,
   //current mixture indicator draws
   arma::umat curmixind(T, mpr);
   
-  //current mixture probability draws
-  /* zombie ???
-   NumericVector curmixprob(10 * T * mpr);
-   */
   // shrinkage prior:
   // NA means: use N(0,tau2)-prior with tau2 fixed
   const NumericVector aShrink = shrinkagepriors["a"];
@@ -219,22 +192,7 @@ List sampler(NumericMatrix y, const int draws,
     }
   }
   
-  // int unrestrictedelementcount = arma::accu(armarestr); only needed for DL prior
   arma::mat armatau2(curtau2.begin(), curtau2.nrow(), curtau2.ncol(), false);
-  // double tauDL = 1.; // whatever
-  // double tmpcounter4samplingtauDL;
-  // arma::mat armapsiDL(m, r, arma::fill::zeros);  // used for DL prior
-  // arma::mat armaphiDL(m, r, arma::fill::zeros);  // used for DL prior
-  // arma::mat armaTDL(m, r, arma::fill::zeros);  // used for DL prior
-  // for (int i = 0; i < m; i++) {
-  //   for (int j = 0; j < r; j++) {
-  //     if (armarestr(i,j) != 0) {
-  //       armapsiDL(i,j) = 1./unrestrictedelementcount;
-  //       armaphiDL(i,j) = 1./unrestrictedelementcount;
-  //       armaTDL(i,j) = 1./unrestrictedelementcount;
-  //     }
-  //   }
-  // }
   
   // number of MCMC draws
   const int N = burnin + draws;
@@ -537,84 +495,19 @@ List sampler(NumericMatrix y, const int draws,
    * TEMPORARY STORAGE
    */
   
-  /*
-   // curynorm will hold log((y - facload %*% f)^2) in STEP 1
-   NumericMatrix curynorm(y.nrow(), y.ncol());
-   arma::mat armaynorm(curynorm.begin(), curynorm.nrow(), curynorm.ncol(), false);
-   
-   // curynorm2 will hold log(f^2) in STEP 1
-   NumericMatrix curfnorm(curf.nrow(), curf.ncol());
-   arma::mat armafnorm(curfnorm.begin(), curfnorm.nrow(), curfnorm.ncol(), false);
-   
-   // Xt will hold the transposed design matrix in STEP 2
-   NumericMatrix Xt(r, T);
-   arma::mat armaXt(Xt.begin(), Xt.nrow(), Xt.ncol(), false);
-   
-   // Xt2 will hold the transposed design matrix in STEP 3
-   NumericMatrix Xt2(r, m);
-   arma::mat armaXt2(Xt2.begin(), Xt2.nrow(), Xt2.ncol(), false);
-   
-   // ytilde will hold the normalized observation vector in STEP 2
-   NumericVector ytilde(T);
-   arma::colvec armaytilde(ytilde.begin(), ytilde.length(), false);
-   
-   // ytilde2 will hold the normalized observation vector in STEP 3
-   NumericVector ytilde2(m);
-   arma::colvec armaytilde2(ytilde2.begin(), ytilde2.length(), false);
-   
-   // Sigma will hold the posterior variance-covariance matrix in STEP 2
-   NumericMatrix Sigma(r, r);
-   arma::mat armaSigma(Sigma.begin(), Sigma.nrow(), Sigma.ncol(), false);
-   
-   // R will hold the Cholesky factor of posterior precision matrix in STEP 2
-   NumericMatrix R(r, r);
-   arma::mat armaR(R.begin(), R.nrow(), R.ncol(), false);
-   
-   // Rinv will hold the inverse Cholesky factor of posterior precision matrix in STEP 3
-   NumericMatrix Rinv(r, r);
-   arma::mat armaRinv(Rinv.begin(), Rinv.nrow(), Rinv.ncol(), false);
-   
-   // Sigma2 will hold the posterior variance-covariance matrix in STEP 3
-   NumericMatrix Sigma2(r, r);
-   arma::mat armaSigma2(Sigma2.begin(), Sigma2.nrow(), Sigma2.ncol(), false);
-   
-   // R2 will hold the Cholesky factor of posterior precision matrix in STEP 3
-   NumericMatrix R2(r, r);
-   arma::mat armaR2(R2.begin(), R2.nrow(), R2.ncol(), false);
-   
-   // R2inv will hold the inverse Cholesky factor of posterior precision matrix in STEP 3
-   NumericMatrix R2inv(r, r);
-   arma::mat armaR2inv(R2inv.begin(), R2inv.nrow(), R2inv.ncol(), false);
-   
-   // mean will hold the posterior mean in STEP 2
-   NumericVector mean(r);
-   arma::colvec armamean(mean.begin(), mean.length(), false);
-   
-   // mean2 will hold the posterior mean in STEP 3
-   NumericVector mean2(r);
-   arma::colvec armamean2(mean2.begin(), mean2.length(), false);
-   
-   // draw will hold some random draws in STEP 2
-   
-   // NumericVector draw(step2draws);
-   NumericVector draw(r);
-   arma::colvec armadraw(draw.begin(), draw.length(), false);
-   
-   // draw2 will hold some random draws in STEP 3
-   NumericVector draw2(r*T);
-   arma::colvec armadraw2(draw2.begin(), draw2.length(), false);
-   */
   int effi = -burnin;
   int effirunningstore = 0;
   
   // temporary variables for the updated stochvol code
   arma::mat curpara_arma(curpara.begin(), curpara.nrow(), curpara.ncol(), false);
-  //  arma::mat curh_arma(curh.begin(), curh.nrow(), curh.ncol(), false); ??? zombie ??? maybe once replaced by armah?
   arma::vec beta_j(1);
   
+  /*
+   * Rcpp::export attribute takes care of RNG sate
   // RNGScope scope;
   //GetRNGstate(); // "by hand" because RNGScope isn't safe if return
   // variables are declared afterwards
+  */
   
   for (int j = m; j < mpr; j++) {
     if (sv(j) == false) {
@@ -668,408 +561,6 @@ List sampler(NumericMatrix y, const int draws,
                signswitch,
                i// rep
     );
-    
-    /*
-     // "linearized residuals"
-     // NOTE: "log", "square" are component-wise functions, '*' denotes matrix multiplication
-     if (r > 0) {
-     armaynorm = log(square(armay - armafacload * armaf));
-     } else {
-     armaynorm = log(square(armay) + offset);
-     }
-     armafnorm = log(square(armaf));
-     
-     armahtilde = exp(-armah(arma::span::all, arma::span(0,m-1))/2.);
-     
-     
-     // STEP 1:
-     // update indicators, latent volatilities, and SV-parameters
-     
-     
-     
-     // STEP 1 for "linearized residuals"
-     for (int j = 0; j < m; j++) {
-     if (sv(j) == true) {
-     double curh0j = curh0(j);
-     arma::vec curh_j = armah.unsafe_col(j);
-     arma::uvec curmixind_j = curmixind.unsafe_col(j);
-     double mu = curpara_arma.at(0, j),
-     phi = curpara_arma.at(1, j),
-     sigma = curpara_arma.at(2, j);
-     stochvol::update_fast_sv(armaynorm.row(j).t(), mu, phi, sigma, curh0j, curh_j, curmixind_j, prior_specs[j], expert_idi);
-     curpara_arma.at(0, j) = mu;
-     curpara_arma.at(1, j) = phi;
-     curpara_arma.at(2, j) = sigma;
-     curh0(j) = curh0j;
-     } else {
-     double rss;
-     if (r > 0) {
-     rss = sum(square(armay.row(j) - armafacload.row(j)*armaf));
-     } else {
-     rss = sum(square(armay.row(j)));
-     }
-     const double sigma = 1/R::rgamma(priorhomoskedastic(j, 0) + .5*T, 1/(priorhomoskedastic(j, 1) + .5*rss));
-     armah.col(j).fill(log(sigma));
-     }
-     }
-     
-     // STEP 1 for factors
-     for (int j = m; j < mpr; j++) {
-     if (sv(j) == true) {
-     double curh0j = curh0(j);
-     arma::vec curh_j = armah.unsafe_col(j);
-     arma::uvec curmixind_j = curmixind.unsafe_col(j);
-     double mu = 0,  //curpara_arma.at(0, j),
-     phi = curpara_arma.at(1, j),
-     sigma = curpara_arma.at(2, j);
-     stochvol::update_fast_sv(armafnorm.row(j-m).t(), mu, phi, sigma, curh0j, curh_j, curmixind_j, prior_specs[j], expert_fac);
-     curpara_arma.at(0, j) = 0;
-     curpara_arma.at(1, j) = phi;
-     curpara_arma.at(2, j) = sigma;
-     curh0(j) = curh0j;
-     }
-     }
-     
-     // intermediate step: calculate transformation of curh
-     armahtilde = exp(-armah(arma::span::all, arma::span(0,m-1))/2.);
-     
-     // STEP 2:
-     // update factor loadings: m independent r-variate regressions
-     // with T observations (for unrestricted case)
-     if (r > 0) {
-     // NEW: shrinkage part:
-     // should we employ the NG-prior?
-     if (ngprior) {
-     if (!columnwise) {
-     for (int j = 0; j < m; j++) {
-     
-     // draw lambda^2
-     armalambda2(j) = as<double>(rgamma(1, cShrink[j] + aShrink[j] * nonzerosperrow[j],
-     1./(dShrink[j] + (aShrink[j]/2.) * sum(armatau2.row(j)))));
-     
-     // draw tau^2
-     for (int k = 0; k < r; k++) {
-     if (armarestr(j,k) != 0) {
-     armatau2(j,k) = do_rgig1(aShrink(j) - .5, armafacload(j,k)*armafacload(j,k),
-     aShrink(j)*armalambda2(j));
-     }
-     }
-     }
-     } else {  // columnwise shrinkage
-     for (int j = 0; j < r; j++) {
-     
-     // draw lambda^2
-     armalambda2(j) = as<double>(rgamma(1, cShrink[j] + aShrink[j] * nonzerospercol[j],
-     1./(dShrink[j] + (aShrink[j]/2.) * sum(armatau2.col(j)))));
-     
-     // draw tau^2
-     for (int k = 0; k < m; k++) {
-     if (armarestr(k,j) != 0) {
-     armatau2(k,j) = do_rgig1(aShrink(j) - .5, armafacload(k,j)*armafacload(k,j),
-     aShrink(j)*armalambda2(j));
-     }
-     }
-     }
-     }
-     }
-     // should we employ the DL-prior?
-     if (dlprior) {
-     tmpcounter4samplingtauDL = 0;
-     for (int j = 0; j < r; j++) {
-     for (int k = 0; k < m; k++) {
-     if (armarestr(k,j) != 0) {
-     armapsiDL(k,j) = 1. / do_rgig1(-.5, 1, (armafacload(k,j)*armafacload(k,j)) / (tauDL * tauDL * armaphiDL(k,j) * armaphiDL(k,j)));
-     tmpcounter4samplingtauDL += fabs(armafacload(k,j))/armaphiDL(k,j);
-     armaTDL(k,j) = do_rgig1(aShrink[0] - 1., 2*fabs(armafacload(k,j)), 1);
-     }
-     }
-     }
-     //Rprintf("%f\n", tmpcounter4samplingtauDL);
-     //if (tmpcounter4samplingtauDL < 1.) Rprintf("THIS: %f\n", armaphiDL[0,0]);
-     tauDL = do_rgig1((aShrink[0] - 1.) * unrestrictedelementcount, 2. * tmpcounter4samplingtauDL, 1);
-     armaphiDL = armaTDL / accu(armaTDL);
-     armatau2 = armapsiDL % armaphiDL % armaphiDL * tauDL * tauDL;
-     }
-     
-     int oldpos = 0;
-     for (int j = 0; j < m; j++) {
-     
-     // TODO: some things outside
-     
-     
-     // transposed design matrix Xt is filled "manually"
-     int activecols = 0;
-     for (int l = 0; l < r; l++) {
-     if (armarestr(j, l) != 0) {
-     for (int k = 0; k < T; k++) {
-     armaXt(activecols, k) = armaf(l, k) * armahtilde(k, j);
-     }
-     activecols++;
-     }
-     }
-     
-     armaytilde = armay.row(j).t() % armahtilde.col(j);
-     
-     
-     // Now draw from the multivariate normal distribution
-     // armaSigma is first used as temporary variable:
-     armaSigma.submat(0,0,activecols-1,activecols-1) = armaXt.rows(0,activecols-1) * armaXt.rows(0,activecols-1).t();
-     
-     // add precisions to diagonal:
-     armaSigma.submat(0,0,activecols-1,activecols-1).diag() += 1/arma::nonzeros(armatau2.row(j));
-     
-     // Find Cholesky factor of posterior precision matrix
-     try {
-     armaR.submat(0, 0, activecols-1, activecols-1) = arma::chol(armaSigma.submat(0,0,activecols-1,activecols-1));
-     } catch (...) {
-     Rcpp::stop("Error in run %i: Couldn't Cholesky-decompose posterior loadings precision in row %i", i+1, j+1);
-     }
-     
-     
-     // TODO: Check whether Armadillo automatically exploits the fact that R2 is upper triangular for inversion
-     // (Partial) Answer: Seems to be OK for native R but solve(trimatu(R), I) is faster with OpenBLAS
-     try {
-     // armaRinv.submat(0,0,activecols-1,activecols-1) = arma::inv(arma::trimatu(armaR.submat(0,0,activecols-1,activecols-1)));
-     armaRinv.submat(0,0,activecols-1,activecols-1) =
-     arma::solve(arma::trimatu(armaR.submat(0,0,activecols-1,activecols-1)),
-     arma::eye<arma::mat>(activecols, activecols));
-     } catch (...) {
-     Rcpp::stop("Error in run %i: Couldn't invert Cholesky factor of posterior loadings precision in row %i", i+1, j+1);
-     }
-     
-     // calculate posterior covariance armaSigma:
-     armaSigma.submat(0, 0, activecols-1, activecols-1) =
-     armaRinv.submat(0, 0, activecols-1, activecols-1) *
-     armaRinv.submat(0, 0, activecols-1, activecols-1).t();
-     
-     // calculate posterior mean:
-     armamean.head(activecols) = armaSigma.submat(0, 0, activecols-1, activecols-1) *
-     armaXt.submat(0, 0, activecols-1, T-1) *
-     armaytilde;
-     
-     // draw from the r-variate normal distribution
-     
-     armadraw = rnorm(r);
-     
-     try {
-     armafacloadtmp(arma::span(oldpos, oldpos + activecols - 1)) = armamean.head(activecols) + armaRinv.submat(0,0,activecols-1,activecols-1) * armadraw.head(activecols);
-     } catch(...) {
-     Rcpp::stop("Error in run %i: Couldn't sample row %i of factor loadings", i+1, j+1);
-     }
-     
-     //  Rprintf("\n%i to %i: ", oldpos, oldpos+activecols-1);
-     //for (int is = oldpos; is < oldpos+activecols; is++) Rprintf("%f ", armafacloadtmp(is));
-     //Rprintf("\n\n");
-     oldpos = oldpos + activecols;
-     
-     }
-     armafacloadt(armafacloadtunrestrictedelements) = armafacloadtmp;
-     armafacload = arma::trans(armafacloadt);
-     
-     if (facloadtol > 0) {
-     
-     for (int ii = 0; ii < m; ii++) {
-     for (int jj = 0; jj < r; jj++) {
- if (armarestr(ii, jj) != 0) {
- if (armafacload(ii, jj) < facloadtol && armafacload(ii, jj) > 0.) {
- armafacload(ii, jj) = facloadtol;
- } else if (armafacload(ii, jj) > -facloadtol && armafacload(ii, jj) < 0.) {
- armafacload(ii, jj) = -facloadtol;
- } else if (armafacload(ii, jj) == 0.) {
- if (R::rbinom(1, 0.5) == 0) {
- armafacload(ii, jj) = facloadtol;
- } else {
- armafacload(ii, jj) = -facloadtol;
- }
- }
- }
-     }
-     }
-     }
- 
- //Rprintf("\n\n");
- //for (int is = 0; is < m; is++) Rprintf("%f %f\n", curfacload(is, 0), curfacload(is, 1));
- 
- if (interweaving == 1 || interweaving == 3 || interweaving == 5 || interweaving == 7) {
- // STEP 2*: "Shallow" Interweaving
- 
- //   // intermediate step: calculate transformation of curh
- //   armahtilde2 = exp(-armah(arma::span::all, arma::span(m, m+r-1)));
- 
- 
- for (int j = 0; j < r; j++) {
- 
- int userow = j;
- if (interweaving == 3 || interweaving == 7) { // find largest absolute element in column to interweave
- userow = 0;
- for (int k = 1; k < m; k++) if (fabs(armafacload(k, j)) > fabs(armafacload(userow, j))) userow = k;
- }
- if (interweaving == 5) { // find random nonzero element in column to interweave
- for (int k = 1; k < m; k++) {
- userow = floor(R::runif(0, m));
- if (fabs(armafacload(userow, j)) > 0.01) break;
- }
- }
- 
- 
- double newdiag2 = do_rgig1((nonzerospercol(j)- T) / 2.,
- sum(square(armaf.row(j) * armafacload(userow,j))/exp(armah.col(m+j)).t()),
- 1/armatau2(userow,j) + sum(square(nonzeros(armafacload.col(j))) / nonzeros(armatau2.col(j))) / (armafacload(userow,j) * armafacload(userow,j)));
- 
- double tmp = sqrt(newdiag2)/armafacload(userow,j);
- 
- armafacload.col(j) *= tmp;
- armaf.row(j) *= 1/tmp;
- }
- }
- 
- if (interweaving == 2 || interweaving == 4 || interweaving == 6 || interweaving == 7) { // STEP 2+: "Deep" Interweaving
- for (int j = 0; j < r; j++) {
- 
- int userow = j;
- if (interweaving == 4 || interweaving == 7) { // find largest absolute element in column to interweave
- userow = 0;
- for (int k = 1; k < m; k++) if (fabs(armafacload(k, j)) > fabs(armafacload(userow, j))) userow = k;
- }
- if (interweaving == 6) { // find random nonzero element in column to interweave
- for (int k = 1; k < m; k++) {
- userow = floor(R::runif(0, m));
- if (fabs(armafacload(userow, j)) > 0.01) break;
- }
- //Rprintf("use: %i ", userow);
- }
- 
- 
- //Rprintf("%i and %i\n", j, userow);
- 
- double phi = curpara(1,m+j);
- double sigma = curpara(2,m+j);
- double mu_old = log(armafacload(userow,j) * armafacload(userow,j));
- hopen = curh(_, m+j) + mu_old;
- double h0open = curh0(m+j) + mu_old;
- double logacceptrate;
- double mu_prop;
- 
- if (priorh0(m+j) < 0.) {  // old prior for h0 (stationary distribution, depends on phi), as in JCGS submission Feb 2016
- double tmph = hopen(0) - phi*h0open;
- for (int k = 1; k < T; k++) tmph += hopen(k) - phi*hopen(k-1);
- 
- double gamma_old = (1 - phi) * mu_old;
- double gamma_prop = as<double>(rnorm(1, tmph/(T+B011inv), sigma/sqrt(T+B011inv)));
- mu_prop = gamma_prop/(1-phi);
- 
- logacceptrate = logdnormquot(mu_prop, mu_old, h0open, sigma/sqrt(1-phi*phi));
- logacceptrate += logspecialquot(gamma_prop, gamma_old, .5, 1/(2.*armatau2(userow,j)), 1-phi);
- logacceptrate += logdnormquot(gamma_old, gamma_prop, 0., sigma*sqrt(1/B011inv));
- 
- } else {  // new prior does not depend on phi
- double tmph = hopen(0);
- for (int k = 1; k < (T-1); k++) tmph += hopen(k);
- 
- double tmp4prop = T*priorh0(m+j)*(1-phi)*(1-phi) + 1;
- double prop_mean = (priorh0(m+j) * (1-phi) * (hopen(T-1) + (1-phi)*tmph - phi*h0open) + h0open) / tmp4prop;
- double prop_sd = (sqrt(priorh0(m+j)) * sigma) / sqrt(tmp4prop);
- 
- mu_prop = as<double>(rnorm(1, prop_mean, prop_sd));
- logacceptrate = .5 * ((mu_prop - mu_old) - (exp(mu_prop) - exp(mu_old)) / armatau2(userow,j));
- }
- 
- // NEW, same for both priors:
- arma::vec relevantload = armafacload.col(j);
- arma::vec relevanttau2 = armatau2.col(j);
- 
- // use all except interwoven element (restricted loadings are assumed to be zero!)
- double mysum = accu(square(nonzeros(relevantload))/nonzeros(relevanttau2)) -
- (relevantload(userow)*relevantload(userow))/relevanttau2(userow);
- 
- logacceptrate += .5 * ((nonzerospercol(j)-1)*(mu_prop - mu_old) -
- mysum / (armafacload(userow,j)*armafacload(userow,j)) * (exp(mu_prop) - exp(mu_old)));
- 
- 
- // Rprintf("ACCEPT? ");
- 
- //ACCEPT/REJECT
- if (log(::unif_rand()) < logacceptrate) {
- //    Rprintf("ACC col %i el %02i - ", j+1, userow+1);
- curh(_, m+j) = hopen - mu_prop;
- curh0(m+j) = h0open - mu_prop;
- 
- double tmp = exp(mu_prop/2)/armafacload(userow,j);
- armafacload.col(j) *= tmp;
- armaf.row(j) *= 1/tmp;
- //    } else {
- //     Rprintf("REJ col %i el %02i - ", j+1, userow+1);
- }
- }
- //   Rprintf("\n");
- }
- 
- // STEP 3:
- // update the factors (T independent r-variate regressions with m observations)
- 
- if (samplefac) {
- armadraw2.imbue(::norm_rand);
- for (int j = 0; j < T; j++) {
- 
- // transposed design matrix Xt2 (r x m) is filled "manually"
- for (int k = 0; k < m; k++) {
- for (int l = 0; l < r; l++) {
- Xt2(l, k) = armafacload(k, l) * armahtilde(j,k);
- }
- }
- 
- armaytilde2 = armay.col(j) % armahtilde.row(j).t();
- 
- // Now draw form the multivariate normal distribution
- 
- // armaSigma2 is first used as temporary variable (to hold the precision):
- armaSigma2 = armaXt2 * armaXt2.t();
- 
- // add precisions to diagonal:
- armaSigma2.diag() += exp(-armah(j, arma::span(m, mpr-1)));
- 
- // find Cholesky factor of posterior precision
- try {
- armaR2 = arma::chol(armaSigma2);
- } catch (...) {
- Rcpp::stop("Error in run %i: Couldn't Cholesky-decompose posterior factor precision at time %i of %i", i+1, j+1, T);
- }
- 
- try {
- //   armaR2inv = arma::inv(R2); # This is a little bit faster for very small matrices but a lot slower for large ones...
- //   armaR2inv = arma::inv(arma::trimatu(armaR2)); # This is OK on Native R but not so nice in OpenBLAS
- armaR2inv = arma::solve(arma::trimatu(armaR2), arma::eye<arma::mat>(r, r));
- } catch (...) {
- Rcpp::stop("Error in run %i: Couldn't invert Cholesky factor of posterior factor precision at time %i of %i", i+1, j+1, T);
- }
- 
- // calculate posterior covariance matrix armaSigma2:
- armaSigma2 = armaR2inv * armaR2inv.t();
- 
- // calculate posterior mean armamean2:
- armamean2 = armaSigma2 * armaXt2 * armaytilde2;
- 
- // draw from the r-variate normal distribution
- try {
- armaf.col(j) = armamean2 + (armaR2inv * armadraw2.subvec(j*r, (j+1)*r - 1));
- } catch(...) {
- Rcpp::stop("Error in run %i: Couldn't sample factors at time %i of %i", i+1, j+1, T);
- }
- }
- }
-     }
- 
- 
- // SIGN SWITCH:
- if (signswitch) {
- for (int j = 0; j < r; j++) {
- if (as<double>(runif(1)) > .5) {
- armafacload.col(j) *= -1;
- armaf.row(j) *= -1;
- }
- }
- }
- */
     
     // REGRESSION (only single regression)
     if (model_mean) {
