@@ -22,7 +22,6 @@
  *  please refer to <http://www.gnu.org/licenses/>.
  */
 
-#include "RcppExports.h"
 #include "update_fsv.h"
 #include "../inst/include/factorstochvol.h"
 
@@ -44,15 +43,3 @@ RcppExport SEXP _factorstochvol_RcppExport_registerCCallable() {
   return R_NilValue;
 }
 
-static const R_CallMethodDef CallEntries[] = {
-  {"_factorstochvol_dmvnorm", (DL_FUNC) &_factorstochvol_dmvnorm, 4},
-  {"_factorstochvol_predict", (DL_FUNC) &_factorstochvol_predict, 3},
-  {"_factorstochvol_sampler", (DL_FUNC) &_factorstochvol_sampler, 35},
-  {"_factorstochvol_RcppExport_registerCCallable", (DL_FUNC) &_factorstochvol_RcppExport_registerCCallable, 0},
-  {NULL, NULL, 0}
-};
-
-RcppExport void R_init_factorstochvol(DllInfo *dll) {
-  R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-  R_useDynamicSymbols(dll, FALSE);
-}
