@@ -40,12 +40,6 @@ double do_rgig1(double lambda, double chi, double psi) {
 
 }
 
-void test(double * data, int size) {
-  for (int i = 0; i < size; i++) {
-    data[i] = i;
-  }
-}
-
 // [[Rcpp::export]]
 List sampler(NumericMatrix y, const int draws,
              const int burnin, const List startval_in,
