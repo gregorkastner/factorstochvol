@@ -35,8 +35,6 @@ using namespace Rcpp;
 
 namespace {
 void validateSignature(const char* sig) {
-  Rcpp::Function require = Rcpp::Environment::base_env()["require"];
-  require("factorstochvol", Rcpp::Named("quietly") = true);
   typedef int(*Ptr_validate)(const char*);
   static Ptr_validate p_validate = (Ptr_validate)
     R_GetCCallable("factorstochvol", "_factorstochvol_RcppExport_validate");
