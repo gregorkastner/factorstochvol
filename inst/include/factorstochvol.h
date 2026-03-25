@@ -35,6 +35,11 @@ using namespace Rcpp;
 
 namespace {
 void validateSignature(const char* sig) {
+  // Rcpp::Function require = Rcpp::Environment::base_env()["require"];
+  // require("factorstochvol", Rcpp::Named("quietly") = true);
+  // No need to attach factorstochvol; if other packages want to use one of the
+  // functions declared below, make sure that the namespace is loaded, e.g.,
+  // by adding importFrom(factorstochvol, fsvsim) to the NAMESPACE file
   typedef int(*Ptr_validate)(const char*);
   static Ptr_validate p_validate = (Ptr_validate)
     R_GetCCallable("factorstochvol", "_factorstochvol_RcppExport_validate");
