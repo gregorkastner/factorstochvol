@@ -1153,7 +1153,9 @@ predcond <- function(x, ahead = 1, each = 1, ...) {
 standardizer <- function(obj) {
  if (dim(obj)[3] >= 2L) {
   tmpmean <- obj[,,"mean",drop=FALSE]
-  tmpsd <- sqrt(obj[,,"m2",drop=FALSE] - tmpmean^2)
+  tmpvar <- obj[,,"m2",drop=FALSE] - tmpmean^2
+  tmpvar[tmpvar<0] <- 0 # in the rare case, when running moments are based on 1 observation, numerical underflow can lead to negative epsilon
+  tmpsd <- sqrt(tmpvar)
   obj[,,"m2"] <- tmpsd
   dimnames(obj)[[3]][dimnames(obj)[[3]] == "m2"] <- "sd"
  }
