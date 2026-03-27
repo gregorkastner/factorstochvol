@@ -104,7 +104,7 @@ Volatility Models. \emph{Computational Statistics and Data Analysis},
 \code{\link[stochvol:stochvol-package]{stochvol}}
 }
 \author{
-Gregor Kastner \email{gregor.kastner@aau..at}
+Gregor Kastner \email{gregor.kastner@aau.at}
 }
 \keyword{models}
 \keyword{package}

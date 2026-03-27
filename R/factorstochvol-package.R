@@ -56,7 +56,7 @@
 #' typos, inconsistencies, or even bugs. Your comments and suggestions
 #' are warmly welcome!
 #'
-#' @author Gregor Kastner \email{gregor.kastner@@aau..at}
+#' @author Gregor Kastner \email{gregor.kastner@@aau.at}
 #'
 #' @references
 #' Kastner, G., Frühwirth-Schnatter, S., and Lopes, H.F. (2017).
