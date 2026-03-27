@@ -43,58 +43,64 @@ void store(const Rcpp::NumericMatrix &curfacload, Rcpp::NumericVector &facload,
            const Rcpp::NumericVector &curbeta, Rcpp::NumericVector &beta,
            const arma::umat &curmixind,  Rcpp::IntegerVector &mixind,
            const bool auxstore, const int thintime, const int where) {
-
- std::copy(curfacload.begin(), curfacload.end(), facload.begin() + where * curfacload.length());
- std::copy(curpara.begin(), curpara.end(), para.begin() + where * curpara.length());
-
- if (thintime == 1) { // store everything
-
-  std::copy(curf.begin(), curf.end(), f.begin() + where * curf.length());
-  std::copy(curh.begin(), curh.end(), h.begin() + where * curh.length());
-
- } else if (thintime == -1) { // store only t = T
-
-  for (int i = 0; i < curf.nrow(); i++) {
-   f(where*curf.nrow() + i) = curf(i, curf.ncol()-1);
+  
+  const R_xlen_t cfll = curfacload.length();
+  if(cfll>0){
+    // in case where cffl=0 std::copy could trigger UndefinedBehaviorSanitizer
+    std::copy(curfacload.begin(), curfacload.end(), facload.begin() + where * cfll);
   }
-
-  for (int i = 0; i < curh.ncol(); i++) {
-   h(where*curh.ncol() + i) = curh(curh.nrow()-1, i);
+  std::copy(curpara.begin(), curpara.end(), para.begin() + where * curpara.length());
+  
+  if (thintime == 1) { // store everything
+    const R_xlen_t cfl = curf.length();
+    if(cfl>0){
+      std::copy(curf.begin(), curf.end(), f.begin() + where * cfl); 
+    }
+    std::copy(curh.begin(), curh.end(), h.begin() + where * curh.length());
+    
+  } else if (thintime == -1) { // store only t = T
+    
+    for (int i = 0; i < curf.nrow(); i++) {
+      f(where*curf.nrow() + i) = curf(i, curf.ncol()-1);
+    }
+    
+    for (int i = 0; i < curh.ncol(); i++) {
+      h(where*curh.ncol() + i) = curh(curh.nrow()-1, i);
+    }
+    
+  } else if (thintime > 1) { // store every thintimeth point in time
+    
+    int tmp = curf.ncol()/thintime;
+    int tmpp = where * curf.nrow() * tmp;
+    
+    for (int j = 0; j < tmp; ++j) {
+      int tmppp = j*thintime;
+      int tmpppp = tmpp + j*curf.nrow();
+      
+      for (int i = 0; i < curf.nrow(); ++i) {
+        f(tmpppp + i) = curf(i, tmppp);
+      }
+    }
+    
+    tmpp = where * curh.ncol() * tmp;
+    
+    for (int i = 0; i < curh.ncol(); ++i) {
+      int tmpppp = tmpp + i*tmp;
+      
+      for (int j = 0; j < tmp; ++j) {
+        h(tmpppp + j) = curh(j*thintime, i);
+      }
+    }
   }
-
- } else if (thintime > 1) { // store every thintimeth point in time
-
-  int tmp = curf.ncol()/thintime;
-  int tmpp = where * curf.nrow() * tmp;
-
-  for (int j = 0; j < tmp; ++j) {
-   int tmppp = j*thintime;
-   int tmpppp = tmpp + j*curf.nrow();
-
-   for (int i = 0; i < curf.nrow(); ++i) {
-    f(tmpppp + i) = curf(i, tmppp);
-   }
+  
+  std::copy(curh0.begin(), curh0.end(), h0.begin() + where * curh0.length());
+  if (beta.size() > 0) {
+    std::copy(curbeta.begin(), curbeta.end(), beta.begin() + where * curbeta.length());
   }
-
-  tmpp = where * curh.ncol() * tmp;
-
-  for (int i = 0; i < curh.ncol(); ++i) {
-   int tmpppp = tmpp + i*tmp;
-
-   for (int j = 0; j < tmp; ++j) {
-    h(tmpppp + j) = curh(j*thintime, i);
-   }
+  
+  if (auxstore) { // store mixture probabilities, mixture indicators, shrinkage hyperparas, h0
+    std::copy(curmixind.begin(), curmixind.end(), mixind.begin() + where * curmixind.n_elem);
+    std::copy(curlambda2.begin(), curlambda2.end(), lambda2.begin() + where * curlambda2.length());
+    std::copy(curtau2.begin(), curtau2.end(), tau2.begin() + where * curtau2.length());
   }
- }
-
- std::copy(curh0.begin(), curh0.end(), h0.begin() + where * curh0.length());
- if (beta.size() > 0) {
-   std::copy(curbeta.begin(), curbeta.end(), beta.begin() + where * curbeta.length());
- }
-
- if (auxstore) { // store mixture probabilities, mixture indicators, shrinkage hyperparas, h0
-  std::copy(curmixind.begin(), curmixind.end(), mixind.begin() + where * curmixind.n_elem);
-  std::copy(curlambda2.begin(), curlambda2.end(), lambda2.begin() + where * curlambda2.length());
-  std::copy(curtau2.begin(), curtau2.end(), tau2.begin() + where * curtau2.length());
- }
 }

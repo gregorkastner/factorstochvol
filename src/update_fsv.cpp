@@ -29,12 +29,6 @@
 using namespace Rcpp;
 using namespace arma;
 
-/*
- * As few as possible function arguments (better readable), or
- * many function arguments (than more has to be defined/initialized within)? 
- *  
- */
-
 void update_fsv(arma::mat& facload,
                 arma::mat& fac,
                 arma::mat& logvar, //!!! if a factor is assumed to be homoskedastic (i.e. the corresponding element in heteroskedastic is 'false'), the corresponding column in logvar has to be initialized with 0s, otherwise the sampler will crash!
@@ -174,36 +168,6 @@ void update_fsv(arma::mat& facload,
         }
       }
     }
-    
-    /*
-    // should we employ the DL-prior?
-     
-    //incorrect algorithm (wrong order of updating the hyperparameters)
-    int unrestrictedelementcount = arma::accu(restriction); // would have to be initialized outside loop
-    double tmpcounter4samplingtauDL; // would have to be initialized outside loop
-    arma::mat armapsiDL(m,r); 
-    arma::mat armaTDL(m,r); 
-    arma::mat armaphiDL(m,r); // would be needed as function argument
-    
-    double tauDL; // DL prior, 1. incorrect original algorithm, 2. tauDL must be function argument...
-    if (dlprior) {
-      tmpcounter4samplingtauDL = 0;
-      for (int j = 0; j < r; j++) {
-        for (int k = 0; k < m; k++) {
-          if (restriction(k,j) != 0) {
-            armapsiDL(k,j) = 1. / do_rgig1(-.5, 1, (facload(k,j)*facload(k,j)) / (tauDL * tauDL * armaphiDL(k,j) * armaphiDL(k,j)));
-            tmpcounter4samplingtauDL += fabs(facload(k,j))/armaphiDL(k,j);
-            armaTDL(k,j) = do_rgig1(aShrink[0] - 1., 2*fabs(facload(k,j)), 1);
-          }
-        }
-      }
-      //Rprintf("%f\n", tmpcounter4samplingtauDL);
-      //if (tmpcounter4samplingtauDL < 1.) Rprintf("THIS: %f\n", armaphiDL[0,0]);
-      tauDL = do_rgig1((aShrink[0] - 1.) * unrestrictedelementcount, 2. * tmpcounter4samplingtauDL, 1);
-      armaphiDL = armaTDL / accu(armaTDL);
-      tau2 = armapsiDL % armaphiDL % armaphiDL * tauDL * tauDL;
-    }
-    */
     
     arma::mat armaXt(r,T);
     arma::vec armafacloadtmp = arma::zeros<arma::vec>(facloadtunrestrictedelements.size());

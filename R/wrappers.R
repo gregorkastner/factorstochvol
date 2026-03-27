@@ -927,7 +927,7 @@ startval <- list(facload = startfacload,
 
 auxstore <- FALSE
 
-res <- .Call("sampler", t(y), draws, burnin, startval,
+res <- sampler(t(y), draws, burnin, startval,
              priormu[1], priormu[2]^2, priorphi, priorsigma,
              priorbeta, model_mean, shrinkagepriors,
              thin, auxstore, thintime, myquiet, para,
@@ -935,8 +935,7 @@ res <- .Call("sampler", t(y), draws, burnin, startval,
              myoffset, truncnormal,
              restrinv, interweaving, signswitch, runningstore,
              runningstorethin, runningstoremoments, pfl,
-             heteroskedastic, priorhomoskedastic, priorh0, samplefac, facloadtol,
-             PACKAGE = "factorstochvol")
+             heteroskedastic, priorhomoskedastic, priorh0, samplefac, facloadtol)
 
 res$y <- y
 
@@ -1135,7 +1134,7 @@ predcond <- function(x, ahead = 1, each = 1, ...) {
 
  each <- as.integer(each)
 
- res <- .Call("predict", x, ahead, each, PACKAGE = "factorstochvol")
+ res <- predict(x, ahead, each)
 
  if (!is.null(x$beta)) {
   for (j in seq_len(NROW(x$beta))) {
@@ -1151,33 +1150,12 @@ predcond <- function(x, ahead = 1, each = 1, ...) {
  res
 }
 
-
-myrgig <- function(n = 1, lambda, chi, psi) {
-
-  ## --------------------------------------------------------------------
-  ## Generate GIG distributed variables (imported from package GIGrvg)
-  ##
-  ## density proportional to
-  ##    f(x) = x^{lambda-1} e^{-1/2 (chi/x+psi x)}
-  ##
-  ##       x >= 0
-  ## --------------------------------------------------------------------
-  ## Arguments:
-  ##
-  ##   n ....... sample size
-  ##   lambda .. parameter for distribution
-  ##   chi   ... parameter for distribution
-  ##   psi   ... parameter for distribution
-  ## --------------------------------------------------------------------
-
-  ## generate sample
-  .Call("my_rgig", n, lambda, chi, psi, PACKAGE = "factorstochvol")
-}
-
 standardizer <- function(obj) {
  if (dim(obj)[3] >= 2L) {
   tmpmean <- obj[,,"mean",drop=FALSE]
-  tmpsd <- sqrt(obj[,,"m2",drop=FALSE] - tmpmean^2)
+  tmpvar <- obj[,,"m2",drop=FALSE] - tmpmean^2
+  tmpvar[tmpvar<0] <- 0 # in the rare case, when running moments are based on 1 observation, numerical underflow can lead to negative epsilon
+  tmpsd <- sqrt(tmpvar)
   obj[,,"m2"] <- tmpsd
   dimnames(obj)[[3]][dimnames(obj)[[3]] == "m2"] <- "sd"
  }
@@ -1212,5 +1190,5 @@ vecdmvnorm <- function(x, means, vars, log = FALSE, tol = 10^6 * .Machine$double
  if (nrow(vars) != m || ncol(vars) != m) stop("Number of rows and columns of 'vars' must be equal to nrow(x).")
  if (dim(vars)[3] != n) stop("Argument 'vars' must have exactly ncol(x) slices.")
 
- .Call("dmvnorm", x, means, vars, log, PACKAGE = "factorstochvol")
+ dmvnorm(x, means, vars, log)
 }
