@@ -56,8 +56,8 @@ cat("Latest paras:", all.equal(res$para[,,iterations], res2$para[,,1]), "\n")
 expect_equal(res$para[,,iterations], res2$para[,,1])
 
 # If you are interested in speed, set iterations to a few hundred at least
-cat("Absolute time difference:", tim2 - tim, "\n")
-if (all(tim > 0)) {
-  cat("Relative time difference:", (tim2 - tim) / tim, "\n")
+cat("Absolute time difference:", tim2[1:3] - tim[1:3], "\n")
+if (all(tim[1:3] > 0)) {
+  cat("Relative time difference:", (tim2[1:3] - tim[1:3]) / tim[1:3], "\n")
 }
 })
